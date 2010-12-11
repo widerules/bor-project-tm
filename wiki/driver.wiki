@@ -1,10 +1,8 @@
-#summary One-sentence summary of this page.
-
 = driver =
 
 Уровень сенсоров и актюаторов на основе arduino.
 
-= Details =
+== Details ==
 
 
 
@@ -12,4 +10,26 @@
 [http://arduino.cc]
 
 
-==== parts ====
+==== микросхемы ====
+M74hc595b1
+[HTTP://GOOGLE.COM?Q=M74hc595b1]
+
+
+LM386N
+HTTP://GOOGLE.COM?Q=LM386N
+
+LM324N
+HTTP://GOOGLE.COM?Q=LM324N
+
+
+24LC16B
+HTTP://GOOGLE.COM?Q=24LC16B
+
+
+DS1307
+HTTP://GOOGLE.COM?Q=DS1307
+
+
+
+
+HTTP://GOOGLE.COM?Q=
