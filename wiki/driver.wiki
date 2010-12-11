@@ -12,18 +12,18 @@
 
 ==== микросхемы ====
 M74hc595b1
-[http://GOOGLE.COM?Q=M74hc595b1]
+[http://GOOGLE.COM?q=M74hc595b1]
 
 
 LM386N
-[http://GOOGLE.COM?Q=LM386N]
+[http://GOOGLE.COM?q=LM386N]
 
 LM324N
-[http://GOOGLE.COM?Q=LM324N]
+[http://GOOGLE.COM?q=LM324N]
 
 
 24LC16B
-[http://GOOGLE.COM?Q=24LC16B]
+[http://GOOGLE.COM?q=24LC16B]
 
 
 DS1307
