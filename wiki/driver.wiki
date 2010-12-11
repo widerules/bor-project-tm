@@ -12,7 +12,7 @@
 
 ==== микросхемы ====
 M74hc595b1
-[http://www.google.com?q=M74hc595b1]
+[http://www.google.com/search?q=M74hc595b1]
 
 
 LM386N
