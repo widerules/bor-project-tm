@@ -320,6 +320,7 @@ public class IBMEyes extends Activity implements SensorListener {
 			}
 		}
 
-	}//getPos
+	}//getPosÿÿÿ
+	
 
 }
