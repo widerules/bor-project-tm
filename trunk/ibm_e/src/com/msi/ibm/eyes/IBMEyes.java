@@ -6,7 +6,7 @@
  * fableson@msiservices.com
  * 
  */
-
+ 
 package com.msi.ibm.eyes;
 
 import java.io.BufferedInputStream;
@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.http.util.ByteArrayBuffer;
+
+//import re.serialout.AudioSerialOutMono;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -88,7 +90,7 @@ public class IBMEyes extends Activity implements SensorListener {
 		ctime = new Date().getTime();
 		ptime = ctime;
 
-		
+		AudioSerialOutMono.activate();
         Log.d(tag, "onClick: Starting service.");
         //startService(new Intent(this, ServiceExample.class));
         startService(new Intent(this, shakeServ.class));

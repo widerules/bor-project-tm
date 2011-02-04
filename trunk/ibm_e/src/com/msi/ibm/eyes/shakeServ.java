@@ -19,6 +19,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.ByteArrayBuffer;
 
+//import re.serialout.AudioSerialOutMono;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -39,6 +41,7 @@ import android.os.Handler;
 import android.os.IBinder; //import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 public class shakeServ extends Service implements SensorEventListener {
@@ -225,7 +228,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			// }
 
 			if ((now - mLastTime) > TIME_THRESHOLD) {
-				Log.d("onShake", "doing accele:" + "x "
+				Log.d("onShake", "ar_doing accele:" + "x "
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
@@ -257,6 +260,9 @@ public class shakeServ extends Service implements SensorEventListener {
 				dLastTime = now;
 				mValues = event.values;
 				if (mValues[0] < 180) {
+					Log.d("arrow", "ar_LEFT");
+					toLeft();
+					/*
 					Log.d("LED", "RED");
 					new Thread() {
 						@Override
@@ -265,8 +271,12 @@ public class shakeServ extends Service implements SensorEventListener {
 							//RedFlashLight();
 						}
 					}.start();
+					*/
 				}
 				if (mValues[0] > 180) {
+					Log.d("arrow", "ar_RIGHT");
+					toRight();
+					/*
 					Log.d("LED", "GREEN");
 					new Thread() {
 						@Override
@@ -276,6 +286,7 @@ public class shakeServ extends Service implements SensorEventListener {
 							//GreenFlashLight();
 						}
 					}.start();
+					*/
 				}
 
 			}
@@ -490,5 +501,47 @@ public class shakeServ extends Service implements SensorEventListener {
 			// }
 		}
 	};
+	
+	public static void toRight(){
+		Log.d("ar_toRight", " start");
+		
+			try{
+				AudioSerialOutMono.new_baudRate = Integer.parseInt("1000");
+			}catch(Exception e){
+				AudioSerialOutMono.new_baudRate = 9600;
+				//baudbox.setText("9600");
+				e.printStackTrace();
+			}
+			try{
+				AudioSerialOutMono.new_characterdelay = Integer.parseInt("1");
+			}catch(Exception e){
+				AudioSerialOutMono.new_characterdelay = 0;
+				e.printStackTrace();//charbox.setText("0");
+				
+			}
+			try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
+			try{			AudioSerialOutMono.output("1");}catch(Exception e){e.printStackTrace();}
+			Log.d("ar_toRight", " stopt");
+			}
+	
+	
+	public static void toLeft(){
+		try{
+			AudioSerialOutMono.new_baudRate = Integer.parseInt("1000");
+		}catch(Exception e){
+			AudioSerialOutMono.new_baudRate = 9600;
+			e.printStackTrace();
+			//baudbox.setText("9600");
+		}
+		try{
+			AudioSerialOutMono.new_characterdelay = Integer.parseInt("0");
+		}catch(Exception e){
+			AudioSerialOutMono.new_characterdelay = 0;
+			e.printStackTrace();
+			//charbox.setText("0");
+		}
+		try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
+		try{			AudioSerialOutMono.output("0");}catch(Exception e){e.printStackTrace();}
+		}
 
 }
