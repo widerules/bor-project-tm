@@ -52,8 +52,10 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 2000;
+	private static final int TIME_THRESHOLD = 1000;
 	private static final int SHAKE_TIMEOUT = 500;
+	private static final int TIME_TRESHOLD_AUDIO = 100;
+	
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
 
@@ -104,6 +106,8 @@ public class shakeServ extends Service implements SensorEventListener {
 
 	@Override
 	public void onCreate() {
+		AudioSerialOutMono.activate();
+
 		float[] mValues = null;
 		float[] aValues = null;
 		super.onCreate();
@@ -256,7 +260,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			// if ((now - mLastForce) > SHAKE_TIMEOUT) {
 			// mShakeCount = 0;
 			// }
-			if ((now - dLastTime) > 1000) {
+			if ((now - dLastTime) > TIME_TRESHOLD_AUDIO) {
 				dLastTime = now;
 				mValues = event.values;
 				if (mValues[0] < 180) {
@@ -298,7 +302,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				mValues = event.values;
 				aValues = event.values;
 
-				Log.d("onShake", "doing orient:" + "x "
+				Log.d("onShake", "ar_doing orient:" + "x "
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
@@ -452,7 +456,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			// inetView.setText("inet answ: " + sender);
 			// Toast.makeText(this,
 			// "Sended to web!:"+sender,Toast.LENGTH_LONG).show();
-			Log.d("wSndr:", urlStr + " >>> " + baf.toByteArray());
+			Log.d("ar_wSndr:", "ar_"+urlStr + " >>> " + baf.toByteArray());
 
 		} catch (Exception e) {
 			// ex = e;
@@ -534,7 +538,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			//baudbox.setText("9600");
 		}
 		try{
-			AudioSerialOutMono.new_characterdelay = Integer.parseInt("0");
+			AudioSerialOutMono.new_characterdelay = Integer.parseInt("1");
 		}catch(Exception e){
 			AudioSerialOutMono.new_characterdelay = 0;
 			e.printStackTrace();

@@ -10,7 +10,14 @@
 package com.msi.ibm.eyes;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -32,6 +39,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
@@ -90,8 +98,9 @@ public class IBMEyes extends Activity implements SensorListener {
 		ctime = new Date().getTime();
 		ptime = ctime;
 
-		AudioSerialOutMono.activate();
+		//AudioSerialOutMono.activate();
         Log.d(tag, "onClick: Starting service.");
+        getIni();
         //startService(new Intent(this, ServiceExample.class));
         startService(new Intent(this, shakeServ.class));
         //break;
@@ -324,5 +333,55 @@ public class IBMEyes extends Activity implements SensorListener {
 
 	}//getPosÿÿÿ
 	
+	public void getIni() {
+		
+		
+		/*try
+
+		{
+
+			String filePath = "/sdcard/andipcam.log";
+			BufferedReader in = new BufferedReader(new FileReader(filePath));
+			String str = "";
+			while ((str = in.readLine()) != null) {
+				Log.d("IBME iniFile:", str);
+			}
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			Log.d("IBME iniFile ERR!!!:", e.toString());
+		}*/
+		//-----------------
+		try{
+			 
+			   File f = new File(Environment.getExternalStorageDirectory()+"/1.txt");
+			 
+			   FileInputStream fileIS = new FileInputStream(f);
+			 
+			   BufferedReader buf = new BufferedReader(new InputStreamReader(fileIS));
+			 
+			   String readString = new String();
+			 
+			   //just reading each line and pass it on the debugger
+			 
+			   while((readString = buf.readLine())!= null){
+			 
+			      Log.d("line: ", readString);
+			 
+			   }
+			 
+			} catch (FileNotFoundException e) {
+			 
+			   e.printStackTrace();
+			 
+			} catch (IOException e){
+			 
+			   e.printStackTrace();
+			 
+			}
+			 
+			 
+	}
 
 }
