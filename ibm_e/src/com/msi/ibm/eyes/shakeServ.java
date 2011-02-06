@@ -52,9 +52,10 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 1000;
+	private static final int TIME_THRESHOLD = 10000;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final int TIME_TRESHOLD_AUDIO = 100;
+	private static final int TIME_TRESHOLD_AUDIO = 5000;
+	private static final String baudRate = "10";
 	
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
@@ -511,7 +512,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		Log.d("ar_toRight", " start");
 		
 			try{
-				AudioSerialOutMono.new_baudRate = Integer.parseInt("1000");
+				AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
 			}catch(Exception e){
 				AudioSerialOutMono.new_baudRate = 9600;
 				//baudbox.setText("9600");
@@ -532,7 +533,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	
 	public static void toLeft(){
 		try{
-			AudioSerialOutMono.new_baudRate = Integer.parseInt("1000");
+			AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
 		}catch(Exception e){
 			AudioSerialOutMono.new_baudRate = 9600;
 			e.printStackTrace();

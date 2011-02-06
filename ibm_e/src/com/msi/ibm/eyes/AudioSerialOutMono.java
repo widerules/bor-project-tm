@@ -9,6 +9,9 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.SystemClock;
+import android.util.Log;
+import java.util.logging.Level;
+
 
 public class AudioSerialOutMono {
 	// originally from http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
@@ -22,7 +25,7 @@ public class AudioSerialOutMono {
 
 	// set that can be edited externally
 	public static int new_baudRate = 9600; // assumes N,8,1 right now
-	public static int new_sampleRate = 48000; // min 4000 max 48000 
+	public static int new_sampleRate = 4000; // min 4000 max 48000 
 	public static int new_characterdelay = 0; // in audio frames, so depends 
 	//on the sample rate. Useful to work with some microcontrollers.
 
@@ -70,7 +73,9 @@ public class AudioSerialOutMono {
 		final byte logichigh = (byte) (-127+l);
 		boolean[] bits = new boolean[sendme.length*bytesinframe];
 		byte[] waveform = new byte[(sendme.length*bytesinframe*sampleRate / baudRate)]; // 8 bit, no parity, 1 stop
+		byte[] waveform_temp = new byte[8];
 		Arrays.fill(waveform, (byte) 0);
+		Arrays.fill(waveform_temp, (byte) 0);
 		Arrays.fill(bits, true); // slight opti to decide what to do with stop bits
 
 		for (i=0;i<sendme.length;++i)
@@ -104,7 +109,26 @@ public class AudioSerialOutMono {
 			}
 		}
 		bits=null;
+		//waveform
+		waveform_temp[0]=logichigh;
+		//waveform_temp[1]=(byte) 0;
+		//waveform_temp[2]=(byte) 0;
+		//waveform_temp[3]=(byte) 0;
+		//waveform_temp[4]=(byte) 255;
+		waveform_temp[5]=logichigh;
+		//waveform_temp[6]=(byte) 0;
+		waveform_temp[7]=logichigh;
+		String log_sdtr="lng:"+waveform.length+";";
+		for (i=0;i<waveform.length;i++){
+			if (Byte.toString(waveform[i])!="0")
+			//if ((i<15)||(i>waveform.length-15))
+			{
+			log_sdtr+=";["+i+"]"+Byte.toString(waveform[i]);
+			}
+		}
+		Log.d("AudSerOut", "ar_aso_"+log_sdtr);
 		return waveform;
+		
 	}
 
 	public static void activate() {
@@ -157,8 +181,10 @@ public class AudioSerialOutMono {
 					length = generatedSnd.length;
 					if (minbufsize<length)
 						minbufsize=length;
-					audiotrk = new AudioTrack(AudioManager.STREAM_MUSIC,
-							sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+					audiotrk = new AudioTrack(
+							AudioManager.STREAM_MUSIC, 
+							sampleRate, 
+							AudioFormat.CHANNEL_CONFIGURATION_MONO,
 							AudioFormat.ENCODING_PCM_8BIT, minbufsize,
 							AudioTrack.MODE_STATIC);
 
