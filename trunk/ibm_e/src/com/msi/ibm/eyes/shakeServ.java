@@ -352,7 +352,8 @@ public class shakeServ extends Service implements SensorEventListener {
 
 	}
 
-	public String getPos() {
+	public String getPos()
+	{
 		String pos = "";
 
 		// posX = 45.046224;
