@@ -24,8 +24,8 @@ public class AudioSerialOutMono {
 	private  static byte generatedSnd[] = null;
 
 	// set that can be edited externally
-	public static int new_baudRate = 9600; // assumes N,8,1 right now
-	public static int new_sampleRate = 4000; // min 4000 max 48000 
+	public static int new_baudRate = 1200; // assumes N,8,1 right now
+	public static int new_sampleRate = 48000; // min 4000 max 48000 
 	public static int new_characterdelay = 0; // in audio frames, so depends 
 	//on the sample rate. Useful to work with some microcontrollers.
 
@@ -42,7 +42,7 @@ public class AudioSerialOutMono {
 		if (new_sampleRate > 48000)
 			new_sampleRate = 48000;
 		if (new_sampleRate < 4000)
-			new_sampleRate = 4000;
+			new_sampleRate = 10000;
 		sampleRate = new_sampleRate; // min 4000 max 48000 
 		if (new_characterdelay < 0)
 			new_characterdelay = 0;
@@ -127,6 +127,8 @@ public class AudioSerialOutMono {
 			}
 		}
 		Log.d("AudSerOut", "ar_aso_"+log_sdtr);
+		
+		
 		return waveform;
 		
 	}
@@ -189,8 +191,58 @@ public class AudioSerialOutMono {
 							AudioTrack.MODE_STATIC);
 
 					audiotrk.setStereoVolume(1,1);
+					//debug
+					int state=0;
+					for(int i=0;i<generatedSnd.length;i++){
+						byte n=1;
+
+						int p1=1000;//idle
+						int p2=2000;//play
+						int p3=3000;//idle
+						int p4=4000;//play
+						if ((i>=0)&&(i<p1)){
+							n=1;			
+							if (state==0){
+								state=1;
+								Log.d("", "ar_1"+i+" of"+length);
+							}
+						}
+						if ((i>=p1)&&(i<p2)){
+							if (n==1){n=-1;}else{n=1;}
+							if (state==1){
+								state=2;
+								Log.d("", "ar_"+state+":"+i);
+							}
+						}
+						if ((i>=p2)&&(i<p3)){
+							n=1;							
+							if (state==2){
+								state=3;
+								Log.d("", "ar_"+state+":"+i);
+							}
+						}
+						if ((i>=p3)&&(i<p4)){
+							if (n==1){n=-1;}else{n=1;}
+							if (state==3){
+								state=4;
+								Log.d("", "ar_"+state+":"+i);
+							}
+						}
+						if (i>=p4){
+							if (n==1){n=-1;}else{n=1;}
+							if (state==4){
+								state=5;
+								Log.d("", "ar_"+state+":"+i);
+							}
+						}
+						//generatedSnd[i]=n;
+						
+					}
+					
+					
 					audiotrk.write(generatedSnd, 0, length); 
 					audiotrk.play();
+					Log.d("", "ar_0.00007"+":");
 				}
 			}
 		}

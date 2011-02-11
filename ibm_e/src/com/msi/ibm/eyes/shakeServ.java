@@ -52,15 +52,15 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 10000;
+	private static final int TIME_THRESHOLD = 500;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final int TIME_TRESHOLD_AUDIO = 5000;
-	private static final String baudRate = "10";
+	private static final int TIME_TRESHOLD_AUDIO = 1500;
+	private static final String baudRate = "500";
 	
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
 
-	private static final int NetworkConnectionTimeout_ms = 5000;
+	private static final int NetworkConnectionTimeout_ms = 50;
 
 	// private SensorManager mSensorMgr;
 	private float mLastX = -1.0f, mLastY = -1.0f, mLastZ = -1.0f;
@@ -514,7 +514,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			try{
 				AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
 			}catch(Exception e){
-				AudioSerialOutMono.new_baudRate = 9600;
+				AudioSerialOutMono.new_baudRate = 2400;
 				//baudbox.setText("9600");
 				e.printStackTrace();
 			}
@@ -526,7 +526,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				
 			}
 			try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
-			try{			AudioSerialOutMono.output("1");}catch(Exception e){e.printStackTrace();}
+			try{			AudioSerialOutMono.output("a");}catch(Exception e){e.printStackTrace();}
 			Log.d("ar_toRight", " stopt");
 			}
 	
@@ -535,7 +535,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		try{
 			AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
 		}catch(Exception e){
-			AudioSerialOutMono.new_baudRate = 9600;
+			AudioSerialOutMono.new_baudRate = 2400;
 			e.printStackTrace();
 			//baudbox.setText("9600");
 		}
@@ -547,7 +547,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			//charbox.setText("0");
 		}
 		try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
-		try{			AudioSerialOutMono.output("0");}catch(Exception e){e.printStackTrace();}
+		try{			AudioSerialOutMono.output("z");}catch(Exception e){e.printStackTrace();}
 		}
 
 }
