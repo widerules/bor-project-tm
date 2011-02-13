@@ -53,8 +53,8 @@ public class shakeServ extends Service implements SensorEventListener {
 
 	private static final int FORCE_THRESHOLD = 350;
 	private static final int TIME_THRESHOLD = 500;
+	private static final int TIME_TRESHOLD_AUDIO = 500;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final int TIME_TRESHOLD_AUDIO = 1500;
 	private static final String baudRate = "500";
 	
 	private static final int SHAKE_DURATION = 1000;
@@ -264,34 +264,17 @@ public class shakeServ extends Service implements SensorEventListener {
 			if ((now - dLastTime) > TIME_TRESHOLD_AUDIO) {
 				dLastTime = now;
 				mValues = event.values;
-				if (mValues[0] < 180) {
-					Log.d("arrow", "ar_LEFT");
-					toLeft();
-					/*
-					Log.d("LED", "RED");
-					new Thread() {
-						@Override
-						public void run() {
-							RedFlashLight();
-							//RedFlashLight();
-						}
-					}.start();
-					*/
+				if ((mValues[0] < 90)&&(mValues[0] > 0)) {
+					toRight("toR");
 				}
-				if (mValues[0] > 180) {
-					Log.d("arrow", "ar_RIGHT");
-					toRight();
-					/*
-					Log.d("LED", "GREEN");
-					new Thread() {
-						@Override
-						public void run() {
-							GreenFlashLight();
-							//GreenFlashLight();
-							//GreenFlashLight();
-						}
-					}.start();
-					*/
+				if ((mValues[0] < 180)&&(mValues[0] > 90)) {
+					toRight("toF");
+				}
+				if ((mValues[0] < 270)&&(mValues[0] > 180)) {
+					toRight("toL");
+				}
+				if ((mValues[0] < 360)&&(mValues[0] > 270)) {
+					toRight("toB");
 				}
 
 			}
@@ -508,13 +491,13 @@ public class shakeServ extends Service implements SensorEventListener {
 		}
 	};
 	
-	public static void toRight(){
-		Log.d("ar_toRight", " start");
+	public static void toRight(String extData){
+		Log.d("ar_toRight", extData);
 		
 			try{
 				AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
 			}catch(Exception e){
-				AudioSerialOutMono.new_baudRate = 2400;
+				AudioSerialOutMono.new_baudRate = 9600;
 				//baudbox.setText("9600");
 				e.printStackTrace();
 			}
@@ -525,29 +508,17 @@ public class shakeServ extends Service implements SensorEventListener {
 				e.printStackTrace();//charbox.setText("0");
 				
 			}
+			char sign='0';
+			if (extData.equals("toR")){sign='a';};
+			if (extData.equals("toL")){sign='k';};
+			if (extData.equals("toF")){sign='p';};
+			if (extData.equals("toB")){sign='z';};
+			AudioSerialOutMono.outStr=extData;
+			
 			try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
 			try{			AudioSerialOutMono.output("a");}catch(Exception e){e.printStackTrace();}
 			Log.d("ar_toRight", " stopt");
 			}
 	
 	
-	public static void toLeft(){
-		try{
-			AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
-		}catch(Exception e){
-			AudioSerialOutMono.new_baudRate = 2400;
-			e.printStackTrace();
-			//baudbox.setText("9600");
-		}
-		try{
-			AudioSerialOutMono.new_characterdelay = Integer.parseInt("1");
-		}catch(Exception e){
-			AudioSerialOutMono.new_characterdelay = 0;
-			e.printStackTrace();
-			//charbox.setText("0");
-		}
-		try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
-		try{			AudioSerialOutMono.output("z");}catch(Exception e){e.printStackTrace();}
-		}
-
 }

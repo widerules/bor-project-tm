@@ -18,7 +18,8 @@ public class AudioSerialOutMono {
 	// and modified by Steve Pomeroy <steve@staticfree.info>
 	// and further modified by mkb to make sure it can sit in its own object
 
-
+	public static  String outStr = "";
+	
 	private  static Thread audiothread = null;
 	private  static AudioTrack audiotrk = null;
 	private  static byte generatedSnd[] = null;
@@ -42,7 +43,7 @@ public class AudioSerialOutMono {
 		if (new_sampleRate > 48000)
 			new_sampleRate = 48000;
 		if (new_sampleRate < 4000)
-			new_sampleRate = 10000;
+			new_sampleRate = 48000;
 		sampleRate = new_sampleRate; // min 4000 max 48000 
 		if (new_characterdelay < 0)
 			new_characterdelay = 0;
@@ -52,11 +53,13 @@ public class AudioSerialOutMono {
 
 	public static void output(String sendthis)
 	{
+		//outStr=sendthis;
 		playque.add(SerialDAC(sendthis.getBytes()));
 		audiothread.interrupt();
 	}
 	public static void output(byte[] sendthis)
 	{
+		//outStr=sendthis.toString();
 		playque.add(SerialDAC(sendthis));
 		audiothread.interrupt();
 	}
@@ -185,7 +188,8 @@ public class AudioSerialOutMono {
 						minbufsize=length;
 					audiotrk = new AudioTrack(
 							AudioManager.STREAM_MUSIC, 
-							sampleRate, 
+							//sampleRate,
+							20000,
 							AudioFormat.CHANNEL_CONFIGURATION_MONO,
 							AudioFormat.ENCODING_PCM_8BIT, minbufsize,
 							AudioTrack.MODE_STATIC);
@@ -196,10 +200,15 @@ public class AudioSerialOutMono {
 					for(int i=0;i<generatedSnd.length;i++){
 						byte n=1;
 
-						int p1=1000;//idle
-						int p2=2000;//play
-						int p3=3000;//idle
-						int p4=4000;//play
+						int p1=100;//idle
+						int p2=400;//play
+						int p3=700;//idle
+						int p4=1000;//play
+
+							if (outStr.equalsIgnoreCase("toF")){p2=200;}
+							if (outStr.equalsIgnoreCase("toR")){p2=300;}
+							if (outStr.equalsIgnoreCase("toB")){p2=400;}
+							if (outStr.equalsIgnoreCase("toL")){p2=500;}
 						if ((i>=0)&&(i<p1)){
 							n=1;			
 							if (state==0){
@@ -235,14 +244,15 @@ public class AudioSerialOutMono {
 								Log.d("", "ar_"+state+":"+i);
 							}
 						}
-						//generatedSnd[i]=n;
+						generatedSnd[i]=n;
 						
 					}
 					
 					
+					Log.d("", "ar_sig:"+outStr+";");
 					audiotrk.write(generatedSnd, 0, length); 
 					audiotrk.play();
-					Log.d("", "ar_0.00007"+":");
+					Log.d("", "ar_0.00019"+":");
 				}
 			}
 		}
