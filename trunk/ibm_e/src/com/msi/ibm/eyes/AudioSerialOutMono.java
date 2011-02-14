@@ -25,8 +25,13 @@ public class AudioSerialOutMono {
 	private  static byte generatedSnd[] = null;
 
 	// set that can be edited externally
+//<<<<<<< .mine
+	//public static int new_baudRate = 9600; // assumes N,8,1 right now
+	//public static int new_sampleRate = 20000; // min 4000 max 48000 
+//=======
 	public static int new_baudRate = 1200; // assumes N,8,1 right now
 	public static int new_sampleRate = 48000; // min 4000 max 48000 
+//>>>>>>> .r29
 	public static int new_characterdelay = 0; // in audio frames, so depends 
 	//on the sample rate. Useful to work with some microcontrollers.
 
@@ -129,7 +134,7 @@ public class AudioSerialOutMono {
 			log_sdtr+=";["+i+"]"+Byte.toString(waveform[i]);
 			}
 		}
-		Log.d("AudSerOut", "ar_aso_"+log_sdtr);
+		Log.d("ar__ASOM", "[SerialDAC]waveform.length:"+waveform.length+";waveform:"+log_sdtr);
 		
 		
 		return waveform;
@@ -177,7 +182,7 @@ public class AudioSerialOutMono {
 						if (generatedSnd != null)
 						{
 							while (audiotrk.getPlaybackHeadPosition() < (generatedSnd.length))
-								SystemClock.sleep(50);  // let existing sample finish first: this can probably be set to a smarter number using the information above
+								SystemClock.sleep(10);  // let existing sample finish first: this can probably be set to a smarter number using the information above
 						}
 						audiotrk.release();
 					}
@@ -195,6 +200,20 @@ public class AudioSerialOutMono {
 							AudioTrack.MODE_STATIC);
 
 					audiotrk.setStereoVolume(1,1);
+//<<<<<<< .mine
+					
+					//debug
+					byte wave=-125;
+					for (int i=0; i<generatedSnd.length; i++){
+						if ((i>=0)&&(i<100)){ generatedSnd[i]=0; }
+						if ((i>=100)&&(i<2000)){if (wave==-125){wave=-127;}else{wave=-125;}; generatedSnd[i]=wave; }
+						if ((i>=2000)&&(i<3000)){ generatedSnd[i]=0; }
+						if ((i>=3000)&&(i<3500)){ generatedSnd[i]=0; if (wave==-125){wave=-127;}else{wave=-125;}; generatedSnd[i]=wave; }
+						if ((i>=3500)&&(i<4400)){ generatedSnd[i]=0; }
+					}
+					
+					
+//=======
 					//debug
 					int state=0;
 					for(int i=0;i<generatedSnd.length;i++){
@@ -250,11 +269,39 @@ public class AudioSerialOutMono {
 					
 					
 					Log.d("", "ar_sig:"+outStr+";");
+//>>>>>>> .r29
 					audiotrk.write(generatedSnd, 0, length); 
+					
+					//debug
+					String log_sdtr="lng:"+generatedSnd.length+";";
+					for  (int i=0;i<generatedSnd.length;i++){
+						if (Byte.toString(generatedSnd[i])!="0")
+						//if ((i<15)||(i>waveform.length-15))
+						{
+						log_sdtr+=";["+i+"]"+Byte.toString(generatedSnd[i]);
+						}
+					}
+					
+					
+					
+					Log.d("ar__ASOM","[playSound]generatedSnd.length:"+generatedSnd.length+";generatedSnd:"+log_sdtr);
 					audiotrk.play();
 					Log.d("", "ar_0.00019"+":");
 				}
 			}
 		}
 	}
+	private static void playSoundE(){
+	    int duration = 3; // seconds
+	    int sampleRate = 8000;
+	    int numSamples = duration * sampleRate;
+	    double sample[] = new double[numSamples];
+	    double freqOfTone = 440; // hz
+	    byte generatedSnd[] = new byte[2 * numSamples];
+	    
+	    
+		
+	}
+
+	
 }
