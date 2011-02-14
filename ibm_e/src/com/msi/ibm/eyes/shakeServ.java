@@ -52,15 +52,13 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 500;
-	private static final int TIME_TRESHOLD_AUDIO = 500;
+	private static final int TIME_THRESHOLD =2500;
+	private static final int TIME_TRESHOLD_AUDIO = 100;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final String baudRate = "500";
-	
+	private static final String baudRate = "2100";//speed of data transfer 
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
-
-	private static final int NetworkConnectionTimeout_ms = 50;
+	private static final int NetworkConnectionTimeout_ms = 1500;
 
 	// private SensorManager mSensorMgr;
 	private float mLastX = -1.0f, mLastY = -1.0f, mLastZ = -1.0f;
@@ -189,7 +187,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		}
 	}
 
-	// /begin code from putnaar --- we don't need any of the interface or the
+	// begin code from putnaar --- we don't need any of the interface or the
 	// registration
 	// before it was all activity based, now the service can take all the
 	// actions. Just adapted the listener to the onShake method
@@ -310,7 +308,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						webSender();
+						//webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
