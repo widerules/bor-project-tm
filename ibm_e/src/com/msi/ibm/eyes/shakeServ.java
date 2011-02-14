@@ -53,9 +53,9 @@ public class shakeServ extends Service implements SensorEventListener {
 
 	private static final int FORCE_THRESHOLD = 350;
 	private static final int TIME_THRESHOLD =2500;
-	private static final int TIME_TRESHOLD_AUDIO = 100;
+	private static final int TIME_TRESHOLD_AUDIO = 1500;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final String baudRate = "2100";//speed of data transfer 
+	private static final String baudRate = "1200";//speed of data transfer 
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
 	private static final int NetworkConnectionTimeout_ms = 1500;

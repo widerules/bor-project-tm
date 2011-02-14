@@ -23,6 +23,8 @@ public class AudioSerialOutMono {
 	private  static Thread audiothread = null;
 	private  static AudioTrack audiotrk = null;
 	private  static byte generatedSnd[] = null;
+	private static int newwave_l=10000;;
+	private  static byte newwave[] = new byte[newwave_l];
 
 	// set that can be edited externally
 //<<<<<<< .mine
@@ -194,15 +196,18 @@ public class AudioSerialOutMono {
 					audiotrk = new AudioTrack(
 							AudioManager.STREAM_MUSIC, 
 							//sampleRate,
-							20000,
+							44800,
 							AudioFormat.CHANNEL_CONFIGURATION_MONO,
-							AudioFormat.ENCODING_PCM_8BIT, minbufsize,
+							AudioFormat.ENCODING_PCM_8BIT, 
+							//minbufsize,
+							newwave_l,
 							AudioTrack.MODE_STATIC);
 
 					audiotrk.setStereoVolume(1,1);
 //<<<<<<< .mine
 					
 					//debug
+					/*
 					byte wave=-125;
 					for (int i=0; i<generatedSnd.length; i++){
 						if ((i>=0)&&(i<100)){ generatedSnd[i]=0; }
@@ -211,68 +216,75 @@ public class AudioSerialOutMono {
 						if ((i>=3000)&&(i<3500)){ generatedSnd[i]=0; if (wave==-125){wave=-127;}else{wave=-125;}; generatedSnd[i]=wave; }
 						if ((i>=3500)&&(i<4400)){ generatedSnd[i]=0; }
 					}
-					
+					*/
 					
 //=======
 					//debug
+					byte neg = -127;
+					byte pos = -125;
+					byte zer = 0;
+					int p1=1000;//idle
+					int p2=2000;//play
+					int p3=1800;//idle
+					int p4=1900;//play
 					int state=0;
 					for(int i=0;i<generatedSnd.length;i++){
 						byte n=1;
 
-						int p1=100;//idle
-						int p2=400;//play
-						int p3=700;//idle
-						int p4=1000;//play
 
-							if (outStr.equalsIgnoreCase("toF")){p2=200;}
-							if (outStr.equalsIgnoreCase("toR")){p2=300;}
-							if (outStr.equalsIgnoreCase("toB")){p2=400;}
-							if (outStr.equalsIgnoreCase("toL")){p2=500;}
+							if (outStr.equalsIgnoreCase("toF")){p2=2000;}
+							if (outStr.equalsIgnoreCase("toR")){p2=4000;}
+							if (outStr.equalsIgnoreCase("toB")){p2=6000;}
+							if (outStr.equalsIgnoreCase("toL")){p2=8000;}
 						if ((i>=0)&&(i<p1)){
-							n=1;			
+							n=zer;			
 							if (state==0){
 								state=1;
 								Log.d("", "ar_1"+i+" of"+length);
 							}
 						}
 						if ((i>=p1)&&(i<p2)){
-							if (n==1){n=-1;}else{n=1;}
+							if (n==neg){n=pos;}else{n=neg;}
 							if (state==1){
 								state=2;
 								Log.d("", "ar_"+state+":"+i);
 							}
 						}
+						/*
 						if ((i>=p2)&&(i<p3)){
-							n=1;							
+							n=zer;							
 							if (state==2){
 								state=3;
 								Log.d("", "ar_"+state+":"+i);
 							}
 						}
 						if ((i>=p3)&&(i<p4)){
-							if (n==1){n=-1;}else{n=1;}
+							if (n==neg){n=pos;}else{n=neg;}
 							if (state==3){
 								state=4;
 								Log.d("", "ar_"+state+":"+i);
 							}
-						}
-						if (i>=p4){
-							if (n==1){n=-1;}else{n=1;}
+						}	*/
+						if (i>=p2){
+							n=zer;							
 							if (state==4){
 								state=5;
 								Log.d("", "ar_"+state+":"+i);
 							}
 						}
+					
 						generatedSnd[i]=n;
 						
 					}
 					
+
 					
 					Log.d("", "ar_sig:"+outStr+";");
 //>>>>>>> .r29
-					audiotrk.write(generatedSnd, 0, length); 
-					
+					//audiotrk.write(generatedSnd, 0, length); 
+					audiotrk.write(newwave, 0, newwave.length);
 					//debug
+					/*
 					String log_sdtr="lng:"+generatedSnd.length+";";
 					for  (int i=0;i<generatedSnd.length;i++){
 						if (Byte.toString(generatedSnd[i])!="0")
@@ -281,12 +293,21 @@ public class AudioSerialOutMono {
 						log_sdtr+=";["+i+"]"+Byte.toString(generatedSnd[i]);
 						}
 					}
+					*/
+					String log_sdtr="lng:"+newwave.length+";";
+					for  (int i=0;i<newwave.length;i++){
+						if (newwave[i]!=zer)
+						//if ((i<15)||(i>waveform.length-15))
+						{
+						log_sdtr+=";["+i+"]"+Byte.toString(newwave[i]);
+						}
+					}
 					
 					
-					
-					Log.d("ar__ASOM","[playSound]generatedSnd.length:"+generatedSnd.length+";generatedSnd:"+log_sdtr);
+					//Log.d("ar__ASOM","[playSound]generatedSnd.length:"+generatedSnd.length+";generatedSnd:"+log_sdtr);
+					Log.d("ar__ASOM","[playSound]newwave.length:"+newwave.length+";newwave:"+log_sdtr);
 					audiotrk.play();
-					Log.d("", "ar_0.00019"+":");
+					Log.d("", "ar_0.00035"+":");
 				}
 			}
 		}
