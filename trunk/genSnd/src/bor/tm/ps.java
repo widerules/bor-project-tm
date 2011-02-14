@@ -86,6 +86,7 @@ public class ps extends Activity  {
             generatedSnd[idx++] = (byte) ((val & 0xff00) >>> 8);
 
         }
+        
     }
 
     void playSound(){
