@@ -23,9 +23,9 @@ public class AudioSerialOutMono {
 	private  static Thread audiothread = null;
 	private  static AudioTrack audiotrk = null;
 	private  static byte generatedSnd[] = null;
-	private static int newwave_l=10000;;
-	private  static byte newwave[] = new byte[newwave_l];
-
+	private static int newwave_l=20000;;
+	private  static double[] newwave = new double[newwave_l];
+	private final static byte generatedNewWave[] = new byte[2 * newwave_l];
 	// set that can be edited externally
 //<<<<<<< .mine
 	//public static int new_baudRate = 9600; // assumes N,8,1 right now
@@ -184,7 +184,7 @@ public class AudioSerialOutMono {
 						if (generatedSnd != null)
 						{
 							while (audiotrk.getPlaybackHeadPosition() < (generatedSnd.length))
-								SystemClock.sleep(10);  // let existing sample finish first: this can probably be set to a smarter number using the information above
+								SystemClock.sleep(100);  // let existing sample finish first: this can probably be set to a smarter number using the information above
 						}
 						audiotrk.release();
 					}
@@ -196,10 +196,11 @@ public class AudioSerialOutMono {
 					audiotrk = new AudioTrack(
 							AudioManager.STREAM_MUSIC, 
 							//sampleRate,
-							44800,
+							20000,
 							AudioFormat.CHANNEL_CONFIGURATION_MONO,
-							AudioFormat.ENCODING_PCM_8BIT, 
+							AudioFormat.ENCODING_PCM_16BIT, 
 							//minbufsize,
+							//newwave_l,
 							newwave_l,
 							AudioTrack.MODE_STATIC);
 
@@ -220,11 +221,11 @@ public class AudioSerialOutMono {
 					
 //=======
 					//debug
-					byte neg = -127;
-					byte pos = -125;
+					byte neg = 1;
+					byte pos = -1;
 					byte zer = 0;
-					int p1=1000;//idle
-					int p2=2000;//play
+					int p1=100;//idle
+					int p2=200;//play
 					int p3=1800;//idle
 					int p4=1900;//play
 					int state=0;
@@ -276,13 +277,55 @@ public class AudioSerialOutMono {
 						generatedSnd[i]=n;
 						
 					}
+					if (outStr.equalsIgnoreCase("toF")){p2=1000;}// 23 - 73 - 120 170 1000~
+					if (outStr.equalsIgnoreCase("toR")){p2=2000;}
+					if (outStr.equalsIgnoreCase("toB")){p2=3000;}
+					if (outStr.equalsIgnoreCase("toL")){p2=4000;}
+					int n=0;
+				       for (int i = 0; i < newwave_l; ++i) {
+				            //sample[i] = Math.sin(2 * Math.PI * i / (sampleRate/freqOfTone));
+				            newwave[i] =  Math.sin(2 * Math.PI * i / (newwave_l));
+				            if ((i>=0)&&(i<500)){n=1;}
+				            if ((i>=500)&&(i<p2)){
+				                //if (n==0) { Log.d("","ar_"+i+":Start"); }
+				            	if (n==1) {n=-1;}else{n=1;}
+				            }
+				           if ((i>=p2)&&(i<5000)){
+				               //if (n==1) { Log.d("","ar_"+i+":Stop"); }
+				               //if (n==-1) { Log.d("","ar_"+i+":Stop"); }
+				           	n=1;
+				           	}
+				            if ((i>=5000)&&(i<7500)){
+				                //if (n==0) { Log.d("","ar_"+i+":Start"); }
+				            	if (n==1) {n=-1;}else{n=1;}}
+				            if (i>=7500){
+				                //if (n==1) { Log.d("","ar_"+i+":Stop"); }
+				                //if (n==-1) { Log.d("","ar_"+i+":Stop"); }
+				            	n=1;
+				            }
+				            newwave[i]= n;
+				            //sample[i]=1;
+				            //if ((i>2997)&&(i<3005)){Log.d("","ar_"+i+":"+sample[i]);};
+				        }
+				  
 					
 
 					
 					Log.d("", "ar_sig:"+outStr+";");
 //>>>>>>> .r29
+					
+			        int idx = 0;
+			        for (final double dVal : newwave) {
+			            // scale to maximum amplitude
+			            final short val = (short) ((dVal * 32767));
+			            // in 16 bit wav PCM, first byte is the low order byte
+			            generatedNewWave[idx++] = (byte) (val & 0x00ff);
+			            generatedNewWave[idx++] = (byte) ((val & 0xff00) >>> 8);
+
+			        }
+
 					//audiotrk.write(generatedSnd, 0, length); 
-					audiotrk.write(newwave, 0, newwave.length);
+					audiotrk.write(generatedNewWave, 0, newwave_l);
 					//debug
 					/*
 					String log_sdtr="lng:"+generatedSnd.length+";";
@@ -299,7 +342,7 @@ public class AudioSerialOutMono {
 						if (newwave[i]!=zer)
 						//if ((i<15)||(i>waveform.length-15))
 						{
-						log_sdtr+=";["+i+"]"+Byte.toString(newwave[i]);
+						//log_sdtr+=";["+i+"]"+Byte.toString(newwave[i]);
 						}
 					}
 					
