@@ -23,7 +23,7 @@ public class AudioSerialOutMono {
 	private  static Thread audiothread = null;
 	private  static AudioTrack audiotrk = null;
 	private  static byte generatedSnd[] = null;
-	private static int newwave_l=20000;;
+	private static int newwave_l=5000;;
 	private  static double[] newwave = new double[newwave_l];
 	private final static byte generatedNewWave[] = new byte[2 * newwave_l];
 	// set that can be edited externally
@@ -277,28 +277,32 @@ public class AudioSerialOutMono {
 						generatedSnd[i]=n;
 						
 					}
-					if (outStr.equalsIgnoreCase("toF")){p2=1000;}// 23 - 73 - 120 170 1000~50ms
-					if (outStr.equalsIgnoreCase("toR")){p2=2000;}
-					if (outStr.equalsIgnoreCase("toB")){p2=3000;}
-					if (outStr.equalsIgnoreCase("toL")){p2=4000;}
+					p1=100;//idle
+					p2=500;//play
+					p3=4000;//idle
+					p4=newwave_l;//play
+					if (outStr.equalsIgnoreCase("toF")){p2=500;}// 23 - 73 - 120 170 1000~50ms
+					if (outStr.equalsIgnoreCase("toR")){p2=1000;}
+					if (outStr.equalsIgnoreCase("toB")){p2=1500;}
+					if (outStr.equalsIgnoreCase("toL")){p2=2000;}
 					int n=0;
 				       for (int i = 0; i < newwave_l; ++i) {
 				            //sample[i] = Math.sin(2 * Math.PI * i / (sampleRate/freqOfTone));
 				            newwave[i] =  Math.sin(2 * Math.PI * i / (newwave_l));
-				            if ((i>=0)&&(i<500)){n=1;}
-				            if ((i>=500)&&(i<p2)){
+				            if ((i>=0)&&(i<p1)){n=1;}
+				            if ((i>=p1)&&(i<p2)){
 				                //if (n==0) { Log.d("","ar_"+i+":Start"); }
 				            	if (n==1) {n=-1;}else{n=1;}
 				            }
-				           if ((i>=p2)&&(i<5000)){
+				           if ((i>=p2)&&(i<p3)){
 				               //if (n==1) { Log.d("","ar_"+i+":Stop"); }
 				               //if (n==-1) { Log.d("","ar_"+i+":Stop"); }
 				           	n=1;
 				           	}
-				            if ((i>=5000)&&(i<7500)){
+				            if ((i>=p3)&&(i<p4)){
 				                //if (n==0) { Log.d("","ar_"+i+":Start"); }
 				            	if (n==1) {n=-1;}else{n=1;}}
-				            if (i>=7500){
+				            if (i>=p4){
 				                //if (n==1) { Log.d("","ar_"+i+":Stop"); }
 				                //if (n==-1) { Log.d("","ar_"+i+":Stop"); }
 				            	n=1;
