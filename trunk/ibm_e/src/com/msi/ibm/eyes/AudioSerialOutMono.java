@@ -277,7 +277,7 @@ public class AudioSerialOutMono {
 						generatedSnd[i]=n;
 						
 					}
-					if (outStr.equalsIgnoreCase("toF")){p2=1000;}// 23 - 73 - 120 170 1000~
+					if (outStr.equalsIgnoreCase("toF")){p2=1000;}// 23 - 73 - 120 170 1000~50ms
 					if (outStr.equalsIgnoreCase("toR")){p2=2000;}
 					if (outStr.equalsIgnoreCase("toB")){p2=3000;}
 					if (outStr.equalsIgnoreCase("toL")){p2=4000;}
