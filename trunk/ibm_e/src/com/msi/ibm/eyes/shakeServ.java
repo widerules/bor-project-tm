@@ -96,12 +96,19 @@ public class shakeServ extends Service implements SensorEventListener {
 		}
 	};
 
-	private String locX;
+	public static String locX;
 
-	private String locY;
+	public static String locY;
 
-	private float[] aValues;
-	private float[] mValues;
+	public static double locXe;
+	public static double locYe;
+
+	public static double dir0;
+	public static double dir1;
+	public static double dir2;
+
+	public float[] aValues;
+	public float[] mValues;
 
 	@Override
 	public void onCreate() {
@@ -262,6 +269,9 @@ public class shakeServ extends Service implements SensorEventListener {
 			if ((now - dLastTime) > TIME_TRESHOLD_AUDIO) {
 				dLastTime = now;
 				mValues = event.values;
+				dir0=mValues[0];
+				dir1=mValues[1];
+				dir2=mValues[2];
 				if ((mValues[0] < 90)&&(mValues[0] > 0)) {
 					toRight("toR");
 				}
@@ -283,11 +293,14 @@ public class shakeServ extends Service implements SensorEventListener {
 
 				mValues = event.values;
 				aValues = event.values;
-
+				dir0=mValues[0];
+				dir1=mValues[1];
+				dir2=mValues[2];
 				Log.d("onShake", "ar_doing orient:" + "x "
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
+				dir0=
 				String posi = getPos();
 				Log.d("onShake", "doing positi:" + posi + ";");
 
@@ -308,7 +321,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						//webSender();
+						webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
@@ -376,6 +389,8 @@ public class shakeServ extends Service implements SensorEventListener {
 				if (location != null) {
 					double lat = location.getLatitude();
 					double lng = location.getLongitude();
+					locXe = lat;
+					locYe = lng;
 					pos = lat + " " + lng;
 					// locY = lng;
 					sb.append(lat).append(", ").append(lng);

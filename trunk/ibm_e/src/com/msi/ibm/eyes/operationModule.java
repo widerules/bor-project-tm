@@ -9,12 +9,16 @@ public class operationModule {
 	private double taskListCoords[][] = new double[100][3];
 	private Date taskListTimeExpire[] = new Date[100];
 	private Boolean taskListTaskComplete[] = new Boolean[100];
+	private int currentTask = 0;
+	private double currentCoords[] = new double[3];
+	private double currentDir[] = new double[3];
+	
 
 	/*
-	tE.prio > tC.prio
+	1)tE.prio > tC.prio
 	?!tE:go(T);nextTask();
 	
-	tE.prio < tC.prio (tC==true)
+	2)tE.prio < tC.prio (tC==true)
 	?tCed():tE=getTime();
 	?tE&!tCed():tE++;
 	?tE:nextTask();go(T);
@@ -30,6 +34,31 @@ public class operationModule {
 		taskListCount++;
 	}
 	
+	public void nextTask(){
+		currentTask++;
+	}
 	
+	public void go(){
+		//get current position
+		currentCoords[0]=shakeServ.locXe;
+		currentCoords[1]=shakeServ.locYe;
+		currentCoords[2]=100;
+		
+		//get current direction
+		currentDir[0]=shakeServ.dir0;
+		currentDir[1]=shakeServ.dir1;
+		currentDir[2]=shakeServ.dir2;
+		
+		//get target position
+		//taskListCoords[currentTask]
+		
+		
+		//get direction
+		/*y(lat) x(lng) 
+		 * 
+		 * */
+		
+		//send commands
+	}
 
 }
