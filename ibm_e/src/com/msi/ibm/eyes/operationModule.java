@@ -54,7 +54,7 @@ public class operationModule {
 		
 		
 		//get direction
-		/*y(lat) x(lng) 
+		/*y(lat) x(lng) arctg(dlt x/dlt y)
 		 * 
 		 * */
 		
