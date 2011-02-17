@@ -23,7 +23,7 @@ public class AudioSerialOutMono {
 	private static Thread audiothread = null;
 	private static AudioTrack audiotrk = null;
 	private static byte generatedSnd[] = null;
-	private static int newwave_l = 5000;;
+	private static int newwave_l = 10000;;
 	private static double[] newwave = new double[newwave_l];
 	private final static byte generatedNewWave[] = new byte[2 * newwave_l];
 	// set that can be edited externally
