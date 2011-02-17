@@ -10,6 +10,17 @@ public class operationModule {
 	private Date taskListTimeExpire[] = new Date[100];
 	private Boolean taskListTaskComplete[] = new Boolean[100];
 
+	/*
+	tE.prio > tC.prio
+	?!tE:go(T);nextTask();
+	
+	tE.prio < tC.prio (tC==true)
+	?tCed():tE=getTime();
+	?tE&!tCed():tE++;
+	?tE:nextTask();go(T);
+
+	tE(){ if tE>getTime() returne false; else returne true; }
+	*/
 	public void addTask(double x, double y, double h, Date tE, Boolean tC) {
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
@@ -18,5 +29,7 @@ public class operationModule {
 		taskListTaskComplete[taskListCount] = tC;
 		taskListCount++;
 	}
+	
+	
 
 }
