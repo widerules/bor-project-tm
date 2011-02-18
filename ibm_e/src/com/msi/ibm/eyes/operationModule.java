@@ -3,6 +3,8 @@ package com.msi.ibm.eyes;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.util.Log;
+
 public class operationModule {
 	Calendar clndr = Calendar.getInstance();
 	private int taskListCount = 0;
@@ -40,17 +42,24 @@ public class operationModule {
 	
 	public void go(){
 		//get current position
-		currentCoords[0]=shakeServ.locXe;
-		currentCoords[1]=shakeServ.locYe;
-		currentCoords[2]=100;
+		currentCoords[0]=shakeServ.locXe; //lat
+		currentCoords[1]=shakeServ.locYe; //lng
+		currentCoords[2]=100; //height
 		
 		//get current direction
-		currentDir[0]=shakeServ.dir0;
+		currentDir[0]=shakeServ.dir0;  //azimuth
 		currentDir[1]=shakeServ.dir1;
 		currentDir[2]=shakeServ.dir2;
 		
 		//get target position
 		//taskListCoords[currentTask]
+
+		//get TargetDirection (atan(dx/dy))
+		//
+		Log.d("opMod", "opMod_go:=shakeServ.locXe"+shakeServ.locXe+"_	shakeServ.locYe_"+shakeServ.locYe);
+		double targetDir= Math.atan2((taskListCoords[currentTask][1]-currentCoords[1]), taskListCoords[currentTask][0]-currentCoords[0]);
+		Log.d("opMod", "opMod_go:targetDir="+targetDir);
+		
 		
 		
 		//get direction
