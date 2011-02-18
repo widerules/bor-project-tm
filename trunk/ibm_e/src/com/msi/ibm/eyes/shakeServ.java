@@ -272,25 +272,16 @@ public class shakeServ extends Service implements SensorEventListener {
 				dir0=mValues[0];
 				dir1=mValues[1];
 				dir2=mValues[2];
-				if ((mValues[0] < 90)&&(mValues[0] > 0)) {
-					toRight("toR");
-				}
-				if ((mValues[0] < 180)&&(mValues[0] > 90)) {
-					toRight("toF");
-				}
-				if ((mValues[0] < 270)&&(mValues[0] > 180)) {
-					toRight("toL");
-				}
-				if ((mValues[0] < 360)&&(mValues[0] > 270)) {
-					toRight("toB");
-				}
-
+				
+				//debug
+				//if ((mValues[0] <  90)&&(mValues[0] >   0)) { toRight("toR"); }
+				//if ((mValues[0] < 180)&&(mValues[0] >  90)) { toRight("toF"); }
+				//if ((mValues[0] < 270)&&(mValues[0] > 180)) { toRight("toL"); }
+				//if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB"); }
 			}
 
 			if ((now - mLastTime) > TIME_THRESHOLD) {
-
 				mLastTime = now;
-
 				mValues = event.values;
 				aValues = event.values;
 				dir0=mValues[0];
@@ -300,7 +291,7 @@ public class shakeServ extends Service implements SensorEventListener {
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
-				dir0=
+			
 				String posi = getPos();
 				Log.d("onShake", "doing positi:" + posi + ";");
 
@@ -317,7 +308,6 @@ public class shakeServ extends Service implements SensorEventListener {
 						locY = tmpStr;
 					}
 				}
-
 				new Thread() {
 					@Override
 					public void run() {
