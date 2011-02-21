@@ -1,6 +1,5 @@
 package com.msi.ibm.eyes;
 
-
 //THIS IS CURRENTLY BEING OPTIMIZED
 
 import java.util.Arrays;
@@ -48,8 +47,8 @@ public class AudioSerialOutMono {
 
 	public static void UpdateParameters() {
 		baudRate = new_baudRate; // we're not forcing standard baud rates here
-									// specifically because we want to allow odd
-									// ones
+		// specifically because we want to allow odd
+		// ones
 		if (new_sampleRate > 48000)
 			new_sampleRate = 48000;
 		if (new_sampleRate < 4000)
@@ -81,22 +80,22 @@ public class AudioSerialOutMono {
 		int j = 0; // counter
 		int k = 0; // counter
 		byte l = 1; // intentional jitter used to prevent the DAC from
-					// flattening the waveform prematurely
+		// flattening the waveform prematurely
 		int m = 0; // counter
 		final int n = sampleRate / baudRate;
 		final byte logichigh = (byte) (-127 + l);
 		boolean[] bits = new boolean[sendme.length * bytesinframe];
 		byte[] waveform = new byte[(sendme.length * bytesinframe * sampleRate / baudRate)]; // 8
-																							// bit,
-																							// no
-																							// parity,
-																							// 1
-																							// stop
+		// bit,
+		// no
+		// parity,
+		// 1
+		// stop
 		byte[] waveform_temp = new byte[8];
 		Arrays.fill(waveform, (byte) 0);
 		Arrays.fill(waveform_temp, (byte) 0);
 		Arrays.fill(bits, true); // slight opti to decide what to do with stop
-									// bits
+		// bits
 
 		for (i = 0; i < sendme.length; ++i) {
 			m = i * bytesinframe;
@@ -122,10 +121,10 @@ public class AudioSerialOutMono {
 			for (k = 0; k < n; k++) {
 				if (bits[i]) {
 					waveform[j] = (byte) (logichigh + l); // the +l / -l is to
-															// fool the DAC into
-															// not having a flat
-															// waveform, which
-															// it might reject
+					// fool the DAC into
+					// not having a flat
+					// waveform, which
+					// it might reject
 					l = (byte) -l;
 				}
 				j++;
@@ -197,16 +196,16 @@ public class AudioSerialOutMono {
 						if (generatedSnd != null) {
 							while (audiotrk.getPlaybackHeadPosition() < (generatedSnd.length))
 								SystemClock.sleep(50); // let existing sample
-														// finish first: this
-														// can probably be set
-														// to a smarter number
-														// using the information
-														// above
+							// finish first: this
+							// can probably be set
+							// to a smarter number
+							// using the information
+							// above
 						}
 						audiotrk.release();
 					}
 					UpdateParameters(); // might as well do it at every
-										// iteration, it's cheap
+					// iteration, it's cheap
 					generatedSnd = playque.poll();
 					length = generatedSnd.length;
 					if (minbufsize < length)
@@ -250,11 +249,11 @@ public class AudioSerialOutMono {
 					int p6 = 0;// play
 					int p7 = 0;// play
 
-					int p=200; //pause
-					int s1=500;//sigs
-					int s2=500;
-					int s3=500;
-					//int state = 0;
+					int p = 200; // pause
+					int s1 = 500;// sigs
+					int s2 = 500;
+					int s3 = 500;
+					// int state = 0;
 
 					p4 = newwave_l;// play
 
@@ -277,31 +276,58 @@ public class AudioSerialOutMono {
 					if (outStr.equalsIgnoreCase("toL")) {
 						s1 = 1000;
 					}
-					
-					p0=0;
-					p1=p;
-					p2=p+s1;
-					p3=2*p+s1;
-					p4=2*p+s1+s2;
-					p5=3*p+s1+s2;
-					p6=3*p+s1+s2+s3;
-					p7=4*p+s1+s2+s3;
-					
-					outStr+=p0+"."+p1+"."+p2+"."+p3+"."+p4+"."+p5+"."+p6+"."+p7+".";
-					
+
+					p0 = 0;
+					p1 = p;
+					p2 = p + s1;
+					p3 = 2 * p + s1;
+					p4 = 2 * p + s1 + s2;
+					p5 = 3 * p + s1 + s2;
+					p6 = 3 * p + s1 + s2 + s3;
+					p7 = 4 * p + s1 + s2 + s3;
+
+					outStr += p0 + "." + p1 + "." + p2 + "." + p3 + "." + p4
+							+ "." + p5 + "." + p6 + "." + p7 + ".";
+
 					int n = 0;
 					for (int i = 0; i < newwave_l; ++i) {
 						// sample[i] = Math.sin(2 * Math.PI * i /
 						// (sampleRate/freqOfTone));
 						newwave[i] = Math.sin(2 * Math.PI * i / (newwave_l));
-						
-						if ((i >= p0) && (i < p1)) {	n = 1; }
-						if ((i >= p1) && (i < p2)) { if (n == 1) { n = -1; } else { n = 1; } }
-						if ((i >= p2) && (i < p3)) {	n = 1; }
-						if ((i >= p3) && (i < p4)) { if (n == 1) { n = -1; } else { n = 1; } }
-						if ((i >= p4) && (i < p5)) {	n = 1; }
-						if ((i >= p5) && (i < p6)) { if (n == 1) { n = -1; } else { n = 1; } }
-						if ((i >= p6)) {	n = 1; }
+
+						if ((i >= p0) && (i < p1)) {
+							n = 1;
+						}
+						if ((i >= p1) && (i < p2)) {
+							if (n == 1) {
+								n = -1;
+							} else {
+								n = 1;
+							}
+						}
+						if ((i >= p2) && (i < p3)) {
+							n = 1;
+						}
+						if ((i >= p3) && (i < p4)) {
+							if (n == 1) {
+								n = -1;
+							} else {
+								n = 1;
+							}
+						}
+						if ((i >= p4) && (i < p5)) {
+							n = 1;
+						}
+						if ((i >= p5) && (i < p6)) {
+							if (n == 1) {
+								n = -1;
+							} else {
+								n = 1;
+							}
+						}
+						if ((i >= p6)) {
+							n = 1;
+						}
 						newwave[i] = n;
 						// sample[i]=1;
 						// if
