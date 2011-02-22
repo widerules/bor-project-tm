@@ -10,13 +10,14 @@ public class operationModule {
 	private int taskListCount = 0;
 	private double taskListCoords[][] = new double[100][3];
 	private double taskDir[] = new double[100];// 0-360
-	private Date taskListTimeExpire[] = new Date[100];
+	private long taskListTimeExpire[] = new long[100]; //time task in mSec
 	private Boolean taskListTaskComplete[] = new Boolean[100];
 	private int currentTask = 0;
 	private double currentCoords[] = new double[3];
 	private double currentDir[] = new double[3];
 	
 	private long startCGtime =0;
+	private long stopCGtime =0;
 	private int na=0;
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
@@ -26,7 +27,7 @@ public class operationModule {
 	 * 
 	 * tE(){ if tE>getTime() returne false; else returne true; }
 	 */
-	public void addTask(double x, double y, double h, Date tE, Boolean tC) {
+	public void addTask(double x, double y, double h, long tE, Boolean tC) {
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
 		taskListCoords[taskListCount][2] = h;
@@ -102,16 +103,22 @@ public class operationModule {
 		CGTimeList[na] = na*dt;
 		
 		
+		//init go 
 		startCGtime=clndr.getTimeInMillis();
+		stopCGtime=startCGtime+taskListTimeExpire[currentTask];
 		go();
 		
 	}
 
 	public void go() {
 		// D) run CG array
-		//cgi  current step of cg
-		long ct=clndr.getTimeInMillis();
-		int cgi = (int)((ct-startCGtime)/na);
+		long ct=clndr.getTimeInMillis();//current time
+
+		//cgs  current step of cg
+		int cgs = (int)((ct-startCGtime)/na);
+		
+		//if ( ct <  )
+		
 		
 		
 		// E) run CG.LOG
