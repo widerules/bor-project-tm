@@ -9,87 +9,130 @@ public class operationModule {
 	Calendar clndr = Calendar.getInstance();
 	private int taskListCount = 0;
 	private double taskListCoords[][] = new double[100][3];
+	private double taskDir[] = new double[100];// 0-360
 	private Date taskListTimeExpire[] = new Date[100];
 	private Boolean taskListTaskComplete[] = new Boolean[100];
 	private int currentTask = 0;
 	private double currentCoords[] = new double[3];
 	private double currentDir[] = new double[3];
 	
-
+	private long startCGtime =0;
+	private int na=0;
 	/*
-	1)tE.prio > tC.prio
-	?!tE:go(T);nextTask();
-	
-	2)tE.prio < tC.prio (tC==true)
-	?tCed():tE=getTime();
-	?tE&!tCed():tE++;
-	?tE:nextTask();go(T);
-
-	tE(){ if tE>getTime() returne false; else returne true; }
-	*/
+	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
+	 * 
+	 * 2)tE.prio < tC.prio (tC==true) ?tCed():tE=getTime(); ?tE&!tCed():tE++;
+	 * ?tE:nextTask();go(T);
+	 * 
+	 * tE(){ if tE>getTime() returne false; else returne true; }
+	 */
 	public void addTask(double x, double y, double h, Date tE, Boolean tC) {
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
 		taskListCoords[taskListCount][2] = h;
+		taskDir[taskListCount] = 0;
 		taskListTimeExpire[taskListCount] = tE;
 		taskListTaskComplete[taskListCount] = tC;
 		taskListCount++;
+		
+		
+		
 	}
-	
-	public void nextTask(){
-		currentTask++;
-	}
-	
-	public void go(){
-		// A) get current Position 
-		//get current position
 
-		currentCoords[0]=shakeServ.locXe; //lat
-		currentCoords[1]=shakeServ.locYe; //lng
-		currentCoords[2]=100; //height
+	public void nextTask() {
+		currentTask++;
 		
-		//get current direction
-		currentDir[0]=shakeServ.dir0;  //azimuth
-		currentDir[1]=shakeServ.dir1;
-		currentDir[2]=shakeServ.dir2;
-		
-		// B) get task Position 
-		//taskListCoords[currentTask]
+		// A) get current Position
+		// get current position
+
+		currentCoords[0] = shakeServ.locXe; // lat
+		currentCoords[1] = shakeServ.locYe; // lng
+		currentCoords[2] = 100; // height
+
+		// get current direction
+		currentDir[0] = shakeServ.dir0; // azimuth
+		currentDir[1] = shakeServ.dir1;
+		currentDir[2] = shakeServ.dir2;
+
+		// B) get task Position
+		// taskListCoords[currentTask]
 		/*
-		taskListCoords[taskListCount][0] = x;
-		taskListCoords[taskListCount][1] = y;
-		taskListCoords[taskListCount][2] = h;
-		taskListTimeExpire[taskListCount] = tE;
-		taskListTaskComplete[taskListCount] = tC;
-		*/
+		 * taskListCoords[taskListCount][0] = x;
+		 * taskListCoords[taskListCount][1] = y;
+		 * taskListCoords[taskListCount][2] = h; taskDir[taskListCount]=0;
+		 * taskListTimeExpire[taskListCount] = tE;
+		 * taskListTaskComplete[taskListCount] = tC;
+		 */
 
 		// C) get CG array
 		// format CG (pos(x,y,z,dir,time)[])
-		// C.a get count steps of CG = f( (Task.posT-Task.pos0), (Task.tT-Task.t0),dt,F  'posT,tT:target position and time;dt:size of time step;F:value of control force;) 
+		// C.a get count steps of CG = f( (Task.posT-Task.pos0),
+		// (Task.tT-Task.t0),dt,F 'posT,tT:target position and time;dt:size of
+		// time step;F:value of control force;)
+		// two props F[0-3]~rpm[] (F0 -minEffective, F1= F2/F0, F2 - normal, F3
+		// -max), rpm~[0-1024]:[0:100;1:400;2:700;3:970;] )
+		// dt = 1000 mS, normal omega w(grad/sec)=10 grad/sec;
+		long dt = 1000; 
 		
-		
+		// delta alpha da=taskDir[taskListCount]-currentDir[0];
+		double da = taskDir[taskListCount] - currentDir[0];
+		// step alpha sa = 10;
+		double sa = 10;
+		// na count of step alpha
+		na = (int) (da / sa);
 
-		// D) run CG array
-		
-		// E) run CG.LOG 
+		int i = 0;
 
-		// F) nextTASK
+		// format CG (pos(x,y,z,dir,time)[])
+		double CGlist[][] = new double[1000][5];
+		long CGTimeList[] = new long[1000];
+		for (i = 0; i < na; i++) {
+			CGlist[i][0] = taskListCoords[taskListCount][0];// x
+			CGlist[i][1] = taskListCoords[taskListCount][1];// y
+			CGlist[i][2] = taskListCoords[taskListCount][2];// z
+			CGlist[i][3] = currentDir[0] + i * sa;// dir
+			CGTimeList[i] = i*dt;
+			// time
+		}
+		na++;
+		CGlist[na][0] = taskListCoords[taskListCount][0];// x
+		CGlist[na][1] = taskListCoords[taskListCount][1];// y
+		CGlist[na][2] = taskListCoords[taskListCount][2];// z
+		CGlist[na][3] = taskDir[taskListCount];// dir
+		CGTimeList[na] = na*dt;
 		
-		//get TargetDirection (atan(dx/dy))
-		//
-		//Log.d("opMod", "opMod_go:=shakeServ.locXe"+shakeServ.locXe+"_	shakeServ.locYe_"+shakeServ.locYe);
-		//need to check!!!
-		double targetDir= Math.atan2((taskListCoords[currentTask][1]-currentCoords[1]), taskListCoords[currentTask][0]-currentCoords[0]);
-		Log.d("opMod", "opMod_go:targetDir="+targetDir);
 		
+		startCGtime=clndr.getTimeInMillis();
+		go();
 		
-		
-		//get direction
-		/*y(lat) x(lng) arctg(dlt x/dlt y)
-		 * 
-		 * */
-		
-		//send commands
 	}
 
+	public void go() {
+		// D) run CG array
+		//cgi  current step of cg
+		long ct=clndr.getTimeInMillis();
+		int cgi = (int)((ct-startCGtime)/na);
+		
+		
+		// E) run CG.LOG
+
+		// F) nextTASK
+
+		// get TargetDirection (atan(dx/dy))
+		//
+		// Log.d("opMod",
+		// "opMod_go:=shakeServ.locXe"+shakeServ.locXe+"_	shakeServ.locYe_"+shakeServ.locYe);
+		// need to check!!!
+		//double targetDir = Math.atan2(
+		//		(taskListCoords[currentTask][1] - currentCoords[1]),
+		//		taskListCoords[currentTask][0] - currentCoords[0]);
+		//Log.d("opMod", "opMod_go:targetDir=" + targetDir);
+
+		// get direction
+		/*
+		 * y(lat) x(lng) arctg(dlt x/dlt y)
+		 */
+
+		// send commands
+	}
 }
