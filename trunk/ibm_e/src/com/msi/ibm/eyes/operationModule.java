@@ -20,13 +20,13 @@ public class operationModule {
 	private long stopCGtime = 0;
 	private int na = 0;
 	private int F = 0;// + cw, - ccw; 0:off;1:min;2:half;3:cruise;4:max;
-	private int signF = 1;// cw:1;ccw:-1; 
+	private int signF = 1;// cw:1;ccw:-1;
 	// format CG (pos(x,y,z,dir,time)[])
 	private double CGlist[][] = new double[1000][5];
 	private long CGTimeList[] = new long[1000];
 	private int cgs = 0; // cgs current step of cg
-	private int alphaprec=10;//pogreshnost' ugla
-	
+	private int alphaprec = 10;// pogreshnost' ugla
+
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
 	 * 
@@ -83,8 +83,12 @@ public class operationModule {
 
 		// delta alpha da=taskDir[taskListCount]-currentDir[0];
 		double da = taskDir[taskListCount] - currentDir[0];
-		if (da>180){signF=-1;}else{signF=1;}
-		
+		if (da > 180) {
+			signF = -1;
+		} else {
+			signF = 1;
+		}
+
 		// step alpha sa = 10;
 		double sa = 10;
 		// na count of step alpha
@@ -93,8 +97,8 @@ public class operationModule {
 		int i = 0;
 
 		// format CG (pos(x,y,z,dir,time)[])
-		//double CGlist[][] = new double[1000][5];
-		//long CGTimeList[] = new long[1000];
+		// double CGlist[][] = new double[1000][5];
+		// long CGTimeList[] = new long[1000];
 		for (i = 0; i < na; i++) {
 			CGlist[i][0] = taskListCoords[taskListCount][0];// x
 			CGlist[i][1] = taskListCoords[taskListCount][1];// y
@@ -113,6 +117,7 @@ public class operationModule {
 		// init go
 		startCGtime = clndr.getTimeInMillis();
 		stopCGtime = startCGtime + taskListTimeExpire[currentTask];
+		Log.d("", "oM_nextTask_go:startT:" + startCGtime+";stopT:"+stopCGtime +";na:"+na);
 		go();
 
 	}
@@ -127,22 +132,40 @@ public class operationModule {
 
 		if (ct < stopCGtime) {
 			if (cgs == 0) {
-				F=signF*1;
-			}else{
-				if (prevcgs!=cgs){//calc F once per CGperiod
-					//correct F as delta between theor and real alpha
-					//double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
-					//if (da>alphaprec){F++;}
-					//get w(i) ugl.skorost' i & i-1
-					double w_i=(CGlist[cgs][3]-CGlist[cgs-1][3])/(CGTimeList[cgs]-CGTimeList[cgs-1]);
-					double wc_i=(shakeServ.dir0-CGlist[cgs-1][3])/(ct-startCGtime-CGTimeList[cgs-1]);
-					if (wc_i>w_i){F--;}else{F--;}
-					//limi F
-					if (F<-4)F=-4;
-					if (F>4)F=4;
-					//send To Ardu
+				F = signF * 1;
+			} else {
+				// if (prevcgs!=cgs){//calc F once per CGperiod
+				// correct F as delta between theor and real alpha
+				// double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
+				// if (da>alphaprec){F++;}
+				// get w(i) ugl.skorost' i & i-1
+				Log.d("", "oM_go_:cgs:" + cgs+";cgdir_i:"+CGlist[cgs][3]+";cgdir_i-1:"+CGlist[cgs-1][3]);
+				Log.d("", "oM_go_:cgs:" + cgs+";cgtm_i:"+CGTimeList[cgs]+";cgtm_i-1:"+CGTimeList[cgs-1]);
+				double wi = (CGlist[cgs][3] - CGlist[cgs - 1][3])
+						/ (CGTimeList[cgs] - CGTimeList[cgs - 1]);
+				double wci = (shakeServ.dir0 - CGlist[cgs - 1][3])
+						/ (ct - startCGtime - CGTimeList[cgs - 1]);
+				Log.d("", "oM_go_wi:" + wi);
+				Log.d("", "oM_go_wci:" + wci);
+
+				if (wci > wi) {
+					F--;
+				} else {
+					F--;
 				}
+				// limi F
+				if (F < -4)
+					F = -4;
+				if (F > 4)
+					F = 4;
+				Log.d("", "oM_go_F:" + F);
+				// send To Ardu
+				// }
 			}
+
+		} else {
+			// debug
+			Log.d("", "oM_go:stop");
 
 		}
 
