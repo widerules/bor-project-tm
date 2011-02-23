@@ -1,6 +1,7 @@
 package com.msi.ibm.eyes;
 
 //import i4nc4mp.myLock.CustomLockService.Task;
+import com.msi.ibm.eyes.operationModule;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -142,6 +143,8 @@ public class shakeServ extends Service implements SensorEventListener {
 		registerReceiver(mReceiver, filter);
 
 		serviceHandler = new Handler();
+		operationModule.addTask(0.0,0.0,0,360,3000,false);
+		operationModule.nextTask();
 	}
 
 	@Override
@@ -266,13 +269,14 @@ public class shakeServ extends Service implements SensorEventListener {
 			// if ((now - mLastForce) > SHAKE_TIMEOUT) {
 			// mShakeCount = 0;
 			// }
-			if ((now - dLastTime) > TIME_TRESHOLD_AUDIO) {
+			if ((now - dLastTime) > TIME_THRESHOLD) {
 				dLastTime = now;
 				mValues = event.values;
 				dir0=mValues[0];
 				dir1=mValues[1];
 				dir2=mValues[2];
 				
+				operationModule.go();
 				//debug
 				//if ((mValues[0] <  90)&&(mValues[0] >   0)) { toRight("toR"); }
 				//if ((mValues[0] < 180)&&(mValues[0] >  90)) { toRight("toF"); }

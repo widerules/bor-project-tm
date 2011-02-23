@@ -6,25 +6,25 @@ import java.util.Date;
 import android.util.Log;
 
 public class operationModule {
-	Calendar clndr = Calendar.getInstance();
-	private int taskListCount = 0;
-	private double taskListCoords[][] = new double[100][3];
-	private double taskDir[] = new double[100];// 0-360
-	private long taskListTimeExpire[] = new long[100]; // time task in mSec
-	private Boolean taskListTaskComplete[] = new Boolean[100];
-	private int currentTask = 0;
-	private double currentCoords[] = new double[3];
-	private double currentDir[] = new double[3];
+	static Calendar clndr = Calendar.getInstance();
+	private static int taskListCount = 0;
+	private static double taskListCoords[][] = new double[100][3];
+	private static double taskDir[] = new double[100];// 0-360
+	private static long taskListTimeExpire[] = new long[100]; // time task in mSec
+	private static Boolean taskListTaskComplete[] = new Boolean[100];
+	private static int currentTask = 0;
+	private static double currentCoords[] = new double[3];
+	private static double currentDir[] = new double[3];
 
-	private long startCGtime = 0;
-	private long stopCGtime = 0;
-	private int na = 0;
-	private int F = 0;// + cw, - ccw; 0:off;1:min;2:half;3:cruise;4:max;
-	private int signF = 1;// cw:1;ccw:-1;
+	private static long startCGtime = 0;
+	private static long stopCGtime = 0;
+	private static int na = 0;
+	private static int F = 0;// + cw, - ccw; 0:off;1:min;2:half;3:cruise;4:max;
+	private static int signF = 1;// cw:1;ccw:-1;
 	// format CG (pos(x,y,z,dir,time)[])
-	private double CGlist[][] = new double[1000][5];
-	private long CGTimeList[] = new long[1000];
-	private int cgs = 0; // cgs current step of cg
+	private static double CGlist[][] = new double[1000][5];
+	private static long CGTimeList[] = new long[1000];
+	private static int cgs = 0; // cgs current step of cg
 	private int alphaprec = 10;// pogreshnost' ugla
 
 	/*
@@ -35,18 +35,18 @@ public class operationModule {
 	 * 
 	 * tE(){ if tE>getTime() returne false; else returne true; }
 	 */
-	public void addTask(double x, double y, double h, long tE, Boolean tC) {
+	public static void addTask(double x, double y, double h, int dir,long tE, Boolean tC) {
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
 		taskListCoords[taskListCount][2] = h;
-		taskDir[taskListCount] = 0;
+		taskDir[taskListCount] = dir;
 		taskListTimeExpire[taskListCount] = tE;
 		taskListTaskComplete[taskListCount] = tC;
 		taskListCount++;
 
 	}
 
-	public void nextTask() {
+	public static void nextTask() {
 		currentTask++;
 
 		// A) get current Position
@@ -122,7 +122,7 @@ public class operationModule {
 
 	}
 
-	public void go() {
+	public static void go() {
 		// D) run CG array
 		long ct = clndr.getTimeInMillis();// current time
 
