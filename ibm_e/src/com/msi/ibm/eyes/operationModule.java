@@ -129,10 +129,18 @@ public class operationModule {
 			if (cgs == 0) {
 				F=signF*1;
 			}else{
-				if (prevcgs!=cgs){
+				if (prevcgs!=cgs){//calc F once per CGperiod
 					//correct F as delta between theor and real alpha
-					double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
-					if (da>alphaprec){F++;}
+					//double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
+					//if (da>alphaprec){F++;}
+					//get w(i) ugl.skorost' i & i-1
+					double w_i=(CGlist[cgs][3]-CGlist[cgs-1][3])/(CGTimeList[cgs]-CGTimeList[cgs-1]);
+					double wc_i=(shakeServ.dir0-CGlist[cgs-1][3])/(ct-startCGtime-CGTimeList[cgs-1]);
+					if (wc_i>w_i){F--;}else{F--;}
+					//limi F
+					if (F<-4)F=-4;
+					if (F>4)F=4;
+					//send To Ardu
 				}
 			}
 
