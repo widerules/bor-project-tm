@@ -10,16 +10,23 @@ public class operationModule {
 	private int taskListCount = 0;
 	private double taskListCoords[][] = new double[100][3];
 	private double taskDir[] = new double[100];// 0-360
-	private long taskListTimeExpire[] = new long[100]; //time task in mSec
+	private long taskListTimeExpire[] = new long[100]; // time task in mSec
 	private Boolean taskListTaskComplete[] = new Boolean[100];
 	private int currentTask = 0;
 	private double currentCoords[] = new double[3];
 	private double currentDir[] = new double[3];
+
+	private long startCGtime = 0;
+	private long stopCGtime = 0;
+	private int na = 0;
+	private int F = 0;// + cw, - ccw; 0:off;1:min;2:half;3:cruise;4:max;
+	private int signF = 1;// cw:1;ccw:-1; 
+	// format CG (pos(x,y,z,dir,time)[])
+	private double CGlist[][] = new double[1000][5];
+	private long CGTimeList[] = new long[1000];
+	private int cgs = 0; // cgs current step of cg
+	private int alphaprec=10;//pogreshnost' ugla
 	
-	private long startCGtime =0;
-	private long stopCGtime =0;
-	private int na=0;
-	private int F=0;// + cw, - ccw; 0:off;1:min;2:half;3:cruise;4:max;
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
 	 * 
@@ -36,14 +43,12 @@ public class operationModule {
 		taskListTimeExpire[taskListCount] = tE;
 		taskListTaskComplete[taskListCount] = tC;
 		taskListCount++;
-		
-		
-		
+
 	}
 
 	public void nextTask() {
 		currentTask++;
-		
+
 		// A) get current Position
 		// get current position
 
@@ -74,10 +79,12 @@ public class operationModule {
 		// two props F[0-3]~rpm[] (F0 -minEffective, F1= F2/F0, F2 - normal, F3
 		// -max), rpm~[0-1024]:[0:100;1:400;2:700;3:970;] )
 		// dt = 1000 mS, normal omega w(grad/sec)=10 grad/sec;
-		long dt = 1000; 
-		
+		long dt = 1000;
+
 		// delta alpha da=taskDir[taskListCount]-currentDir[0];
 		double da = taskDir[taskListCount] - currentDir[0];
+		if (da>180){signF=-1;}else{signF=1;}
+		
 		// step alpha sa = 10;
 		double sa = 10;
 		// na count of step alpha
@@ -86,14 +93,14 @@ public class operationModule {
 		int i = 0;
 
 		// format CG (pos(x,y,z,dir,time)[])
-		double CGlist[][] = new double[1000][5];
-		long CGTimeList[] = new long[1000];
+		//double CGlist[][] = new double[1000][5];
+		//long CGTimeList[] = new long[1000];
 		for (i = 0; i < na; i++) {
 			CGlist[i][0] = taskListCoords[taskListCount][0];// x
 			CGlist[i][1] = taskListCoords[taskListCount][1];// y
 			CGlist[i][2] = taskListCoords[taskListCount][2];// z
 			CGlist[i][3] = currentDir[0] + i * sa;// dir
-			CGTimeList[i] = i*dt;
+			CGTimeList[i] = i * dt;
 			// time
 		}
 		na++;
@@ -101,32 +108,36 @@ public class operationModule {
 		CGlist[na][1] = taskListCoords[taskListCount][1];// y
 		CGlist[na][2] = taskListCoords[taskListCount][2];// z
 		CGlist[na][3] = taskDir[taskListCount];// dir
-		CGTimeList[na] = na*dt;
-		
-		
-		//init go 
-		startCGtime=clndr.getTimeInMillis();
-		stopCGtime=startCGtime+taskListTimeExpire[currentTask];
+		CGTimeList[na] = na * dt;
+
+		// init go
+		startCGtime = clndr.getTimeInMillis();
+		stopCGtime = startCGtime + taskListTimeExpire[currentTask];
 		go();
-		
+
 	}
 
 	public void go() {
 		// D) run CG array
-		long ct=clndr.getTimeInMillis();//current time
+		long ct = clndr.getTimeInMillis();// current time
 
-		//cgs  current step of cg
-		int cgs = (int)((ct-startCGtime)*na/taskListTimeExpire[taskListCount]);
-		
-		if ( ct <  stopCGtime ){
-			if (cgs==0){
-								
+		// cgs current step of cg
+		int prevcgs = cgs;
+		cgs = (int) ((ct - startCGtime) * na / taskListTimeExpire[taskListCount]);
+
+		if (ct < stopCGtime) {
+			if (cgs == 0) {
+				F=signF*1;
+			}else{
+				if (prevcgs!=cgs){
+					//correct F as delta between theor and real alpha
+					double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
+					if (da>alphaprec){F++;}
+				}
 			}
-			
+
 		}
-		
-		
-		
+
 		// E) run CG.LOG
 
 		// F) nextTASK
@@ -136,10 +147,10 @@ public class operationModule {
 		// Log.d("opMod",
 		// "opMod_go:=shakeServ.locXe"+shakeServ.locXe+"_	shakeServ.locYe_"+shakeServ.locYe);
 		// need to check!!!
-		//double targetDir = Math.atan2(
-		//		(taskListCoords[currentTask][1] - currentCoords[1]),
-		//		taskListCoords[currentTask][0] - currentCoords[0]);
-		//Log.d("opMod", "opMod_go:targetDir=" + targetDir);
+		// double targetDir = Math.atan2(
+		// (taskListCoords[currentTask][1] - currentCoords[1]),
+		// taskListCoords[currentTask][0] - currentCoords[0]);
+		// Log.d("opMod", "opMod_go:targetDir=" + targetDir);
 
 		// get direction
 		/*
