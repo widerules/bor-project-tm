@@ -19,6 +19,7 @@ public class operationModule {
 	private long startCGtime =0;
 	private long stopCGtime =0;
 	private int na=0;
+	private int F=0;// + cw, - ccw; 0:off;1:min;2:half;3:cruise;4:max;
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
 	 * 
@@ -115,9 +116,14 @@ public class operationModule {
 		long ct=clndr.getTimeInMillis();//current time
 
 		//cgs  current step of cg
-		int cgs = (int)((ct-startCGtime)/na);
+		int cgs = (int)((ct-startCGtime)*na/taskListTimeExpire[taskListCount]);
 		
-		//if ( ct <  )
+		if ( ct <  stopCGtime ){
+			if (cgs==0){
+								
+			}
+			
+		}
 		
 		
 		
