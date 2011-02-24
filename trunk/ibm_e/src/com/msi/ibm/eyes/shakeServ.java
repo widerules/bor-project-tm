@@ -304,7 +304,7 @@ public class shakeServ extends Service implements SensorEventListener {
 
 				if (!taskStarted) {
 					
-					operationModule.addTask(0.0, 0.0, 0, 360, 60000, false);
+					operationModule.addTask(0.0, 0.0, 0, 360, 20000, false);
 					operationModule.nextTask();
 					taskStarted = true;
 					Log.d("", "shS_oSCH_:addTask(),nextTask();taskStarted;"
