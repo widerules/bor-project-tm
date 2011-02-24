@@ -193,6 +193,30 @@ public class operationModule {
 			} else {
 				// debug
 				Log.d("", "oM_go:stop");
+				
+				double tempDa=taskDir[taskListCount]-shakeServ.dir0;
+				if (Math.abs(tempDa)>180){tempDa=-1*(360-tempDa)
+					
+					
+					
+					
+					;}
+				
+				if (shakeServ.dir0>taskDir[taskListCount]){
+					F--;
+				} else {
+					F++;
+				}
+				// Limit F
+				if (F < -4)
+					F = -4;
+				if (F > 4)
+					F = 4;
+				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				Log.d("", "oM_go_F:" + F);
+				// send To Ardu
+				// }
+				
 
 			}
 		} catch (Exception e) {
