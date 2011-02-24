@@ -197,21 +197,25 @@ public class operationModule {
 				//double tempDa=taskDir[taskListCount]-shakeServ.dir0;
 				//if (Math.abs(tempDa)>180){tempDa=-1*(360-tempDa);}
 				long b = getTarget(shakeServ.dir0, taskDir[taskListCount]);
-				if (b<0){
-					F++;
-				} else {
+				if (b>5){
 					F--;
+				} 
+				if (b<-5){
+					F++;
+				}
+				if (b>=-5&&b<=5){
+					F=0;
 				}
 				// Limit F
-				if (F < -4)
-					F = -4;
-				if (F > 4)
-					F = 4;
+				if (F < -2)
+					F = -2;
+				if (F > 2)
+					F = 2;
 				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
 				Log.d("", "oM_go_F:" + F);
 				// send To Ardu
 				// }
-				
+				cmnd(F);//send to ardu
 
 			}
 		} catch (Exception e) {
@@ -249,5 +253,20 @@ public class operationModule {
         double sa=Math.sin(ra);
         long b=Math.round(-1*(sa/Math.abs(sa))*Math.toDegrees(Math.acos(Math.cos(ra))));
         return b;
+	}
+	private static void cmnd(int cmnd){
+		AudioSerialOutMono.outStr = cmnd+"";
+
+		try {
+			AudioSerialOutMono.UpdateParameters();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			AudioSerialOutMono.output("a");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
