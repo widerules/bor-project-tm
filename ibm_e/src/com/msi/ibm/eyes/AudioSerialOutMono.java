@@ -264,16 +264,19 @@ public class AudioSerialOutMono {
 					// if (outStr.equalsIgnoreCase("toB")){p2=1500;}
 					// if (outStr.equalsIgnoreCase("toL")){p2=2000;}
 
-					if (outStr.equalsIgnoreCase("toF")) {
-						s1 = 250;
+					if (outStr.equalsIgnoreCase("-2")) {
+						s1 = 200;
 					}// 23 - 73 - 120 170 1000~50ms
-					if (outStr.equalsIgnoreCase("toR")) {
-						s1 = 500;
+					if (outStr.equalsIgnoreCase("-1")) {
+						s1 = 400;
 					}
-					if (outStr.equalsIgnoreCase("toB")) {
-						s1 = 750;
+					if (outStr.equalsIgnoreCase("0")) {
+						s1 = 600;
 					}
-					if (outStr.equalsIgnoreCase("toL")) {
+					if (outStr.equalsIgnoreCase("1")) {
+						s1 = 800;
+					}
+					if (outStr.equalsIgnoreCase("2")) {
 						s1 = 1000;
 					}
 
