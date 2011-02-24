@@ -143,7 +143,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		registerReceiver(mReceiver, filter);
 
 		serviceHandler = new Handler();
-		operationModule.addTask(0.0,0.0,0,360,3000,false);
+		operationModule.addTask(0.0,0.0,0,360,30000,false);
 		operationModule.nextTask();
 	}
 
@@ -276,7 +276,6 @@ public class shakeServ extends Service implements SensorEventListener {
 				dir1=mValues[1];
 				dir2=mValues[2];
 				
-				operationModule.go();
 				//debug
 				//if ((mValues[0] <  90)&&(mValues[0] >   0)) { toRight("toR"); }
 				//if ((mValues[0] < 180)&&(mValues[0] >  90)) { toRight("toF"); }
@@ -285,6 +284,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			}
 
 			if ((now - mLastTime) > TIME_THRESHOLD) {
+				
 				mLastTime = now;
 				mValues = event.values;
 				aValues = event.values;
@@ -296,7 +296,12 @@ public class shakeServ extends Service implements SensorEventListener {
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
 			
-				String posi = getPos();
+				String posi ="";
+				Log.d("", "shS_oSCH_: start go ;");
+				operationModule.go();
+				Log.d("", "shS_oSCH_: back from go ;");
+				//String posi = getPos();
+
 				Log.d("onShake", "doing positi:" + posi + ";");
 
 				StringTokenizer parser = new StringTokenizer(posi, " ");
@@ -315,7 +320,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						webSender();
+						//webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
