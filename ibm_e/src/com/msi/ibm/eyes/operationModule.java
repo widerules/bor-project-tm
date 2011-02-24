@@ -10,7 +10,8 @@ public class operationModule {
 	private static int taskListCount = 0;
 	private static double taskListCoords[][] = new double[100][3];
 	private static double taskDir[] = new double[100];// 0-360
-	private static long taskListTimeExpire[] = new long[100]; // time task in mSec
+	private static long taskListTimeExpire[] = new long[100]; // time task in
+																// mSec
 	private static Boolean taskListTaskComplete[] = new Boolean[100];
 	private static int currentTask = 0;
 	private static double currentCoords[] = new double[3];
@@ -26,6 +27,7 @@ public class operationModule {
 	private static long CGTimeList[] = new long[1000];
 	private static int cgs = 0; // cgs current step of cg
 	private int alphaprec = 10;// pogreshnost' ugla
+	private static long ct = 0;
 
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
@@ -35,14 +37,18 @@ public class operationModule {
 	 * 
 	 * tE(){ if tE>getTime() returne false; else returne true; }
 	 */
-	public static void addTask(double x, double y, double h, int dir,long tE, Boolean tC) {
+	public static void addTask(double x, double y, double h, int dir, long tE,
+			Boolean tC) {
+		taskListCount++;
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
 		taskListCoords[taskListCount][2] = h;
 		taskDir[taskListCount] = dir;
 		taskListTimeExpire[taskListCount] = tE;
 		taskListTaskComplete[taskListCount] = tC;
-		taskListCount++;
+		Log.d("", "oM_nextTask_addTask:x:" + taskListCoords[taskListCount][0]
+				+ ";taskDir:" + taskDir[taskListCount] + ";tE:"
+				+ taskListTimeExpire[taskListCount]);
 
 	}
 
@@ -115,57 +121,75 @@ public class operationModule {
 		CGTimeList[na] = na * dt;
 
 		// init go
-		startCGtime = clndr.getTimeInMillis();
+		startCGtime = System.currentTimeMillis();//clndr.getTimeInMillis();
 		stopCGtime = startCGtime + taskListTimeExpire[currentTask];
-		Log.d("", "oM_nextTask_go:startT:" + startCGtime+";stopT:"+stopCGtime +";na:"+na);
+		Log.d("", "oM_nextTask_go:startT:" + startCGtime + ";stopT:"
+				+ stopCGtime + ";na:" + na);
 		go();
 
 	}
 
 	public static void go() {
-		// D) run CG array
-		long ct = clndr.getTimeInMillis();// current time
+		Log.d("", "oM_go:start;");
+		try {
+			// D) run CG array
+			ct = System.currentTimeMillis();//clndr.getTimeInMillis();// current time
+			long dt = stopCGtime - ct;
+			Log.d("", "oM_go_:ct:" + ct + ";stopCGtime:" + stopCGtime + ";dt:"
+					+ dt + ";");
 
-		// cgs current step of cg
-		int prevcgs = cgs;
-		cgs = (int) ((ct - startCGtime) * na / taskListTimeExpire[taskListCount]);
+			// cgs current step of cg
+			int prevcgs = cgs;
+			cgs = (int) ((ct - startCGtime) * na / taskListTimeExpire[taskListCount]);
+			Log.d("", "oM_go_:cgs:" + cgs
+					+ ";taskListTimeExpire[taskListCount]:"
+					+ taskListTimeExpire[taskListCount] + ";");
 
-		if (ct < stopCGtime) {
-			if (cgs == 0) {
-				F = signF * 1;
-			} else {
-				// if (prevcgs!=cgs){//calc F once per CGperiod
-				// correct F as delta between theor and real alpha
-				// double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
-				// if (da>alphaprec){F++;}
-				// get w(i) ugl.skorost' i & i-1
-				Log.d("", "oM_go_:cgs:" + cgs+";cgdir_i:"+CGlist[cgs][3]+";cgdir_i-1:"+CGlist[cgs-1][3]);
-				Log.d("", "oM_go_:cgs:" + cgs+";cgtm_i:"+CGTimeList[cgs]+";cgtm_i-1:"+CGTimeList[cgs-1]);
-				double wi = (CGlist[cgs][3] - CGlist[cgs - 1][3])
-						/ (CGTimeList[cgs] - CGTimeList[cgs - 1]);
-				double wci = (shakeServ.dir0 - CGlist[cgs - 1][3])
-						/ (ct - startCGtime - CGTimeList[cgs - 1]);
-				Log.d("", "oM_go_wi:" + wi);
-				Log.d("", "oM_go_wci:" + wci);
-
-				if (wci > wi) {
-					F--;
+			if (ct < stopCGtime) {
+				if (cgs == 0) {
+					F = signF * 1;
+					Log.d("", "oM_go_F:" + F);
 				} else {
-					F--;
-				}
-				// limi F
-				if (F < -4)
-					F = -4;
-				if (F > 4)
-					F = 4;
-				Log.d("", "oM_go_F:" + F);
-				// send To Ardu
-				// }
-			}
+					// if (prevcgs!=cgs){//calc F once per CGperiod
+					// correct F as delta between theor and real alpha
+					// double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
+					// if (da>alphaprec){F++;}
+					// get w(i) ugl.skorost' i & i-1
+					Log.d("", "oM_go_:cgs:" + cgs + ";cgdir_i:"
+							+ CGlist[cgs][3] + ";cgdir_i-1:"
+							+ CGlist[cgs - 1][3]);
+					Log.d("", "oM_go_:cgs:" + cgs + ";cgtm_i:"
+							+ CGTimeList[cgs] + ";cgtm_i-1:"
+							+ CGTimeList[cgs - 1]);
+					double wi = (CGlist[cgs][3] - CGlist[cgs - 1][3])
+							/ (CGTimeList[cgs] - CGTimeList[cgs - 1]);
+					double wci = (shakeServ.dir0 - CGlist[cgs - 1][3])
+							/ (ct - startCGtime - CGTimeList[cgs - 1]);
+					Log.d("", "oM_go_wi:" + wi);
+					Log.d("", "oM_go_wci:" + wci);
 
-		} else {
-			// debug
-			Log.d("", "oM_go:stop");
+					if (wci > wi) {
+						F--;
+					} else {
+						F--;
+					}
+					// Limit F
+					if (F < -4)
+						F = -4;
+					if (F > 4)
+						F = 4;
+					Log.d("", "oM_go_F:" + F);
+					// send To Ardu
+					// }
+				}
+
+			} else {
+				// debug
+				Log.d("", "oM_go:stop");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 
 		}
 
@@ -189,5 +213,7 @@ public class operationModule {
 		 */
 
 		// send commands
+		Log.d("", "oM_go:stop;");
+
 	}
 }
