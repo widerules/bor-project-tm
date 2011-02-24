@@ -53,10 +53,10 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD =500;
+	private static final int TIME_THRESHOLD = 500;
 	private static final int TIME_TRESHOLD_AUDIO = 500;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final String baudRate = "1200";//speed of data transfer 
+	private static final String baudRate = "1200";// speed of data transfer
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
 	private static final int NetworkConnectionTimeout_ms = 1500;
@@ -70,6 +70,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	private int mShakeCount = 0;
 	private long mLastShake;
 	private long mLastForce;
+	private Boolean taskStarted = false;
 
 	private Handler mCleanLedHandler = new Handler();
 
@@ -143,8 +144,6 @@ public class shakeServ extends Service implements SensorEventListener {
 		registerReceiver(mReceiver, filter);
 
 		serviceHandler = new Handler();
-		operationModule.addTask(0.0,0.0,0,360,30000,false);
-		operationModule.nextTask();
 	}
 
 	@Override
@@ -272,35 +271,51 @@ public class shakeServ extends Service implements SensorEventListener {
 			if ((now - dLastTime) > TIME_THRESHOLD) {
 				dLastTime = now;
 				mValues = event.values;
-				dir0=mValues[0];
-				dir1=mValues[1];
-				dir2=mValues[2];
-				
-				//debug
-				//if ((mValues[0] <  90)&&(mValues[0] >   0)) { toRight("toR"); }
-				//if ((mValues[0] < 180)&&(mValues[0] >  90)) { toRight("toF"); }
-				//if ((mValues[0] < 270)&&(mValues[0] > 180)) { toRight("toL"); }
-				//if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB"); }
+				dir0 = mValues[0];
+				dir1 = mValues[1];
+				dir2 = mValues[2];
+
+				// debug
+				// if ((mValues[0] < 90)&&(mValues[0] > 0)) { toRight("toR"); }
+				// if ((mValues[0] < 180)&&(mValues[0] > 90)) { toRight("toF");
+				// }
+				// if ((mValues[0] < 270)&&(mValues[0] > 180)) { toRight("toL");
+				// }
+				// if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB");
+				// }
 			}
 
 			if ((now - mLastTime) > TIME_THRESHOLD) {
-				
+
 				mLastTime = now;
 				mValues = event.values;
 				aValues = event.values;
-				dir0=mValues[0];
-				dir1=mValues[1];
-				dir2=mValues[2];
+				dir0 = mValues[0];
+				dir1 = mValues[1];
+				dir2 = mValues[2];
+//				Log.d("onShake", "ar_doing orient:" + "x "
+//						+ event.values[SensorManager.DATA_X] + ";y "
+//						+ event.values[SensorManager.DATA_Y] + ";z "
+//						+ event.values[SensorManager.DATA_Z]);
 				Log.d("onShake", "ar_doing orient:" + "x "
-						+ event.values[SensorManager.DATA_X] + ";y "
-						+ event.values[SensorManager.DATA_Y] + ";z "
-						+ event.values[SensorManager.DATA_Z]);
-			
-				String posi ="";
-				Log.d("", "shS_oSCH_: start go ;");
-				operationModule.go();
-				Log.d("", "shS_oSCH_: back from go ;");
-				//String posi = getPos();
+						+ dir0 + ";y "
+						+ dir1 + ";z "
+						+ dir2);
+
+				if (!taskStarted) {
+					
+					operationModule.addTask(0.0, 0.0, 0, 360, 60000, false);
+					operationModule.nextTask();
+					taskStarted = true;
+					Log.d("", "shS_oSCH_:addTask(),nextTask();taskStarted;"
+							+ taskStarted);
+				} else {
+					Log.d("", "shS_oSCH_: start go ;");
+					operationModule.go();
+					Log.d("", "shS_oSCH_: back from go ;");
+				}
+				String posi = "";
+				// String posi = getPos();
 
 				Log.d("onShake", "doing positi:" + posi + ";");
 
@@ -317,10 +332,11 @@ public class shakeServ extends Service implements SensorEventListener {
 						locY = tmpStr;
 					}
 				}
+
 				new Thread() {
 					@Override
 					public void run() {
-						//webSender();
+						// webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
@@ -346,8 +362,7 @@ public class shakeServ extends Service implements SensorEventListener {
 
 	}
 
-	public String getPos()
-	{
+	public String getPos() {
 		String pos = "";
 
 		// posX = 45.046224;
@@ -453,7 +468,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			// inetView.setText("inet answ: " + sender);
 			// Toast.makeText(this,
 			// "Sended to web!:"+sender,Toast.LENGTH_LONG).show();
-			Log.d("ar_wSndr:", "ar_"+urlStr + " >>> " + baf.toByteArray());
+			Log.d("ar_wSndr:", "ar_" + urlStr + " >>> " + baf.toByteArray());
 
 		} catch (Exception e) {
 			// ex = e;
@@ -472,7 +487,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		notif.flags = Notification.FLAG_SHOW_LIGHTS;
 		notif.ledOnMS = 500;
 		nm.notify(0, notif);
-		//nm.cancelAll();
+		// nm.cancelAll();
 		// Program the end of the light :
 		mCleanLedHandler.postDelayed(mClearLED_Task, 200);
 	}
@@ -483,10 +498,10 @@ public class shakeServ extends Service implements SensorEventListener {
 		notif.ledARGB = 0xFFFF0000;
 		notif.flags = Notification.FLAG_SHOW_LIGHTS;
 		notif.ledOnMS = 500;
-		//notif.ledOnMS = 100;
+		// notif.ledOnMS = 100;
 		nm.notify(0, notif);
 		// Program the end of the light :
-		//nm.cancelAll();
+		// nm.cancelAll();
 		mCleanLedHandler.postDelayed(mClearLED_Task, 400);
 	}
 
@@ -502,35 +517,54 @@ public class shakeServ extends Service implements SensorEventListener {
 			// }
 		}
 	};
-	
-	public static void toRight(String extData){
+
+	public static void toRight(String extData) {
 		Log.d("ar_toRight", extData);
-		
-			try{
-				AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
-			}catch(Exception e){
-				AudioSerialOutMono.new_baudRate = 9600;
-				//baudbox.setText("9600");
-				e.printStackTrace();
-			}
-			try{
-				AudioSerialOutMono.new_characterdelay = Integer.parseInt("1");
-			}catch(Exception e){
-				AudioSerialOutMono.new_characterdelay = 0;
-				e.printStackTrace();//charbox.setText("0");
-				
-			}
-			char sign='0';
-			if (extData.equals("toR")){sign='a';};
-			if (extData.equals("toL")){sign='k';};
-			if (extData.equals("toF")){sign='p';};
-			if (extData.equals("toB")){sign='z';};
-			AudioSerialOutMono.outStr=extData;
-			
-			try{			AudioSerialOutMono.UpdateParameters();}catch(Exception e){e.printStackTrace();}
-			try{			AudioSerialOutMono.output("a");}catch(Exception e){e.printStackTrace();}
-			Log.d("ar_toRight", " stopt");
-			}
-	
-	
+
+		try {
+			AudioSerialOutMono.new_baudRate = Integer.parseInt(baudRate);
+		} catch (Exception e) {
+			AudioSerialOutMono.new_baudRate = 9600;
+			// baudbox.setText("9600");
+			e.printStackTrace();
+		}
+		try {
+			AudioSerialOutMono.new_characterdelay = Integer.parseInt("1");
+		} catch (Exception e) {
+			AudioSerialOutMono.new_characterdelay = 0;
+			e.printStackTrace();// charbox.setText("0");
+
+		}
+		char sign = '0';
+		if (extData.equals("toR")) {
+			sign = 'a';
+		}
+		;
+		if (extData.equals("toL")) {
+			sign = 'k';
+		}
+		;
+		if (extData.equals("toF")) {
+			sign = 'p';
+		}
+		;
+		if (extData.equals("toB")) {
+			sign = 'z';
+		}
+		;
+		AudioSerialOutMono.outStr = extData;
+
+		try {
+			AudioSerialOutMono.UpdateParameters();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			AudioSerialOutMono.output("a");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Log.d("ar_toRight", " stopt");
+	}
+
 }

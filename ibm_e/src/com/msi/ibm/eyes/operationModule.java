@@ -11,7 +11,7 @@ public class operationModule {
 	private static double taskListCoords[][] = new double[100][3];
 	private static double taskDir[] = new double[100];// 0-360
 	private static long taskListTimeExpire[] = new long[100]; // time task in
-																// mSec
+	// mSec
 	private static Boolean taskListTaskComplete[] = new Boolean[100];
 	private static int currentTask = 0;
 	private static double currentCoords[] = new double[3];
@@ -49,7 +49,6 @@ public class operationModule {
 		Log.d("", "oM_nextTask_addTask:x:" + taskListCoords[taskListCount][0]
 				+ ";taskDir:" + taskDir[taskListCount] + ";tE:"
 				+ taskListTimeExpire[taskListCount]);
-
 	}
 
 	public static void nextTask() {
@@ -89,6 +88,8 @@ public class operationModule {
 
 		// delta alpha da=taskDir[taskListCount]-currentDir[0];
 		double da = taskDir[taskListCount] - currentDir[0];
+		Log.d("", "oM_nextTask_go:taskDir[taskListCount]:"
+				+ taskDir[taskListCount] + ";currentDir[0]:" + currentDir[0]);
 		if (da > 180) {
 			signF = -1;
 		} else {
@@ -121,7 +122,7 @@ public class operationModule {
 		CGTimeList[na] = na * dt;
 
 		// init go
-		startCGtime = System.currentTimeMillis();//clndr.getTimeInMillis();
+		startCGtime = System.currentTimeMillis();// clndr.getTimeInMillis();
 		stopCGtime = startCGtime + taskListTimeExpire[currentTask];
 		Log.d("", "oM_nextTask_go:startT:" + startCGtime + ";stopT:"
 				+ stopCGtime + ";na:" + na);
@@ -133,7 +134,8 @@ public class operationModule {
 		Log.d("", "oM_go:start;");
 		try {
 			// D) run CG array
-			ct = System.currentTimeMillis();//clndr.getTimeInMillis();// current time
+			ct = System.currentTimeMillis();// clndr.getTimeInMillis();//
+			// current time
 			long dt = stopCGtime - ct;
 			Log.d("", "oM_go_:ct:" + ct + ";stopCGtime:" + stopCGtime + ";dt:"
 					+ dt + ";");
@@ -146,7 +148,7 @@ public class operationModule {
 					+ taskListTimeExpire[taskListCount] + ";");
 
 			if (ct < stopCGtime) {
-				if (cgs == 0) {
+				if (cgs == 0) {//???
 					F = signF * 1;
 					Log.d("", "oM_go_F:" + F);
 				} else {
@@ -161,17 +163,22 @@ public class operationModule {
 					Log.d("", "oM_go_:cgs:" + cgs + ";cgtm_i:"
 							+ CGTimeList[cgs] + ";cgtm_i-1:"
 							+ CGTimeList[cgs - 1]);
-					double wi = (CGlist[cgs][3] - CGlist[cgs - 1][3])
+					double wi = signF * (CGlist[cgs][3] - CGlist[cgs - 1][3])
 							/ (CGTimeList[cgs] - CGTimeList[cgs - 1]);
-					double wci = (shakeServ.dir0 - CGlist[cgs - 1][3])
-							/ (ct - startCGtime - CGTimeList[cgs - 1]);
+					
+					double tha=wi*(ct - startCGtime - CGTimeList[cgs - 1])+ CGlist[cgs - 1][3];//theo alpa in current time
+					double wci = (shakeServ.dir0 - CGlist[cgs - 1][3])/ (ct - startCGtime - CGTimeList[cgs - 1]);
+					double log_cda=shakeServ.dir0 - CGlist[cgs - 1][3];
+					long log_cdt=(ct - startCGtime );
+					Log.d("", "oM_go_cda:" + log_cda+";cdir0:"+shakeServ.dir0+";CGdir[cgs - 1]:"+CGlist[cgs - 1][3]+";tha:"+tha+";curRelTime:"+log_cdt);
 					Log.d("", "oM_go_wi:" + wi);
 					Log.d("", "oM_go_wci:" + wci);
 
-					if (wci > wi) {
+					//if (wci > wi) {
+					if (shakeServ.dir0>tha){
 						F--;
 					} else {
-						F--;
+						F++;
 					}
 					// Limit F
 					if (F < -4)
