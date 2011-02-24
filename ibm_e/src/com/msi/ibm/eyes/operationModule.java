@@ -194,18 +194,13 @@ public class operationModule {
 				// debug
 				Log.d("", "oM_go:stop");
 				
-				double tempDa=taskDir[taskListCount]-shakeServ.dir0;
-				if (Math.abs(tempDa)>180){tempDa=-1*(360-tempDa)
-					
-					
-					
-					
-					;}
-				
-				if (shakeServ.dir0>taskDir[taskListCount]){
-					F--;
-				} else {
+				//double tempDa=taskDir[taskListCount]-shakeServ.dir0;
+				//if (Math.abs(tempDa)>180){tempDa=-1*(360-tempDa);}
+				long b = getTarget(shakeServ.dir0, taskDir[taskListCount]);
+				if (b<0){
 					F++;
+				} else {
+					F--;
 				}
 				// Limit F
 				if (F < -4)
@@ -246,5 +241,13 @@ public class operationModule {
 		// send commands
 		Log.d("", "oM_go:stop;");
 
+	}
+	
+	private static long getTarget(double srcDir, double dstDir){
+	
+        double ra =Math.toRadians(dstDir-srcDir);
+        double sa=Math.sin(ra);
+        long b=Math.round(-1*(sa/Math.abs(sa))*Math.toDegrees(Math.acos(Math.cos(ra))));
+        return b;
 	}
 }
