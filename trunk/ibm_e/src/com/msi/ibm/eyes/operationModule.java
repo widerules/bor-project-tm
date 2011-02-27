@@ -29,6 +29,11 @@ public class operationModule {
 	private int alphaprec = 10;// pogreshnost' ugla
 	private static long ct = 0;
 
+	private static long curTime = 0;
+	private static long preTime = 0;
+
+	private static double curDir=0;
+	private static double preDir=0;
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
 	 * 
@@ -181,10 +186,10 @@ public class operationModule {
 						F++;
 					}
 					// Limit F
-					if (F < -4)
-						F = -4;
-					if (F > 4)
-						F = 4;
+					if (F < -1)
+						F = -1;
+					if (F > 1)
+						F = 1;
 					Log.d("", "oM_go_F:" + F);
 					// send To Ardu
 					// }
@@ -192,8 +197,46 @@ public class operationModule {
 
 			} else {
 				// debug
-				Log.d("", "oM_go:stop");
+				Log.d("", "oM_go:stopCG");
 				
+				preTime=curTime;
+				curTime=ct;
+				
+				preDir=curDir;
+				curDir=shakeServ.dir0;
+				
+				Log.d("", "oM_go-:================================"+curTime);
+				Log.d("", "oM_go-pT:" + preTime+"; cT:"+curTime);
+				Log.d("", "oM_go-pD:" + preDir+"; cD:"+curDir);
+
+				double wn_src=5; // g/sec
+				double wn=0;
+				double aT=taskDir[taskListCount];
+				Log.d("", "oM_go-targetDir:" + aT+";");
+				//get_wn ai aT
+				int ltmp = (int) (getTarget(curDir,aT)/Math.abs(getTarget(curDir, aT)));
+				wn=-wn_src*ltmp;
+				Log.d("", "oM_go-wn:" + wn+";");
+				
+				
+				double ati=0;
+				//get_ati wn ai-1 ti ti-1
+				ati=(wn*(curTime-preTime)/1000+preDir);
+				Log.d("", "oM_go-targetCurrentDir:" + ati+";");
+
+				
+				long Fc =0;
+				//get_Fc ai ati  (Fc - current Force)
+				if (Math.abs(ati-aT)>10){//pacific area
+				Fc = getTarget(curDir, ati);
+				Fc=-Fc/Math.abs(Fc);
+				}
+				Log.d("", "oM_go-currentForce:" + Fc+";");
+				
+				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				
+				
+				/*
 				//double tempDa=taskDir[taskListCount]-shakeServ.dir0;
 				//if (Math.abs(tempDa)>180){tempDa=-1*(360-tempDa);}
 				long b = getTarget(shakeServ.dir0, taskDir[taskListCount]);
@@ -207,14 +250,21 @@ public class operationModule {
 					F=0;
 				}
 				// Limit F
-				if (F < -2)
-					F = -2;
-				if (F > 2)
-					F = 2;
-				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				Log.d("", "oM_go_F:" + F);
+				if (F < -1)
+					F = -1;
+				if (F > 1)
+					F = 1;
+				*/
+				
+				
+				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				Log.d("", "oM_go_F:" + Fc);
 				// send To Ardu
 				// }
+				F=(int) Fc;
+				
+				
+				
 				cmnd(F);//send to ardu
 
 			}
@@ -254,6 +304,7 @@ public class operationModule {
         long b=Math.round(-1*(sa/Math.abs(sa))*Math.toDegrees(Math.acos(Math.cos(ra))));
         return b;
 	}
+	
 	private static void cmnd(int cmnd){
 		AudioSerialOutMono.outStr = cmnd+"";
 
