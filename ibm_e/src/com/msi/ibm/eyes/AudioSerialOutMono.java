@@ -23,7 +23,7 @@ public class AudioSerialOutMono {
 	private static Thread audiothread = null;
 	private static AudioTrack audiotrk = null;
 	private static byte generatedSnd[] = null;
-	private static int newwave_l = 10000;;
+	private static int newwave_l = 2000;;
 	private static double[] newwave = new double[newwave_l];
 	private final static byte generatedNewWave[] = new byte[2 * newwave_l];
 	// set that can be edited externally
@@ -212,7 +212,7 @@ public class AudioSerialOutMono {
 						minbufsize = length;
 					audiotrk = new AudioTrack(AudioManager.STREAM_MUSIC,
 							// sampleRate,
-							20000, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+							10000, AudioFormat.CHANNEL_CONFIGURATION_MONO,
 							AudioFormat.ENCODING_PCM_16BIT,
 							// minbufsize,
 							// newwave_l,
@@ -249,10 +249,10 @@ public class AudioSerialOutMono {
 					int p6 = 0;// play
 					int p7 = 0;// play
 
-					int p = 200; // pause
+					int p = 100; // pause
 					int s1 = 500;// sigs
-					int s2 = 500;
-					int s3 = 500;
+					int s2 = 100;
+					int s3 = 100;
 					// int state = 0;
 
 					p4 = newwave_l;// play
@@ -268,13 +268,13 @@ public class AudioSerialOutMono {
 						s1 = 200;
 					}// 23 - 73 - 120 170 1000~50ms
 					if (outStr.equalsIgnoreCase("-1")) {
-						s1 = 400;
+						s1 = 50;
 					}
 					if (outStr.equalsIgnoreCase("0")) {
-						s1 = 600;
+						s1 = 100;
 					}
 					if (outStr.equalsIgnoreCase("1")) {
-						s1 = 800;
+						s1 = 150;
 					}
 					if (outStr.equalsIgnoreCase("2")) {
 						s1 = 1000;
@@ -289,7 +289,8 @@ public class AudioSerialOutMono {
 					p6 = 3 * p + s1 + s2 + s3;
 					p7 = 4 * p + s1 + s2 + s3;
 
-					outStr += p0 + "." + p1 + "." + p2 + "." + p3 + "." + p4
+					outStr +=":"+p0 + "." + 
+						p1 + "." + p2 + "." + p3 + "." + p4
 							+ "." + p5 + "." + p6 + "." + p7 + ".";
 
 					int n = 0;
@@ -298,9 +299,9 @@ public class AudioSerialOutMono {
 						// (sampleRate/freqOfTone));
 						newwave[i] = Math.sin(2 * Math.PI * i / (newwave_l));
 
-						if ((i >= p0) && (i < p1)) {
-							n = 1;
-						}
+						//if ((i >= p0) && (i < p1)) {
+						//	n = 1;
+						//}
 						if ((i >= p1) && (i < p2)) {
 							if (n == 1) {
 								n = -1;

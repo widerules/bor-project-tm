@@ -53,8 +53,8 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 1000;
-	private static final int TIME_TRESHOLD_AUDIO = 1000;
+	private static final int TIME_THRESHOLD = 350;
+	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final String baudRate = "1200";// speed of data transfer
 	private static final int SHAKE_DURATION = 1000;
@@ -304,7 +304,7 @@ public class shakeServ extends Service implements SensorEventListener {
 
 				if (!taskStarted) {
 					
-					operationModule.addTask(0.0, 0.0, 0, 360, 20000, false);
+					operationModule.addTask(0.0, 0.0, 0, 360, 5000, false);
 					operationModule.nextTask();
 					taskStarted = true;
 					Log.d("", "shS_oSCH_:addTask(),nextTask();taskStarted;"
