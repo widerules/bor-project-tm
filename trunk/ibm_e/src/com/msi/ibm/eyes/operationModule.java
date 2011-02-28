@@ -210,9 +210,13 @@ public class operationModule {
 				Log.d("", "oM_go-pT:" + preTime+"; cT:"+curTime);
 				Log.d("", "oM_go-pD:" + preDir+"; cD:"+curDir);
 
-				double wn_src=5; // g/sec
-				double wn=0;
+				
 				double aT=taskDir[taskListCount];
+				double wn=0;
+				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
+				double wn_src=5; // g/sec
+				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
+				Log.d("", "oM_go-wn_src:" + wn_src+";");
 				Log.d("", "oM_go-targetDir:" + aT+";");
 				//get_wn ai aT
 				int ltmp = (int) (getTarget(curDir,aT)/Math.abs(getTarget(curDir, aT)));
@@ -266,7 +270,21 @@ public class operationModule {
         return b;
 	}
 //<<<<<<< .mine
-	
+	/*
+
+<object id="javademo" classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701" height="357" width="630">
+<param name="url" value="http://www.nasa.gov/multimedia/isslivestream.asx">
+<param name="scale" value="tofit">
+<param name="DisplaySize" value="0">
+<param name="fullScreen" value="true">
+<param name="filename" value="http://www.nasa.gov/multimedia/isslivestream.asx">
+<param name="autoplay" value="true">
+<param name="showcontrols" value="1">
+<param name="autostart" value="true">
+<param name="name" value="javademo">
+<param name="src" value="http://www.nasa.gov/multimedia/isslivestream.asx"><embed id="javademo" type="application/x-mplayer2" src="http://www.nasa.gov/multimedia/isslivestream.asx" name="javademo" autostart="true" showcontrols="1" autoplay="true" filename="http://www.nasa.gov/multimedia/isslivestream.asx" fullscreen="true" displaysize="0" scale="tofit" url="http://www.nasa.gov/multimedia/isslivestream.asx" height="357" width="630">
+</object>
+	 */
 	
 //=======
 	
