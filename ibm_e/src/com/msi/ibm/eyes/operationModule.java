@@ -134,6 +134,7 @@ public class operationModule {
 		go();
 
 	}
+	
 
 	public static void go() {
 		Log.d("", "oM_go:start;");
@@ -236,31 +237,9 @@ public class operationModule {
 				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
 				
 				
-				/*
-				//double tempDa=taskDir[taskListCount]-shakeServ.dir0;
-				//if (Math.abs(tempDa)>180){tempDa=-1*(360-tempDa);}
-				long b = getTarget(shakeServ.dir0, taskDir[taskListCount]);
-				if (b>5){
-					F--;
-				} 
-				if (b<-5){
-					F++;
-				}
-				if (b>=-5&&b<=5){
-					F=0;
-				}
-				// Limit F
-				if (F < -1)
-					F = -1;
-				if (F > 1)
-					F = 1;
-				*/
-				
-				
 				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
 				Log.d("", "oM_go_F:" + Fc);
 				// send To Ardu
-				// }
 				F=(int) Fc;
 				
 				
@@ -273,24 +252,6 @@ public class operationModule {
 
 		}
 
-		// E) run CG.LOG
-
-		// F) nextTASK
-
-		// get TargetDirection (atan(dx/dy))
-		//
-		// Log.d("opMod",
-		// "opMod_go:=shakeServ.locXe"+shakeServ.locXe+"_	shakeServ.locYe_"+shakeServ.locYe);
-		// need to check!!!
-		// double targetDir = Math.atan2(
-		// (taskListCoords[currentTask][1] - currentCoords[1]),
-		// taskListCoords[currentTask][0] - currentCoords[0]);
-		// Log.d("opMod", "opMod_go:targetDir=" + targetDir);
-
-		// get direction
-		/*
-		 * y(lat) x(lng) arctg(dlt x/dlt y)
-		 */
 
 		// send commands
 		Log.d("", "oM_go:stop;");
@@ -304,7 +265,12 @@ public class operationModule {
         long b=Math.round(-1*(sa/Math.abs(sa))*Math.toDegrees(Math.acos(Math.cos(ra))));
         return b;
 	}
+//<<<<<<< .mine
 	
+	
+//=======
+	
+//>>>>>>> .r61
 	private static void cmnd(int cmnd){
 		AudioSerialOutMono.outStr = cmnd+"";
 
