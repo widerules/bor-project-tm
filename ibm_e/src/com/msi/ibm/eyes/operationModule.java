@@ -154,6 +154,7 @@ public class operationModule {
 					+ taskListTimeExpire[taskListCount] + ";");
 
 			if (ct < stopCGtime) {
+				/*
 				if (cgs == 0) {//???
 					F = signF * 1;
 					Log.d("", "oM_go_F:" + F);
@@ -195,8 +196,59 @@ public class operationModule {
 					// send To Ardu
 					// }
 				}
+				*/
+				preTime=curTime;
+				curTime=ct;
+				
+				preDir=curDir;
+				curDir=shakeServ.dir0;
+				
+				Log.d("", "oM_go-:================================"+curTime);
+				Log.d("", "oM_go-pT:" + preTime+"; cT:"+curTime);
+				Log.d("", "oM_go-pD:" + preDir+"; cD:"+curDir);
+
+				
+				double aT=taskDir[taskListCount];
+				double wn=0;
+				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
+				double wn_src=5; // g/sec
+				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
+				Log.d("", "oM_go-wn_src:" + wn_src+";");
+				Log.d("", "oM_go-targetDir:" + aT+";");
+				//get_wn ai aT
+				int ltmp = (int) (getTarget(curDir,aT)/Math.abs(getTarget(curDir, aT)));
+				wn=-wn_src*ltmp;
+				Log.d("", "oM_go-wn:" + wn+";");
+				
+				
+				double ati=0;
+				//get_ati wn ai-1 ti ti-1
+				ati=(wn*(curTime-preTime)/1000+preDir);
+				Log.d("", "oM_go-targetCurrentDir:" + ati+";");
+
+				
+				long Fc =0;
+				//get_Fc ai ati  (Fc - current Force)
+				if (Math.abs(ati-aT)>10){//pacific area
+				Fc = getTarget(curDir, ati);
+				Fc=-Fc/Math.abs(Fc);
+				}
+				Log.d("", "oM_go-currentForce:" + Fc+";");
+				
+				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				
+				
+				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				Log.d("", "oM_go_F:" + Fc);
+				// send To Ardu
+				F=(int) Fc;
+				
+				
+				
+				cmnd(F);//send to ardu
 
 			} else {
+				shakeServ.setTaskStarted(false);
 				// debug
 				Log.d("", "oM_go:stopCG");
 				
