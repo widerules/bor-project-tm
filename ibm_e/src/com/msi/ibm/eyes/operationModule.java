@@ -89,6 +89,8 @@ public class operationModule {
 		// two props F[0-3]~rpm[] (F0 -minEffective, F1= F2/F0, F2 - normal, F3
 		// -max), rpm~[0-1024]:[0:100;1:400;2:700;3:970;] )
 		// dt = 1000 mS, normal omega w(grad/sec)=10 grad/sec;
+		
+		/*
 		long dt = 1000;
 
 		// delta alpha da=taskDir[taskListCount]-currentDir[0];
@@ -126,7 +128,7 @@ public class operationModule {
 		CGlist[na][2] = taskListCoords[taskListCount][2];// z
 		CGlist[na][3] = taskDir[taskListCount];// dir
 		CGTimeList[na] = na * dt;
-
+		*/
 		// init go
 		startCGtime = System.currentTimeMillis();// clndr.getTimeInMillis();
 		stopCGtime = startCGtime + taskListTimeExpire[currentTask];

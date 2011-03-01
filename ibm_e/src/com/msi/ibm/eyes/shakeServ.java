@@ -54,7 +54,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 3000;//350
+	private static final int TIME_THRESHOLD = 1500;
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final String baudRate = "1200";// speed of data transfer
