@@ -54,7 +54,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 350;
+	private static final int TIME_THRESHOLD = 3000;//350
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final String baudRate = "1200";// speed of data transfer
@@ -340,7 +340,7 @@ public class shakeServ extends Service implements SensorEventListener {
 					Log.d("", "shS_oSCH_: back from go ;");
 				}
 				String posi = "";
-				// String posi = getPos();
+				posi = getPos();
 
 				Log.d("onShake", "doing positi:" + posi + ";");
 
@@ -464,7 +464,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		try {
 			Date cDate = new Date();
 			int tmpInt = Integer.parseInt(webDataAr[0])+1;
-			if (tmpInt>360){tmpInt=0;}
+			if (tmpInt>360){tmpInt=3;}
 			webDataAr[0] = tmpInt+"";
 
 			// locX=777;
@@ -478,6 +478,7 @@ public class shakeServ extends Service implements SensorEventListener {
 					+ "&ext=" + "!" + battLevel;
 
 			String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
+			Log.d("ar_wSndr:", urlStr );
 
 			URL myURL = new URL(urlStr);
 			URLConnection ucon = myURL.openConnection();
@@ -501,7 +502,9 @@ public class shakeServ extends Service implements SensorEventListener {
 					webDataAr[i + 1] = webDataAr[i];
 					webDataArTm[i + 1] = webDataArTm[i];
 				}
-				webDataAr[0] = webData;
+				webDataAr[0] = webData.trim();
+				Log.d("ar_wSndr:", "webData [" + webData + "]");
+				//webDataAr[0] = "180";
 				webDataArTm[0] = System.currentTimeMillis();
 			}
 

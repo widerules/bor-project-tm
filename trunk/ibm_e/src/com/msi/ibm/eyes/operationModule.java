@@ -92,6 +92,7 @@ public class operationModule {
 		long dt = 1000;
 
 		// delta alpha da=taskDir[taskListCount]-currentDir[0];
+		if (taskDir[taskListCount]==0){taskDir[taskListCount]=1;}
 		double da = taskDir[taskListCount] - currentDir[0];
 		Log.d("", "oM_nextTask_go:taskDir[taskListCount]:"
 				+ taskDir[taskListCount] + ";currentDir[0]:" + currentDir[0]);
