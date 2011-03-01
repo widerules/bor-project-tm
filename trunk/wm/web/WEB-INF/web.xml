@@ -24,6 +24,10 @@
         <servlet-name>genPath</servlet-name>
         <servlet-class>genPath</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>cmnd</servlet-name>
+        <servlet-class>cmnd</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>wm_s</servlet-name>
         <url-pattern>/wm_s</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>genPath</servlet-name>
         <url-pattern>/genPath</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>cmnd</servlet-name>
+        <url-pattern>/cmnd</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

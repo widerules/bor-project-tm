@@ -58,8 +58,8 @@ public class genPath extends HttpServlet {
             try {
                 Class.forName("org.postgresql.Driver");
                 String url = "jdbc:postgresql://127.0.0.1:5432/gisdb";
-                String username = "postgres";
-                String password = "postgres";
+                String username = "pgsql";
+                String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
@@ -93,7 +93,7 @@ public class genPath extends HttpServlet {
 
                 //view
                 out.println("<head> "
-                        + "    <meta http-equiv=\"refresh\" content=\"1;url=http://localhost:8080/wm/genPath?tm="+cal.get(Calendar.SECOND)+"\">"
+                        + "    <meta http-equiv=\"refresh\" content=\"1;url=http://92.63.96.27:8180/wm/genPath?tm="+cal.get(Calendar.SECOND)+"\">"
                         + "</head>");
 
                 out.println("st " + err + "<br/>");
@@ -117,9 +117,9 @@ public class genPath extends HttpServlet {
                     + " (now(),   now(),   " + v0+ ",     " + v1+ ",     " + v2+ ",     GeomFromText('POINT(" + lng + " " + lat + ")',32769),'" + a0+ " "+a1 +" "+ a2 + "'); ";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://127.0.0.1:5432/gisdb";
-                String username = "postgres";
-                String password = "postgres";
+                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
+                String username = "pgsql";
+                String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 st.executeUpdate(sqlReq1);

@@ -36,12 +36,17 @@ public class planekml extends HttpServlet {
         response.setContentType("application/vnd.google-earth.kml+xml");
         PrintWriter out = response.getWriter();
         try {
+            String rfrsh="2";
+            try{
+             rfrsh  = request.getParameter("r");
+            }catch(Exception e){}
             String path = "";
             double lat = 0;
             double lng = 0;
             double dir = 0;
             double rol = 0;
             double til = 0;
+            double sc_til = 0;
 
             String err = "";
             String sqlReq = " select "
@@ -50,8 +55,8 @@ public class planekml extends HttpServlet {
             try {
                 Class.forName("org.postgresql.Driver");
                 String url = "jdbc:postgresql://127.0.0.1:5432/gisdb";
-                String username = "postgres";
-                String password = "postgres";
+                String username = "pgsql";
+                String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
@@ -67,11 +72,12 @@ public class planekml extends HttpServlet {
                     if (j == 0) {
 
                         try {
-                            dir = Double.valueOf(rs.getString(3)) - 90;
+                            dir = Double.valueOf(rs.getString(3));
                             lat = Double.valueOf(rs.getString(7));
                             lng = Double.valueOf(rs.getString(6));
-                            rol = -Double.valueOf(rs.getString(5));
-                            til = -Double.valueOf(rs.getString(4));
+                            rol = Double.valueOf(rs.getString(5));
+                            til = Double.valueOf(rs.getString(4));
+                            sc_til=(til-(-90))/(90-(-90))*(1.1-0.7)+0.7;
                         } catch (Exception er) {
                         }
 
@@ -145,8 +151,8 @@ public class planekml extends HttpServlet {
                     + "		</Location>"
                     + "		<Orientation>"
                     + "			<heading>" + dir + "</heading>"
-                    + "			<tilt>" + rol + "</tilt>"
-                    + "			<roll>" + til + "</roll>"
+                    + "			<tilt>" + til + "</tilt>"
+                    + "			<roll>" + rol + "</roll>"
                     + "		</Orientation>"
                     + "		<Scale>"
                     + "			<x>1</x>"
@@ -184,51 +190,41 @@ public class planekml extends HttpServlet {
                     //+ "<flyToMode>smooth</flyToMode>"
                     + "      <longitude>" + lng + "</longitude>"
                     + "      <latitude>" + lat + "</latitude>"
-                    + "      <altitude>300</altitude>"
-                    + "      <heading>0</heading>"
+                    + "      <altitude>200</altitude>"
+                    + "      <heading>"+dir+"</heading>"
                     + "      <tilt>75</tilt>"
-                    + "      <range>1500</range>"
+                    + "      <range>500</range>"
                     + "      <altitudeMode>relativeToGround</altitudeMode>"
                     + "    </LookAt>"
-                    + " <ScreenOverlay id=\"khScreenOverlay757\">"
-                    + "  <name>Simple crosshairs</name>"
-                    + "  <Icon>"
-                    + "    <href>http://localhost:8080/wm/files/front_base.png</href>"
-                    + "  </Icon>"
-                    + "  <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>"
-                    + "  <screenXY x=\"0\" y=\"0.9\" xunits=\"fraction\" yunits=\"fraction\"/>"
-                    + "  <rotation>0</rotation>"
-                    + "  <size x=\"150\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
-                    + "</ScreenOverlay>"
                     + " <ScreenOverlay id=\"khScreenOverlay756\">"
                     + "  <name>Simple crosshairs</name>"
                     + "  <Icon>"
-                    + "    <href>http://localhost:8080/wm/files/front.png</href>"
+                    + "    <href>http://92.63.96.27:8180/wm/files/kren.png</href>"
                     + "  </Icon>"
-                    + "  <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <screenXY x=\"0\" y=\"0.9\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <rotation>"+rol+"</rotation>"
-                    + "  <size x=\"150\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
+                    + "  <size x=\"600\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
                     + "</ScreenOverlay>"
-                    + " <ScreenOverlay id=\"khScreenOverlay758\">"
+                    + " <ScreenOverlay id=\"khScreenOverlay757\">"
                     + "  <name>Simple crosshairs</name>"
                     + "  <Icon>"
-                    + "    <href>http://localhost:8080/wm/files/prof_base.png</href>"
+                    + "    <href>http://92.63.96.27:8180/wm/files/base.png</href>"
                     + "  </Icon>"
-                    + "  <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>"
-                    + "  <screenXY x=\"0\" y=\"0.7\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <screenXY x=\"0\" y=\"0.9\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <rotation>0</rotation>"
-                    + "  <size x=\"150\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
+                    + "  <size x=\"600\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
                     + "</ScreenOverlay>"
                     + " <ScreenOverlay id=\"khScreenOverlay759\">"
                     + "  <name>Simple crosshairs</name>"
                     + "  <Icon>"
-                    + "    <href>http://localhost:8080/wm/files/prof.png</href>"
+                    + "    <href>http://92.63.96.27:8180/wm/files/ground.png</href>"
                     + "  </Icon>"
-                    + "  <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>"
-                    + "  <screenXY x=\"0\" y=\"0.7\" xunits=\"fraction\" yunits=\"fraction\"/>"
-                    + "  <rotation>"+til+"</rotation>"
-                    + "  <size x=\"150\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
+                    + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <screenXY x=\"0\" y=\""+sc_til+"\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <rotation>0</rotation>"
+                    + "  <size x=\"600\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
                     + "</ScreenOverlay>"
                     + "</Document>"
                     + "</kml>";

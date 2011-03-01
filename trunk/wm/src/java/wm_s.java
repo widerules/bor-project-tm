@@ -38,7 +38,7 @@ public class wm_s extends HttpServlet {
         try {
 
             Calendar cal = new GregorianCalendar();
-            out.println(cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH) + " " + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR) + " " + cal.get(Calendar.MINUTE) + " " + cal.get(Calendar.SECOND) + " ");
+            //out.println(cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH) + " " + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR) + " " + cal.get(Calendar.MINUTE) + " " + cal.get(Calendar.SECOND) + " ");
 
 
 
@@ -51,6 +51,7 @@ public class wm_s extends HttpServlet {
             String a0 = request.getParameter("a0");
             String a1 = request.getParameter("a1");
             String a2 = request.getParameter("a2");
+            String ext  = request.getParameter("ext");
             //out.println(a1);
             /*
              *
@@ -142,7 +143,7 @@ public class wm_s extends HttpServlet {
             }
 
 
-             * http://192.168.0.102:8084/wm/wm_s
+             * http://192.168.0.102:8080/wm_s
             INSERT INTO timeline
             (srvtime, dvctime, orient1, orient2, orient3, "position",ext)
             VALUES
@@ -152,12 +153,12 @@ public class wm_s extends HttpServlet {
             String sqlReq = " INSERT INTO timeline "
                     + "             (srvtime, dvctime, orient1, orient2, orient3, \"position\",ext)"
                     + " VALUES "
-                    + " (now(),   now(),   " + v0+ ",     " + v1+ ",     " + v2+ ",     GeomFromText('POINT(" + lng + " " + lat + ")',32769),'" + a0+ " "+a1 +" "+ a2 + "'); ";
+                    + " (now(),   now(),   " + v0+ ",     " + v1+ ",     " + v2+ ",     GeomFromText('POINT(" + lng + " " + lat + ")',32769),'" + ext + "'); ";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://127.0.0.1:5432/gisdb";
-                String username = "postgres";
-                String password = "postgres";
+                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
+                String username = "pgsql";
+                String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 st.executeUpdate(sqlReq);
@@ -171,6 +172,30 @@ public class wm_s extends HttpServlet {
             } catch (Exception e) {
                 out.print("Exception!:"+e);
             }
+
+                       sqlReq = "SELECT cmnd FROM cmnds order by id desc limit 1;";
+                               String cmndR="";
+
+                try{
+                Class.forName("org.postgresql.Driver");
+                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
+                String username = "pgsql";
+                String password = "pgsql";
+                Connection con = DriverManager.getConnection(url, username, password);
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(sqlReq);
+                while (rs.next()) {
+                    cmndR=rs.getString(1);
+                }
+                rs.close();
+                st.close();
+                con.close();
+
+            } catch (Exception e) {
+                out.print("Exception!:"+e);
+            }
+
+            out.println(cmndR);
 
             /* TODO output your page here
             out.println("<html>");
