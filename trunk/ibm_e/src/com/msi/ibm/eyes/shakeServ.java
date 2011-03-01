@@ -43,6 +43,7 @@ import android.os.IBinder; //import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.widget.Toast;
 
 public class shakeServ extends Service implements SensorEventListener {
@@ -70,7 +71,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	private int mShakeCount = 0;
 	private long mLastShake;
 	private long mLastForce;
-	private Boolean taskStarted = false;
+	private static Boolean taskStarted = false;
 
 	private Handler mCleanLedHandler = new Handler();
 
@@ -93,7 +94,8 @@ public class shakeServ extends Service implements SensorEventListener {
 				// Unregisters the listener and registers it again.
 				mSensorEventManager.unregisterListener(shakeServ.this);
 				mSensorEventManager.registerListener(shakeServ.this, mSensor,
-						SensorManager.SENSOR_DELAY_NORMAL);
+				// SensorManager.SENSOR_DELAY_NORMAL);
+						SensorManager.SENSOR_DELAY_GAME);
 			}
 		}
 	};
@@ -109,12 +111,22 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static double dir1;
 	public static double dir2;
 
+	public static String webDataAr[] = new String[100]; // array of data from
+	// web
+	public static long webDataArTm[] = new long[100]; // array time of request
+	// data from web
+	public int webDataCount = 0; // curren counter value for webData array
+
 	public float[] aValues;
 	public float[] mValues;
 
 	@Override
 	public void onCreate() {
 		AudioSerialOutMono.activate();
+		for (int i = 0; i < 100; i++) {
+			webDataAr[i] = "250";
+			webDataArTm[i] = System.currentTimeMillis();
+		}
 
 		float[] mValues = null;
 		float[] aValues = null;
@@ -293,22 +305,35 @@ public class shakeServ extends Service implements SensorEventListener {
 				dir0 = mValues[0];
 				dir1 = mValues[1];
 				dir2 = mValues[2];
-//				Log.d("onShake", "ar_doing orient:" + "x "
-//						+ event.values[SensorManager.DATA_X] + ";y "
-//						+ event.values[SensorManager.DATA_Y] + ";z "
-//						+ event.values[SensorManager.DATA_Z]);
-				Log.d("onShake", "ar_doing orient:" + "x "
-						+ dir0 + ";y "
-						+ dir1 + ";z "
-						+ dir2);
+				// Log.d("onShake", "ar_doing orient:" + "x "
+				// + event.values[SensorManager.DATA_X] + ";y "
+				// + event.values[SensorManager.DATA_Y] + ";z "
+				// + event.values[SensorManager.DATA_Z]);
+				Log.d("onShake", "ar_doing orient:" + "x " + dir0 + ";y "
+						+ dir1 + ";z " + dir2);
 
-				if (!taskStarted) {
-					
-					operationModule.addTask(0.0, 0.0, 0, 360, 5000, false);
+				if (!getTaskStarted()) {
+					double tmpX = 0;
+					double tmpY = 0;
+					double tmpZ = 0;
+					int tmpDir = 0;
+					int tmpTE = 5000;
+					Boolean tmpTC = false;
+					try{
+					tmpDir = Integer.parseInt(webDataAr[0]);
+					//debug
+					//tmpDir++;
+					//if (tmpDir>360){tmpDir=0;}
+					//webDataAr[0]=tmpDir+"";
+					}catch(Exception e){}
+					Log.d("", "shS_oSCH_:addTask() x:"+ tmpX+";y:"+tmpY+";z:"+tmpZ+";dir:"+tmpDir+";te:"+tmpTE+";tc:"+tmpTC);
+					operationModule.addTask(tmpX, tmpY, tmpZ, tmpDir, tmpTE, tmpTC);
+					Log.d("", "shS_oSCH_:addTask() ended;");
+					setTaskStarted(true);
+					Log.d("", "shS_oSCH_:nextTask();taskStarted:"
+							+ getTaskStarted());
 					operationModule.nextTask();
-					taskStarted = true;
-					Log.d("", "shS_oSCH_:addTask(),nextTask();taskStarted;"
-							+ taskStarted);
+					Log.d("", "shS_oSCH_:nextTask() ended;");
 				} else {
 					Log.d("", "shS_oSCH_: start go ;");
 					operationModule.go();
@@ -336,7 +361,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						// webSender();
+						 webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
@@ -438,6 +463,9 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		try {
 			Date cDate = new Date();
+			int tmpInt = Integer.parseInt(webDataAr[0])+1;
+			if (tmpInt>360){tmpInt=0;}
+			webDataAr[0] = tmpInt+"";
 
 			// locX=777;
 			// locY=777;
@@ -456,12 +484,27 @@ public class shakeServ extends Service implements SensorEventListener {
 
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
-
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int current = 0;
-			while ((current = bis.read()) != -1) {
-				baf.append((byte) current);
+			String webData = "-";
+			try {
+				int current = 0;
+				while ((current = bis.read()) != -1) {
+					baf.append((byte) current);
+				}
+				webData = new String(baf.toByteArray());
+			} finally {
+				// baf.clear();
+				bis.close();
 			}
+			if (!webData.equalsIgnoreCase("-")) {
+				for (int i = 0; i < 99; i++) {
+					webDataAr[i + 1] = webDataAr[i];
+					webDataArTm[i + 1] = webDataArTm[i];
+				}
+				webDataAr[0] = webData;
+				webDataArTm[0] = System.currentTimeMillis();
+			}
+
 
 			// inetView.setText("inet answ: " + new
 			// String(baf.toByteArray()));
@@ -565,6 +608,19 @@ public class shakeServ extends Service implements SensorEventListener {
 			e.printStackTrace();
 		}
 		Log.d("ar_toRight", " stopt");
+	}
+
+	public static void setTaskStarted(Boolean taskStarted) {
+		shakeServ.taskStarted = taskStarted;
+	}
+
+	public static Boolean getTaskStarted() {
+		return taskStarted;
+	}
+
+	public static void setTaskStarted(boolean taskStarted2) {
+		// TODO Auto-generated method stub
+		taskStarted=taskStarted2;
 	}
 
 }
