@@ -257,6 +257,7 @@ public class AudioSerialOutMono {
 
 					p4 = newwave_l;// play
 
+					
 					// compas
 					// if (outStr.equalsIgnoreCase("toF")){p2=500;}// 23 - 73 -
 					// 120 170 1000~50ms
@@ -277,7 +278,7 @@ public class AudioSerialOutMono {
 						s1 = 150;
 					}
 					if (outStr.equalsIgnoreCase("2")) {
-						s1 = 1000;
+						s1 = 1000;	
 					}
 
 					p0 = 0;
