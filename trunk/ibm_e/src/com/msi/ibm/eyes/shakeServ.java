@@ -1,7 +1,8 @@
 package com.msi.ibm.eyes;
 /*
  * ?A) Podrobno danniye o sostoyanii Andro to server
- * 		!A.a)	
+ * 		!A.a)	otpravka pervichnih dannih na server
+ * 		?A.b)	opredelit' periodichnost' svyazi s serverom - otdelit' ot posilki command na ardu
  * 
  * ?B) Upravleniye zadaniyami s servera
  * 		!B.a)	commanda na stranize otpravki dannih(/wm_s)
@@ -11,7 +12,7 @@ package com.msi.ibm.eyes;
  * ?C) Algorim upravlenia
  * 		!C.a)	ispolzovat' uglovuyu skorost'
  * 		!C.b)	izmenyat' uglovuyu skorost' ot ugla
- * 		?C.c)	izmenyat' impuls ot ugla - dlitel'nost' raboti 	
+ * 		?C.c)	izmenyat' impuls kak func(ugla) - dlitel'nost' raboti(p=Ft) 	
  *  
  *  
  * */
