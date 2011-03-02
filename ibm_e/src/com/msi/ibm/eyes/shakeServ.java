@@ -139,7 +139,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	public void onCreate() {
 		AudioSerialOutMono.activate();
 		for (int i = 0; i < 100; i++) {
-			webDataAr[i] = "250";
+			webDataAr[i] = "0";
 			webDataArTm[i] = System.currentTimeMillis();
 		}
 
@@ -478,9 +478,9 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		try {
 			Date cDate = new Date();
-			int tmpInt = Integer.parseInt(webDataAr[0])+1;
-			if (tmpInt>360){tmpInt=3;}
-			webDataAr[0] = tmpInt+"";
+			//int tmpInt = Integer.parseInt(webDataAr[0])+1;
+			//if (tmpInt>360){tmpInt=3;}
+			//webDataAr[0] = tmpInt+"";
 
 			// locX=777;
 			// locY=777;
