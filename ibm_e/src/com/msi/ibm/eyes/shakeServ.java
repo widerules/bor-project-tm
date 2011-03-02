@@ -1,6 +1,20 @@
 package com.msi.ibm.eyes;
-
-//import i4nc4mp.myLock.CustomLockService.Task;
+/*
+ * ?A) Podrobno danniye o sostoyanii Andro to server
+ * 		!A.a)	
+ * 
+ * ?B) Upravleniye zadaniyami s servera
+ * 		!B.a)	commanda na stranize otpravki dannih(/wm_s)
+ * 		!B.b)	upravlenie(/cmnd) commandoy na stranize otpravki dannih
+ * 		?B.c)	krasivoye 	upravlenie(/cmnd) commandoy na stranize otpravki dannih(rul')
+ * 
+ * ?C) Algorim upravlenia
+ * 		!C.a)	ispolzovat' uglovuyu skorost'
+ * 		!C.b)	izmenyat' uglovuyu skorost' ot ugla
+ * 		?C.c)	izmenyat' impuls ot ugla - dlitel'nost' raboti 	
+ *  
+ *  
+ * */
 import com.msi.ibm.eyes.operationModule;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
