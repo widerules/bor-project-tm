@@ -69,7 +69,8 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int TIME_THRESHOLD = 1500;
+	private static final int web_THRESHOLD = 3000;
+	private static final int SENSOR_THRESHOLD = 400;
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final String baudRate = "1200";// speed of data transfer
@@ -266,7 +267,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			// mShakeCount = 0;
 			// }
 
-			if ((now - mLastTime) > TIME_THRESHOLD) {
+			if ((now - mLastTime) > SENSOR_THRESHOLD) {
 				Log.d("onShake", "ar_doing accele:" + "x "
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
@@ -295,26 +296,12 @@ public class shakeServ extends Service implements SensorEventListener {
 			// if ((now - mLastForce) > SHAKE_TIMEOUT) {
 			// mShakeCount = 0;
 			// }
-			if ((now - dLastTime) > TIME_THRESHOLD) {
+			if ((now - dLastTime) > SENSOR_THRESHOLD) {
 				dLastTime = now;
 				mValues = event.values;
 				dir0 = mValues[0];
 				dir1 = mValues[1];
 				dir2 = mValues[2];
-
-				// debug
-				// if ((mValues[0] < 90)&&(mValues[0] > 0)) { toRight("toR"); }
-				// if ((mValues[0] < 180)&&(mValues[0] > 90)) { toRight("toF");
-				// }
-				// if ((mValues[0] < 270)&&(mValues[0] > 180)) { toRight("toL");
-				// }
-				// if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB");
-				// }
-			}
-
-			if ((now - mLastTime) > TIME_THRESHOLD) {
-
-				mLastTime = now;
 				mValues = event.values;
 				aValues = event.values;
 				dir0 = mValues[0];
@@ -372,6 +359,20 @@ public class shakeServ extends Service implements SensorEventListener {
 						locY = tmpStr;
 					}
 				}
+
+				// debug
+				// if ((mValues[0] < 90)&&(mValues[0] > 0)) { toRight("toR"); }
+				// if ((mValues[0] < 180)&&(mValues[0] > 90)) { toRight("toF");
+				// }
+				// if ((mValues[0] < 270)&&(mValues[0] > 180)) { toRight("toL");
+				// }
+				// if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB");
+				// }
+			}
+
+			if ((now - mLastTime) > web_THRESHOLD) {
+
+				mLastTime = now;
 
 				new Thread() {
 					@Override
