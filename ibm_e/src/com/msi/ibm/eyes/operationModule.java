@@ -248,7 +248,7 @@ public class operationModule {
 				
 				
 				
-				cmnd(F);//send to ardu
+				cmnd(F,3);//send to ardu
 
 			} else {
 				shakeServ.setTaskStarted(false);
@@ -303,7 +303,7 @@ public class operationModule {
 				
 				
 				
-				cmnd(F);//send to ardu
+				cmnd(F,3);//send to ardu
 
 			}
 		} catch (Exception e) {
@@ -344,8 +344,8 @@ public class operationModule {
 //=======
 	
 //>>>>>>> .r61
-	private static void cmnd(int cmnd){
-		AudioSerialOutMono.outStr = cmnd+"";
+	private static void cmnd(int cmnd, int val){
+		AudioSerialOutMono.outStr = cmnd+"|"+val;
 
 		try {
 			AudioSerialOutMono.UpdateParameters();
