@@ -247,7 +247,7 @@ public class operationModule {
 				F=(int) Fc;
 				
 				
-				
+				//if (){}
 				cmnd(F,3);//send to ardu
 
 			} else {
