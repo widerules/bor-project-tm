@@ -242,13 +242,15 @@ public class operationModule {
 				
 				
 				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				Log.d("", "oM_go_F:" + Fc);
 				// send To Ardu
 				F=(int) Fc;
-				
-				
-				//if (){}
-				cmnd(F,3);//send to ardu
+				int Fval=1;
+				ltmp=(int)Math.abs(getTarget(curDir, aT));
+				if (ltmp<90){Fval=1;}
+				if ((ltmp>=90)&&(ltmp<120)){Fval=2;}
+				if ((ltmp>=120)&&(ltmp<=180)){Fval=3;}
+				Log.d("", "oM_go_F:" + Fc+";Fval:" + Fval+";");
+				cmnd(F,Fval);//send to ardu
 
 			} else {
 				shakeServ.setTaskStarted(false);
@@ -297,13 +299,14 @@ public class operationModule {
 				
 				
 				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				Log.d("", "oM_go_F:" + Fc);
-				// send To Ardu
 				F=(int) Fc;
-				
-				
-				
-				cmnd(F,3);//send to ardu
+				int Fval=1;
+				ltmp=(int)Math.abs(getTarget(curDir, aT));
+				if (ltmp<90){Fval=1;}
+				if ((ltmp>=90)&&(ltmp<120)){Fval=2;}
+				if ((ltmp>=120)&&(ltmp<=180)){Fval=3;}
+				Log.d("", "oM_go_F:" + Fc+";Fval:" + Fval+";");
+				cmnd(F,Fval);//send to ardu
 
 			}
 		} catch (Exception e) {
