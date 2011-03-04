@@ -5,6 +5,7 @@ package com.msi.ibm.eyes;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -266,20 +267,38 @@ public class AudioSerialOutMono {
 					// if (outStr.equalsIgnoreCase("toB")){p2=1500;}
 					// if (outStr.equalsIgnoreCase("toL")){p2=2000;}
 
-					if (outStr.equalsIgnoreCase("-2")) {
+				    StringTokenizer st = new StringTokenizer(outStr,"|");
+				    int j=0;
+				    String oS[]=new String[10];
+				    
+				     while (st.hasMoreTokens()) {
+				         oS[j]=st.nextToken();
+				         j++;
+				     }
+					
+					if (oS[0].equalsIgnoreCase("-2")) {
 						s1 = 200;
 					}// 23 - 73 - 120 170 1000~50ms
-					if (outStr.equalsIgnoreCase("-1")) {
+					if (oS[0].equalsIgnoreCase("-1")) {
 						s1 = 50;
 					}
-					if (outStr.equalsIgnoreCase("0")) {
+					if (oS[0].equalsIgnoreCase("0")) {
 						s1 = 100;
 					}
-					if (outStr.equalsIgnoreCase("1")) {
+					if (oS[0].equalsIgnoreCase("1")) {
 						s1 = 150;
 					}
-					if (outStr.equalsIgnoreCase("2")) {
+					if (oS[0].equalsIgnoreCase("2")) {
 						s1 = 1000;	
+					}
+					if (oS[1].equalsIgnoreCase("1")) {
+						s2 = 50;
+					}
+					if (oS[1].equalsIgnoreCase("2")) {
+						s2 = 100;
+					}
+					if (oS[1].equalsIgnoreCase("3")) {
+						s2 = 150;
 					}
 
 					p0 = 0;
