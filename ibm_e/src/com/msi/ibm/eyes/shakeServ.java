@@ -69,8 +69,12 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
 	private static final int FORCE_THRESHOLD = 350;
-	private static final int web_THRESHOLD = 3000;
+//<<<<<<< .mine
+	private static final int TIME_THRESHOLD = 15000;
+//=======
+	private static final int web_THRESHOLD = 15000;
 	private static final int SENSOR_THRESHOLD = 400;
+//>>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final String baudRate = "1200";// speed of data transfer
@@ -314,6 +318,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				Log.d("onShake", "ar_doing orient:" + "x " + dir0 + ";y "
 						+ dir1 + ";z " + dir2);
 
+				
 				if (!getTaskStarted()) {
 					double tmpX = 0;
 					double tmpY = 0;
@@ -377,7 +382,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						 webSender();
+						 //webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
