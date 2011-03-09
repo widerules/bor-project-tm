@@ -251,10 +251,11 @@ public class AudioSerialOutMono {
 					int p6 = 0;// play
 					int p7 = 0;// play
 
+					
 					int p = 50; // pause
 					int s1 = 500;// sigs
 					int s2 = 100;
-					int s3 = 100;
+					int s3 = 50;
 					// int state = 0;
 
 					p4 = newwave_l;// play
