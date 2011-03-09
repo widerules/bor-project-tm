@@ -250,7 +250,6 @@ public class AudioSerialOutMono {
 					int p5 = 0;// idle
 					int p6 = 0;// play
 					int p7 = 0;// play
-
 					
 					int p = 50; // pause
 					int s1 = 500;// sigs
