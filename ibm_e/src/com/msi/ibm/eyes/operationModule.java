@@ -214,7 +214,7 @@ public class operationModule {
 				double aT=taskDir[taskListCount];
 				double wn=0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
-				double wn_src=25; // g/sec
+				double wn_src=20; // g/sec
 				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
 				Log.d("", "oM_go-wn_src:" + wn_src+";");
 				Log.d("", "oM_go-targetDir:" + aT+";");
@@ -271,7 +271,7 @@ public class operationModule {
 				double aT=taskDir[taskListCount];
 				double wn=0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
-				double wn_src=25; // g/sec
+				double wn_src=20; // g/sec
 				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
 				Log.d("", "oM_go-wn_src:" + wn_src+";");
 				Log.d("", "oM_go-targetDir:" + aT+";");
@@ -304,7 +304,7 @@ public class operationModule {
 				ltmp=(int)Math.abs(getTarget(curDir, aT));
 				if (ltmp<90){Fval=1;}
 				if ((ltmp>=90)&&(ltmp<120)){Fval=2;}
-				if ((ltmp>=120)&&(ltmp<=180)){Fval=3;}
+				if ((ltmp>=150)&&(ltmp<=180)){Fval=3;}
 				Log.d("", "oM_go_F:" + Fc+";Fval:" + Fval+";");
 				cmnd(F,Fval);//send to ardu
 
