@@ -68,7 +68,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	final Handler uiThreadCallback = new Handler();
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
-	private static final int FORCE_THRESHOLD = 350;
+	private static final int FORCE_THRESHOLD = 200;
 //<<<<<<< .mine
 	private static final int TIME_THRESHOLD = 15000;
 //=======
@@ -382,7 +382,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						 //webSender();
+						 webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}

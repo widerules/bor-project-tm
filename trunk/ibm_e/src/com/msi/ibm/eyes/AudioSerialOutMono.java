@@ -254,7 +254,7 @@ public class AudioSerialOutMono {
 					int p = 50; // pause
 					int s1 = 500;// sigs
 					int s2 = 100;
-					int s3 = 50;
+					int s3 = 10;
 					// int state = 0;
 
 					p4 = newwave_l;// play
@@ -276,9 +276,9 @@ public class AudioSerialOutMono {
 				         j++;
 				     }
 					
-					if (oS[0].equalsIgnoreCase("-2")) {
-						s1 = 200;
-					}// 23 - 73 - 120 170 1000~50ms
+					//if (oS[0].equalsIgnoreCase("-2")) {
+					//	s1 = 200;
+					//}// 23 - 73 - 120 170 1000~50ms
 					if (oS[0].equalsIgnoreCase("-1")) {
 						s1 = 50;
 					}
@@ -288,9 +288,9 @@ public class AudioSerialOutMono {
 					if (oS[0].equalsIgnoreCase("1")) {
 						s1 = 150;
 					}
-					if (oS[0].equalsIgnoreCase("2")) {
-						s1 = 1000;	
-					}
+					//if (oS[0].equalsIgnoreCase("2")) {
+					//	s1 = 1000;	
+					//}
 					if (oS[1].equalsIgnoreCase("1")) {
 						s2 = 50;
 					}
@@ -373,7 +373,8 @@ public class AudioSerialOutMono {
 					}
 
 					// audiotrk.write(generatedSnd, 0, length);
-					audiotrk.write(generatedNewWave, 0, newwave_l);
+					//audiotrk.write(generatedNewWave, 0, newwave_l);
+					audiotrk.write(generatedNewWave, 0, 1000);
 					// debug
 					/*
 					 * String log_sdtr="lng:"+generatedSnd.length+";"; for (int
