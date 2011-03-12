@@ -214,7 +214,7 @@ public class operationModule {
 				double aT=taskDir[taskListCount];
 				double wn=0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
-				double wn_src=20; // g/sec
+				double wn_src=360; // g/sec
 				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
 				Log.d("", "oM_go-wn_src:" + wn_src+";");
 				Log.d("", "oM_go-targetDir:" + aT+";");
@@ -271,7 +271,7 @@ public class operationModule {
 				double aT=taskDir[taskListCount];
 				double wn=0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
-				double wn_src=20; // g/sec
+				double wn_src=360; // g/sec
 				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
 				Log.d("", "oM_go-wn_src:" + wn_src+";");
 				Log.d("", "oM_go-targetDir:" + aT+";");
