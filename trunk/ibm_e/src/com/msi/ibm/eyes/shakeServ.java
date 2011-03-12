@@ -68,11 +68,12 @@ public class shakeServ extends Service implements SensorEventListener {
 	final Handler uiThreadCallback = new Handler();
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
+	
 	private static final int FORCE_THRESHOLD = 200;
 //<<<<<<< .mine
 	private static final int TIME_THRESHOLD = 15000;
 //=======
-	private static final int web_THRESHOLD = 15000;
+	private static final int web_THRESHOLD = 2000;
 	private static final int SENSOR_THRESHOLD = 400;
 //>>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 300;
