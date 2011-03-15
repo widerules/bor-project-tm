@@ -63,6 +63,27 @@ import android.widget.Toast;
 
 public class shakeServ extends Service implements SensorEventListener {
 
+	//logger to ext column 
+	public static String dirc_log; //current direction 
+	public static String dirT_log; //target direction 
+	public static String dirTc_log; //current target direction(ati) 
+	public static String wc_log; //current angle speed 
+	public static String ctime_log; //current timestamp 
+	public static String F_log; //F -1 0 1 
+	public static String Fval_log; //value of F 
+
+	//control
+	public static String An_dirT_cntrl; 
+	public static String An_wmax_cntrl; 
+	public static String An_daz_cntrl; 
+	//public static String An_Tweb_cntrl; 
+	public static String An_TWebLog_cntrl; 
+	public static String An_TWebCntrl_cntrl; 
+	public static String An_TSens_cntrl; 
+	public static String An_TArdu_cntrl; 
+	
+
+	
 	private LocationManager locationManager;
 
 	final Handler uiThreadCallback = new Handler();
@@ -74,7 +95,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	private static final int TIME_THRESHOLD = 15000;
 //=======
 	private static final int web_THRESHOLD = 2000;
-	private static final int SENSOR_THRESHOLD = 400;
+	private static final int SENSOR_THRESHOLD = 1000;
 //>>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
