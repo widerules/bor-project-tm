@@ -96,7 +96,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	private static final int TIME_THRESHOLD = 15000;
 //=======
 	private static final int web_THRESHOLD = 1000;
-	private static final int SENSOR_THRESHOLD = 1000;
+	private static final int SENSOR_THRESHOLD = 500;
 //>>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
