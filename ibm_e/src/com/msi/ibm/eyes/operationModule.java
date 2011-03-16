@@ -32,8 +32,9 @@ public class operationModule {
 	private static long curTime = 0;
 	private static long preTime = 0;
 
-	private static double curDir=0;
-	private static double preDir=0;
+	private static double curDir = 0;
+	private static double preDir = 0;
+
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
 	 * 
@@ -89,46 +90,33 @@ public class operationModule {
 		// two props F[0-3]~rpm[] (F0 -minEffective, F1= F2/F0, F2 - normal, F3
 		// -max), rpm~[0-1024]:[0:100;1:400;2:700;3:970;] )
 		// dt = 1000 mS, normal omega w(grad/sec)=10 grad/sec;
-		
+
 		/*
-		long dt = 1000;
-
-		// delta alpha da=taskDir[taskListCount]-currentDir[0];
-		if (taskDir[taskListCount]==0){taskDir[taskListCount]=1;}
-		double da = taskDir[taskListCount] - currentDir[0];
-		Log.d("", "oM_nextTask_go:taskDir[taskListCount]:"
-				+ taskDir[taskListCount] + ";currentDir[0]:" + currentDir[0]);
-		if (da > 180) {
-			signF = -1;
-		} else {
-			signF = 1;
-		}
-
-		// step alpha sa = 10;
-		double sa = 10;
-		// na count of step alpha
-		na = (int) (da / sa);
-
-		int i = 0;
-
-		// format CG (pos(x,y,z,dir,time)[])
-		// double CGlist[][] = new double[1000][5];
-		// long CGTimeList[] = new long[1000];
-		for (i = 0; i < na; i++) {
-			CGlist[i][0] = taskListCoords[taskListCount][0];// x
-			CGlist[i][1] = taskListCoords[taskListCount][1];// y
-			CGlist[i][2] = taskListCoords[taskListCount][2];// z
-			CGlist[i][3] = currentDir[0] + i * sa;// dir
-			CGTimeList[i] = i * dt;
-			// time
-		}
-		na++;
-		CGlist[na][0] = taskListCoords[taskListCount][0];// x
-		CGlist[na][1] = taskListCoords[taskListCount][1];// y
-		CGlist[na][2] = taskListCoords[taskListCount][2];// z
-		CGlist[na][3] = taskDir[taskListCount];// dir
-		CGTimeList[na] = na * dt;
-		*/
+		 * long dt = 1000;
+		 * 
+		 * // delta alpha da=taskDir[taskListCount]-currentDir[0]; if
+		 * (taskDir[taskListCount]==0){taskDir[taskListCount]=1;} double da =
+		 * taskDir[taskListCount] - currentDir[0]; Log.d("",
+		 * "oM_nextTask_go:taskDir[taskListCount]:" + taskDir[taskListCount] +
+		 * ";currentDir[0]:" + currentDir[0]); if (da > 180) { signF = -1; }
+		 * else { signF = 1; }
+		 * 
+		 * // step alpha sa = 10; double sa = 10; // na count of step alpha na =
+		 * (int) (da / sa);
+		 * 
+		 * int i = 0;
+		 * 
+		 * // format CG (pos(x,y,z,dir,time)[]) // double CGlist[][] = new
+		 * double[1000][5]; // long CGTimeList[] = new long[1000]; for (i = 0; i
+		 * < na; i++) { CGlist[i][0] = taskListCoords[taskListCount][0];// x
+		 * CGlist[i][1] = taskListCoords[taskListCount][1];// y CGlist[i][2] =
+		 * taskListCoords[taskListCount][2];// z CGlist[i][3] = currentDir[0] +
+		 * i * sa;// dir CGTimeList[i] = i * dt; // time } na++; CGlist[na][0] =
+		 * taskListCoords[taskListCount][0];// x CGlist[na][1] =
+		 * taskListCoords[taskListCount][1];// y CGlist[na][2] =
+		 * taskListCoords[taskListCount][2];// z CGlist[na][3] =
+		 * taskDir[taskListCount];// dir CGTimeList[na] = na * dt;
+		 */
 		// init go
 		startCGtime = System.currentTimeMillis();// clndr.getTimeInMillis();
 		stopCGtime = startCGtime + taskListTimeExpire[currentTask];
@@ -137,7 +125,6 @@ public class operationModule {
 		go();
 
 	}
-	
 
 	public static void go() {
 		Log.d("", "oM_go:start;");
@@ -158,197 +145,219 @@ public class operationModule {
 
 			if (ct < stopCGtime) {
 				/*
-				if (cgs == 0) {//???
-					F = signF * 1;
-					Log.d("", "oM_go_F:" + F);
-				} else {
-					// if (prevcgs!=cgs){//calc F once per CGperiod
-					// correct F as delta between theor and real alpha
-					// double da=(CGlist[cgs][3]-shakeServ.dir0)*signF;
-					// if (da>alphaprec){F++;}
-					// get w(i) ugl.skorost' i & i-1
-					Log.d("", "oM_go_:cgs:" + cgs + ";cgdir_i:"
-							+ CGlist[cgs][3] + ";cgdir_i-1:"
-							+ CGlist[cgs - 1][3]);
-					Log.d("", "oM_go_:cgs:" + cgs + ";cgtm_i:"
-							+ CGTimeList[cgs] + ";cgtm_i-1:"
-							+ CGTimeList[cgs - 1]);
-					double wi = signF * (CGlist[cgs][3] - CGlist[cgs - 1][3])
-							/ (CGTimeList[cgs] - CGTimeList[cgs - 1]);
-					
-					double tha=wi*(ct - startCGtime - CGTimeList[cgs - 1])+ CGlist[cgs - 1][3];//theo alpa in current time
-					double wci = (shakeServ.dir0 - CGlist[cgs - 1][3])/ (ct - startCGtime - CGTimeList[cgs - 1]);
-					double log_cda=shakeServ.dir0 - CGlist[cgs - 1][3];
-					long log_cdt=(ct - startCGtime );
-					Log.d("", "oM_go_cda:" + log_cda+";cdir0:"+shakeServ.dir0+";CGdir[cgs - 1]:"+CGlist[cgs - 1][3]+";tha:"+tha+";curRelTime:"+log_cdt);
-					Log.d("", "oM_go_wi:" + wi);
-					Log.d("", "oM_go_wci:" + wci);
+				 * if (cgs == 0) {//??? F = signF * 1; Log.d("", "oM_go_F:" +
+				 * F); } else { // if (prevcgs!=cgs){//calc F once per CGperiod
+				 * // correct F as delta between theor and real alpha // double
+				 * da=(CGlist[cgs][3]-shakeServ.dir0)*signF; // if
+				 * (da>alphaprec){F++;} // get w(i) ugl.skorost' i & i-1
+				 * Log.d("", "oM_go_:cgs:" + cgs + ";cgdir_i:" + CGlist[cgs][3]
+				 * + ";cgdir_i-1:" + CGlist[cgs - 1][3]); Log.d("",
+				 * "oM_go_:cgs:" + cgs + ";cgtm_i:" + CGTimeList[cgs] +
+				 * ";cgtm_i-1:" + CGTimeList[cgs - 1]); double wi = signF *
+				 * (CGlist[cgs][3] - CGlist[cgs - 1][3]) / (CGTimeList[cgs] -
+				 * CGTimeList[cgs - 1]);
+				 * 
+				 * double tha=wi*(ct - startCGtime - CGTimeList[cgs - 1])+
+				 * CGlist[cgs - 1][3];//theo alpa in current time double wci =
+				 * (shakeServ.dir0 - CGlist[cgs - 1][3])/ (ct - startCGtime -
+				 * CGTimeList[cgs - 1]); double log_cda=shakeServ.dir0 -
+				 * CGlist[cgs - 1][3]; long log_cdt=(ct - startCGtime );
+				 * Log.d("", "oM_go_cda:" +
+				 * log_cda+";cdir0:"+shakeServ.dir0+";CGdir[cgs - 1]:"
+				 * +CGlist[cgs - 1][3]+";tha:"+tha+";curRelTime:"+log_cdt);
+				 * Log.d("", "oM_go_wi:" + wi); Log.d("", "oM_go_wci:" + wci);
+				 * 
+				 * //if (wci > wi) { if (shakeServ.dir0>tha){ F--; } else { F++;
+				 * } // Limit F if (F < -1) F = -1; if (F > 1) F = 1; Log.d("",
+				 * "oM_go_F:" + F); // send To Ardu // } }
+				 */
+				preTime = curTime;
+				curTime = ct;
 
-					//if (wci > wi) {
-					if (shakeServ.dir0>tha){
-						F--;
-					} else {
-						F++;
-					}
-					// Limit F
-					if (F < -1)
-						F = -1;
-					if (F > 1)
-						F = 1;
-					Log.d("", "oM_go_F:" + F);
-					// send To Ardu
-					// }
-				}
-				*/
-				preTime=curTime;
-				curTime=ct;
+				preDir = curDir;
+				curDir = shakeServ.dir0;
 				
-				preDir=curDir;
-				curDir=shakeServ.dir0;
-				
-				Log.d("", "oM_go-:================================"+curTime);
-				Log.d("", "oM_go-pT:" + preTime+"; cT:"+curTime);
-				Log.d("", "oM_go-pD:" + preDir+"; cD:"+curDir);
 
-				
-				double aT=taskDir[taskListCount];
-				double wn=0;
+				Log.d("", "oM_go-:================================" + curTime);
+				Log.d("", "oM_go-pT:" + preTime + "; cT:" + curTime);
+				Log.d("", "oM_go-pD:" + preDir + "; cD:" + curDir);
+
+				double aT = taskDir[taskListCount];
+
+				double wn = 0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
-				double wn_src=360; // g/sec
-				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
-				Log.d("", "oM_go-wn_src:" + wn_src+";");
-				Log.d("", "oM_go-targetDir:" + aT+";");
-				//get_wn ai aT
-				int ltmp = (int) (getTarget(curDir,aT)/Math.abs(getTarget(curDir, aT)));
-				wn=-wn_src*ltmp;
-				Log.d("", "oM_go-wn:" + wn+";");
+				double wn_src = 360; // g/sec
+				wn_src = wn_src * Math.abs(getTarget(curDir, aT)) / 180;
 				
+				Log.d("", "oM_go-wn_src:" + wn_src + ";");
+				Log.d("", "oM_go-targetDir:" + aT + ";");
+				// get_wn ai aT
+				int ltmp = (int) (getTarget(curDir, aT) / Math.abs(getTarget(
+						curDir, aT)));
+				wn = -wn_src * ltmp;
 				
-				double ati=0;
-				//get_ati wn ai-1 ti ti-1
-				ati=(wn*(curTime-preTime)/1000+preDir);
-				Log.d("", "oM_go-targetCurrentDir:" + ati+";");
+				Log.d("", "oM_go-wn:" + wn + ";");
 
-				
-				long Fc =0;
-				//get_Fc ai ati  (Fc - current Force)
-				if (Math.abs(ati-aT)>10){//pacific area
-				Fc = getTarget(curDir, ati);
-				Fc=-Fc/Math.abs(Fc);
+				double ati = 0;
+				// get_ati wn ai-1 ti ti-1
+				ati = (wn * (curTime - preTime) / 1000 + preDir);
+				Log.d("", "oM_go-targetCurrentDir:" + ati + ";");
+
+				long Fc = 0;
+				// get_Fc ai ati (Fc - current Force)
+				if (Math.abs(ati - aT) > 10) {// pacific area
+					Fc = getTarget(curDir, ati);
+					Fc = -Fc / Math.abs(Fc);
 				}
-				Log.d("", "oM_go-currentForce:" + Fc+";");
-				
-				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				
-				
-				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				// send To Ardu
-				F=(int) Fc;
-				int Fval=1;
-				ltmp=(int)Math.abs(getTarget(curDir, aT));
-				if (ltmp<90){Fval=1;}
-				if ((ltmp>=90)&&(ltmp<120)){Fval=2;}
-				if ((ltmp>=120)&&(ltmp<=180)){Fval=3;}
-				Log.d("", "oM_go_F:" + Fc+";Fval:" + Fval+";");
-				cmnd(F,Fval);//send to ardu
+				Log.d("", "oM_go-currentForce:" + Fc + ";");
 
+				Log.d("", "oM_go_cda:" + shakeServ.dir0 + ";taskDir:"
+						+ taskDir[taskListCount]);
+
+				// Log.d("", "oM_go_cda:" +
+				// shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				// send To Ardu
+				F = (int) Fc;
+				int Fval = 1;
+				ltmp = (int) Math.abs(getTarget(curDir, aT));
+				if (ltmp < 90) {
+					Fval = 1;
+				}
+				if ((ltmp >= 90) && (ltmp < 120)) {
+					Fval = 2;
+				}
+				if ((ltmp >= 120) && (ltmp <= 180)) {
+					Fval = 3;
+				}
+				Log.d("", "oM_go_F:" + Fc + ";Fval:" + Fval + ";");
+				shakeServ.ctime_log=ct+"";
+				shakeServ.dirc_log=curDir+"";
+				shakeServ.dirT_log=aT+"";
+				shakeServ.dirTc_log=ati+"";
+				shakeServ.wc_log=wn+"";
+				shakeServ.wmax_log=wn_src+"";
+				shakeServ.F_log=F+"";
+				shakeServ.Fval_log=Fval+"";
+				cmnd(F, Fval);// send to ardu
 			} else {
 				shakeServ.setTaskStarted(false);
 				// debug
 				Log.d("", "oM_go:stopCG");
-				
-				preTime=curTime;
-				curTime=ct;
-				
-				preDir=curDir;
-				curDir=shakeServ.dir0;
-				
-				Log.d("", "oM_go-:================================"+curTime);
-				Log.d("", "oM_go-pT:" + preTime+"; cT:"+curTime);
-				Log.d("", "oM_go-pD:" + preDir+"; cD:"+curDir);
 
-				
-				double aT=taskDir[taskListCount];
-				double wn=0;
+				preTime = curTime;
+				curTime = ct;
+
+				preDir = curDir;
+				curDir = shakeServ.dir0;
+
+				Log.d("", "oM_go-:================================" + curTime);
+				Log.d("", "oM_go-pT:" + preTime + "; cT:" + curTime);
+				Log.d("", "oM_go-pD:" + preDir + "; cD:" + curDir);
+
+				double aT = taskDir[taskListCount];
+				double wn = 0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
-				double wn_src=360; // g/sec
-				wn_src=wn_src*Math.abs(getTarget(curDir,aT))/180;
-				Log.d("", "oM_go-wn_src:" + wn_src+";");
-				Log.d("", "oM_go-targetDir:" + aT+";");
-				//get_wn ai aT
-				int ltmp = (int) (getTarget(curDir,aT)/Math.abs(getTarget(curDir, aT)));
-				wn=-wn_src*ltmp;
-				Log.d("", "oM_go-wn:" + wn+";");
-				
-				
-				double ati=0;
-				//get_ati wn ai-1 ti ti-1
-				ati=(wn*(curTime-preTime)/1000+preDir);
-				Log.d("", "oM_go-targetCurrentDir:" + ati+";");
+				double wn_src = 360; // g/sec
+				wn_src = wn_src * Math.abs(getTarget(curDir, aT)) / 180;
+				Log.d("", "oM_go-wn_src:" + wn_src + ";");
+				Log.d("", "oM_go-targetDir:" + aT + ";");
+				// get_wn ai aT
+				int ltmp = (int) (getTarget(curDir, aT) / Math.abs(getTarget(
+						curDir, aT)));
+				wn = -wn_src * ltmp;
+				Log.d("", "oM_go-wn:" + wn + ";");
 
-				
-				long Fc =0;
-				//get_Fc ai ati  (Fc - current Force)
-				if (Math.abs(ati-aT)>10){//pacific area
-				Fc = getTarget(curDir, ati);
-				Fc=-Fc/Math.abs(Fc);
+				double ati = 0;
+				// get_ati wn ai-1 ti ti-1
+				ati = (wn * (curTime - preTime) / 1000 + preDir);
+				Log.d("", "oM_go-targetCurrentDir:" + ati + ";");
+
+				long Fc = 0;
+				// get_Fc ai ati (Fc - current Force)
+				if (Math.abs(ati - aT) > 10) {// pacific area
+					Fc = getTarget(curDir, ati);
+					Fc = -Fc / Math.abs(Fc);
 				}
-				Log.d("", "oM_go-currentForce:" + Fc+";");
-				
-				Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				
-				
-				//Log.d("", "oM_go_cda:" + shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
-				F=(int) Fc;
-				int Fval=1;
-				ltmp=(int)Math.abs(getTarget(curDir, aT));
-				if (ltmp<90){Fval=1;}
-				if ((ltmp>=90)&&(ltmp<120)){Fval=2;}
-				if ((ltmp>=150)&&(ltmp<=180)){Fval=3;}
-				Log.d("", "oM_go_F:" + Fc+";Fval:" + Fval+";");
-				cmnd(F,Fval);//send to ardu
+				Log.d("", "oM_go-currentForce:" + Fc + ";");
 
+				Log.d("", "oM_go_cda:" + shakeServ.dir0 + ";taskDir:"
+						+ taskDir[taskListCount]);
+
+				// Log.d("", "oM_go_cda:" +
+				// shakeServ.dir0+";taskDir:"+taskDir[taskListCount]);
+				F = (int) Fc;
+				int Fval = 1;
+				ltmp = (int) Math.abs(getTarget(curDir, aT));
+				if (ltmp < 90) {
+					Fval = 1;
+				}
+				if ((ltmp >= 90) && (ltmp < 120)) {
+					Fval = 2;
+				}
+				if ((ltmp >= 150) && (ltmp <= 180)) {
+					Fval = 3;
+				}
+				Log.d("", "oM_go_F:" + Fc + ";Fval:" + Fval + ";");
+				shakeServ.ctime_log=ct+"";
+				shakeServ.dirc_log=curDir+"";
+				shakeServ.dirT_log=aT+"";
+				shakeServ.dirTc_log=ati+"";
+				shakeServ.wc_log=wn+"";
+				shakeServ.wmax_log=wn_src+"";
+				shakeServ.F_log=F+"";
+				shakeServ.Fval_log=Fval+"";
+				
+				
+				cmnd(F, Fval);// send to ardu
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 
 		}
 
-
 		// send commands
 		Log.d("", "oM_go:stop;");
 
 	}
-	
-	private static long getTarget(double srcDir, double dstDir){
-	
-        double ra =Math.toRadians(dstDir-srcDir);
-        double sa=Math.sin(ra);
-        long b=Math.round(-1*(sa/Math.abs(sa))*Math.toDegrees(Math.acos(Math.cos(ra))));
-        return b;
-	}
-//<<<<<<< .mine
-	/*
 
-<object id="javademo" classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701" height="357" width="630">
-<param name="url" value="http://www.nasa.gov/multimedia/isslivestream.asx">
-<param name="scale" value="tofit">
-<param name="DisplaySize" value="0">
-<param name="fullScreen" value="true">
-<param name="filename" value="http://www.nasa.gov/multimedia/isslivestream.asx">
-<param name="autoplay" value="true">
-<param name="showcontrols" value="1">
-<param name="autostart" value="true">
-<param name="name" value="javademo">
-<param name="src" value="http://www.nasa.gov/multimedia/isslivestream.asx"><embed id="javademo" type="application/x-mplayer2" src="http://www.nasa.gov/multimedia/isslivestream.asx" name="javademo" autostart="true" showcontrols="1" autoplay="true" filename="http://www.nasa.gov/multimedia/isslivestream.asx" fullscreen="true" displaysize="0" scale="tofit" url="http://www.nasa.gov/multimedia/isslivestream.asx" height="357" width="630">
-</object>
+	private static long getTarget(double srcDir, double dstDir) {
+
+		double ra = Math.toRadians(dstDir - srcDir);
+		double sa = Math.sin(ra);
+		long b = Math.round(-1 * (sa / Math.abs(sa))
+				* Math.toDegrees(Math.acos(Math.cos(ra))));
+		return b;
+	}
+
+	// <<<<<<< .mine
+	/*
+	 * 
+	 * <object id="javademo"
+	 * classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6"codebase=
+	 * "http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"
+	 * height="357" width="630"> <param name="url"
+	 * value="http://www.nasa.gov/multimedia/isslivestream.asx"> <param
+	 * name="scale" value="tofit"> <param name="DisplaySize" value="0"> <param
+	 * name="fullScreen" value="true"> <param name="filename"
+	 * value="http://www.nasa.gov/multimedia/isslivestream.asx"> <param
+	 * name="autoplay" value="true"> <param name="showcontrols" value="1">
+	 * <param name="autostart" value="true"> <param name="name"
+	 * value="javademo"> <param name="src"
+	 * value="http://www.nasa.gov/multimedia/isslivestream.asx"><embed
+	 * id="javademo" type="application/x-mplayer2"
+	 * src="http://www.nasa.gov/multimedia/isslivestream.asx" name="javademo"
+	 * autostart="true" showcontrols="1" autoplay="true"
+	 * filename="http://www.nasa.gov/multimedia/isslivestream.asx"
+	 * fullscreen="true" displaysize="0" scale="tofit"
+	 * url="http://www.nasa.gov/multimedia/isslivestream.asx" height="357"
+	 * width="630"> </object>
 	 */
-	
-//=======
-	
-//>>>>>>> .r61
-	private static void cmnd(int cmnd, int val){
-		AudioSerialOutMono.outStr = cmnd+"|"+val;
+
+	// =======
+
+	// >>>>>>> .r61
+	private static void cmnd(int cmnd, int val) {
+		AudioSerialOutMono.outStr = cmnd + "|" + val;
 
 		try {
 			AudioSerialOutMono.UpdateParameters();
@@ -360,6 +369,6 @@ public class operationModule {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 }
