@@ -68,6 +68,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static String dirT_log; //target direction 
 	public static String dirTc_log; //current target direction(ati) 
 	public static String wc_log; //current angle speed 
+	public static String wmax_log; 
 	public static String ctime_log; //current timestamp 
 	public static String F_log; //F -1 0 1 
 	public static String Fval_log; //value of F 
@@ -94,7 +95,7 @@ public class shakeServ extends Service implements SensorEventListener {
 //<<<<<<< .mine
 	private static final int TIME_THRESHOLD = 15000;
 //=======
-	private static final int web_THRESHOLD = 2000;
+	private static final int web_THRESHOLD = 1000;
 	private static final int SENSOR_THRESHOLD = 1000;
 //>>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 300;
@@ -157,7 +158,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	// web
 	public static long webDataArTm[] = new long[100]; // array time of request
 	// data from web
-	public int webDataCount = 0; // curren counter value for webData array
+	public static int webDataCount = 0; // curren counter value for webData array
 
 	public float[] aValues;
 	public float[] mValues;
