@@ -130,7 +130,7 @@ public class operationModule {
 		Log.d("", "oM_go:start;");
 		try {
 			// D) run CG array
-			long prevt=ct;
+			long prevt = ct;
 			ct = System.currentTimeMillis();// clndr.getTimeInMillis();//
 			// current time
 			long dt = stopCGtime - ct;
@@ -177,9 +177,7 @@ public class operationModule {
 
 				preDir = curDir;
 				curDir = shakeServ.dir0;
-				int delta_t = (int) (curTime-preTime);
-				
-				
+				int delta_t = (int) (curTime - preTime);
 
 				Log.d("", "oM_go-:================================" + curTime);
 				Log.d("", "oM_go-pT:" + preTime + "; cT:" + curTime);
@@ -190,22 +188,17 @@ public class operationModule {
 				double wn = 0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
 				double wn_src = 120; // g/sec
-				//wn_src = wn_src * Math.abs(getTarget(curDir, aT)) / 180;
-				
+				// wn_src = wn_src * Math.abs(getTarget(curDir, aT)) / 180;
+
 				Log.d("", "oM_go-wn_src:" + wn_src + ";");
 				Log.d("", "oM_go-targetDir:" + aT + ";");
 				// get_wn ai aT
 				int ltmp = (int) (getTarget(curDir, aT) / Math.abs(getTarget(
 						curDir, aT)));
-				//wn = -wn_src * ltmp;
-				wn=-(int) (getTarget(curDir, preDir)/delta_t*1000);
-				long wn_temp = 	(getTarget(curDir, preDir)/delta_t*1000);
-					
-					
-				
-				
-				
-				
+				// wn = -wn_src * ltmp;
+				wn = -(int) (getTarget(curDir, preDir) / delta_t * 1000);
+				long wn_temp = (getTarget(curDir, preDir) / delta_t * 1000);
+
 				Log.d("", "oM_go-wn:" + wn + ";");
 
 				double ati = 0;
@@ -215,10 +208,10 @@ public class operationModule {
 
 				long Fc = 0;
 				// get_Fc ai ati (Fc - current Force)
-//				if (Math.abs(ati - aT) > 20) {// pacific area
-					Fc = getTarget(curDir, aT);
-					Fc = -Fc / Math.abs(Fc);
-	//			}
+				// if (Math.abs(ati - aT) > 20) {// pacific area
+				Fc = getTarget(curDir, aT);
+				Fc = -Fc / Math.abs(Fc);
+				// }
 				Log.d("", "oM_go-currentForce:" + Fc + ";");
 
 				Log.d("", "oM_go_cda:" + shakeServ.dir0 + ";taskDir:"
@@ -240,22 +233,25 @@ public class operationModule {
 					Fval = 3;
 				}
 				Log.d("", "oM_go_F:" + Fc + ";Fval:" + Fval + ";");
-				shakeServ.ctime_log=ct+"";
-				shakeServ.dirc_log=curDir+"";
-				shakeServ.dirT_log=aT+"";
-				shakeServ.dirTc_log=ati+"";
-				shakeServ.wc_log=wn+"";
-				shakeServ.wmax_log=wn_src+"";
-				shakeServ.F_log=F+"";
-				shakeServ.Fval_log=Fval+"";
-				if (Math.abs(curDir - aT) < 20) {// pacific area
-					F=0;
+				shakeServ.ctime_log = ct + "";
+				shakeServ.dirc_log = curDir + "";
+				shakeServ.dirT_log = aT + "";
+				shakeServ.dirTc_log = ati + "";
+				shakeServ.wc_log = wn + "";
+				shakeServ.wmax_log = wn_src + "";
+				shakeServ.F_log = F + "";
+				shakeServ.Fval_log = Fval + "";
+				int da_temp=(int)getTarget(curDir, aT);
+				if (Math.abs(da_temp) < 20) {// pacific area - move area
+					F = 2;
 				}
-				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:"+aT+";dirTc:"+ati+";wc:"+wn_temp+";wmax:"+wn_src+";F:"+F+";Fval:"+Fval+";");
-				Log.d("web_log", "cd:" + curDir + ";pd:" + preDir + ";ct: "+curTime+ ";pt: "+preTime+";dt:"+delta_t+";");
+				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:" + aT
+						+ ";dirTc:" + ati + ";wc:" + wn_temp + ";wmax:"
+						+ wn_src + ";F:" + F + ";Fval:" + Fval + ";");
+				Log.d("web_log", "cd:" + curDir + ";pd:" + preDir + ";ct: "
+						+ curTime + ";pt: " + preTime + ";dt:" + delta_t + ";");
 				cmnd(F, Fval);// send to ardu
-				
-				
+
 			} else {
 				shakeServ.setTaskStarted(false);
 				// debug
@@ -263,7 +259,7 @@ public class operationModule {
 
 				preTime = curTime;
 				curTime = ct;
-				int delta_t = (int) (curTime-preTime);
+				int delta_t = (int) (curTime - preTime);
 
 				preDir = curDir;
 				curDir = shakeServ.dir0;
@@ -276,16 +272,17 @@ public class operationModule {
 				double wn = 0;
 				// wn_src=f(getTarget(curDir,aT)) - chem blizhe - tem men'she
 				double wn_src = 120; // g/sec
-				//wn_src = wn_src * Math.abs(getTarget(curDir, aT)) / 180;//wn_src=f(ac-aT)
-				
+				// wn_src = wn_src * Math.abs(getTarget(curDir, aT)) /
+				// 180;//wn_src=f(ac-aT)
+
 				Log.d("", "oM_go-wn_src:" + wn_src + ";");
 				Log.d("", "oM_go-targetDir:" + aT + ";");
 				// get_wn ai aT
 				int ltmp = (int) (getTarget(curDir, aT) / Math.abs(getTarget(
 						curDir, aT)));
 				wn = -wn_src * ltmp;
-				wn=-(int) (getTarget(curDir, preDir)/delta_t*1000);
-				long wn_temp = 	(getTarget(curDir, preDir)/delta_t*1000);
+				wn = -(int) (getTarget(curDir, preDir) / delta_t * 1000);
+				long wn_temp = (getTarget(curDir, preDir) / delta_t * 1000);
 				Log.d("", "oM_go-wn:" + wn + ";");
 
 				double ati = 0;
@@ -295,8 +292,8 @@ public class operationModule {
 
 				long Fc = 0;
 				// get_Fc ai ati (Fc - current Force)
-					Fc = getTarget(curDir, aT);
-					Fc = -Fc / Math.abs(Fc);
+				Fc = getTarget(curDir, aT);
+				Fc = -Fc / Math.abs(Fc);
 				Log.d("", "oM_go-currentForce:" + Fc + ";");
 
 				Log.d("", "oM_go_cda:" + shakeServ.dir0 + ";taskDir:"
@@ -317,21 +314,25 @@ public class operationModule {
 					Fval = 3;
 				}
 				Log.d("", "oM_go_F:" + Fc + ";Fval:" + Fval + ";");
-				shakeServ.ctime_log=ct+"";
-				shakeServ.dirc_log=curDir+"";
-				shakeServ.dirT_log=aT+"";
-				shakeServ.dirTc_log=ati+"";
-				shakeServ.wc_log=wn+"";
-				shakeServ.wmax_log=wn_src+"";
-				shakeServ.F_log=F+"";
-				shakeServ.Fval_log=Fval+"";
-				
-				if (Math.abs(curDir - aT) < 20) {// pacific area
-					F=0;
+				shakeServ.ctime_log = ct + "";
+				shakeServ.dirc_log = curDir + "";
+				shakeServ.dirT_log = aT + "";
+				shakeServ.dirTc_log = ati + "";
+				shakeServ.wc_log = wn + "";
+				shakeServ.wmax_log = wn_src + "";
+				shakeServ.F_log = F + "";
+				shakeServ.Fval_log = Fval + "";
+
+				int da_temp=(int)getTarget(curDir, aT);
+				if (Math.abs(da_temp) < 20) {// pacific area - move area
+					F = 0;
 				}
-				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:"+aT+";dirTc:"+ati+";wc:"+wn_temp+";wmax:"+wn_src+";F:"+F+";Fval:"+Fval+";");
-				Log.d("web_log", "cd:" + curDir + ";pd:" + preDir + ";ct: "+curTime+ ";pt: "+preTime+";dt:"+delta_t+";");
-				
+				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:" + aT
+						+ ";dirTc:" + ati + ";wc:" + wn_temp + ";wmax:"
+						+ wn_src + ";F:" + F + ";Fval:" + Fval + ";");
+				Log.d("web_log", "cd:" + curDir + ";pd:" + preDir + ";ct: "
+						+ curTime + ";pt: " + preTime + ";dt:" + delta_t + ";");
+
 				cmnd(F, Fval);// send to ardu
 			}
 		} catch (Exception e) {
