@@ -347,10 +347,11 @@ public class shakeServ extends Service implements SensorEventListener {
 					double tmpY = 0;
 					double tmpZ = 0;
 					int tmpDir = 0;
-					int tmpTE = 5000;
+					int tmpTE = 0;
 					Boolean tmpTC = false;
 					try{
 					tmpDir = Integer.parseInt(webDataAr[0]);
+					tmpTE=Integer.parseInt(webDataAr[1]);
 					//debug
 					//tmpDir++;
 					//if (tmpDir>360){tmpDir=0;}

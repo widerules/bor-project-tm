@@ -288,6 +288,9 @@ public class AudioSerialOutMono {
 					if (oS[0].equalsIgnoreCase("1")) {
 						s1 = 150;
 					}
+					if (oS[0].equalsIgnoreCase("2")) {
+						s1 = 200;
+					}
 					//if (oS[0].equalsIgnoreCase("2")) {
 					//	s1 = 1000;	
 					//}
