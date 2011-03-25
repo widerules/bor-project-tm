@@ -139,7 +139,7 @@ public class operationModule {
 
 			// cgs current step of cg
 			int prevcgs = cgs;
-			cgs = (int) ((ct - startCGtime) * na / taskListTimeExpire[taskListCount]);
+			//cgs = (int) ((ct - startCGtime) * na / taskListTimeExpire[taskListCount]);
 			Log.d("", "oM_go_:cgs:" + cgs
 					+ ";taskListTimeExpire[taskListCount]:"
 					+ taskListTimeExpire[taskListCount] + ";");
