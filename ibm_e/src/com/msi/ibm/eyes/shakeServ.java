@@ -157,7 +157,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static long webDataArTm[] = new long[100]; // array time of request
 	// data from web
 	public static int webDataCount = 0; // curren counter value for webData
-										// array
+	// array
 
 	public float[] aValues;
 	public float[] mValues;
@@ -349,7 +349,8 @@ public class shakeServ extends Service implements SensorEventListener {
 					Boolean tmpTC = false;
 					try {
 
-						StringTokenizer parser = new StringTokenizer(webDataAr[0], "|");
+						StringTokenizer parser = new StringTokenizer(
+								webDataAr[0], "|");
 						String tmpStr = "";
 						int i = 0;
 						while (parser.hasMoreTokens()) {
@@ -359,12 +360,13 @@ public class shakeServ extends Service implements SensorEventListener {
 								tmpDir = Integer.parseInt(tmpStr);
 							}
 							if (i == 2) {
-								tmpTE = Integer.parseInt(tmpStr);;
+								tmpTE = Integer.parseInt(tmpStr);
+								;
 							}
 						}
 
-						//tmpDir = Integer.parseInt(webDataAr[0]);
-						//tmpTE = Integer.parseInt(webDataAr[1]);
+						// tmpDir = Integer.parseInt(webDataAr[0]);
+						// tmpTE = Integer.parseInt(webDataAr[1]);
 						// debug
 						// tmpDir++;
 						// if (tmpDir>360){tmpDir=0;}
@@ -414,6 +416,8 @@ public class shakeServ extends Service implements SensorEventListener {
 				// }
 				// if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB");
 				// }
+				//debug
+				if (webDataAr[0].equalsIgnoreCase("120|5000")){webDataAr[0] = "120|0";}
 			}
 
 			if ((now - mLastTime) > web_THRESHOLD) {
@@ -524,6 +528,9 @@ public class shakeServ extends Service implements SensorEventListener {
 		Log.d("wSndr", "background task - start");
 
 		try {
+			// debug
+			webDataAr[0] = "120|5000";
+
 			Date cDate = new Date();
 			// int tmpInt = Integer.parseInt(webDataAr[0])+1;
 			// if (tmpInt>360){tmpInt=3;}
@@ -548,7 +555,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			String webData = "-";
+			String webData = "120|5000";
 			try {
 				int current = 0;
 				while ((current = bis.read()) != -1) {
