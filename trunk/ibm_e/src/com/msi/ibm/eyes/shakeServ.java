@@ -1,4 +1,5 @@
 package com.msi.ibm.eyes;
+
 /*
  * ?A) Podrobno danniye o sostoyanii Andro to server
  * 		!A.a)	otpravka pervichnih dannih na server
@@ -63,41 +64,38 @@ import android.widget.Toast;
 
 public class shakeServ extends Service implements SensorEventListener {
 
-	//logger to ext column 
-	public static String dirc_log; //current direction 
-	public static String dirT_log; //target direction 
-	public static String dirTc_log; //current target direction(ati) 
-	public static String wc_log; //current angle speed 
-	public static String wmax_log; 
-	public static String ctime_log; //current timestamp 
-	public static String F_log; //F -1 0 1 
-	public static String Fval_log; //value of F 
+	// logger to ext column
+	public static String dirc_log; // current direction
+	public static String dirT_log; // target direction
+	public static String dirTc_log; // current target direction(ati)
+	public static String wc_log; // current angle speed
+	public static String wmax_log;
+	public static String ctime_log; // current timestamp
+	public static String F_log; // F -1 0 1
+	public static String Fval_log; // value of F
 
-	//control
-	public static String An_dirT_cntrl; 
-	public static String An_wmax_cntrl; 
-	public static String An_daz_cntrl; 
-	//public static String An_Tweb_cntrl; 
-	public static String An_TWebLog_cntrl; 
-	public static String An_TWebCntrl_cntrl; 
-	public static String An_TSens_cntrl; 
-	public static String An_TArdu_cntrl; 
-	
+	// control
+	public static String An_dirT_cntrl;
+	public static String An_wmax_cntrl;
+	public static String An_daz_cntrl;
+	// public static String An_Tweb_cntrl;
+	public static String An_TWebLog_cntrl;
+	public static String An_TWebCntrl_cntrl;
+	public static String An_TSens_cntrl;
+	public static String An_TArdu_cntrl;
 
-	
 	private LocationManager locationManager;
 
 	final Handler uiThreadCallback = new Handler();
 	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
 
-	
 	private static final int FORCE_THRESHOLD = 200;
-//<<<<<<< .mine
+	// <<<<<<< .mine
 	private static final int TIME_THRESHOLD = 15000;
-//=======
+	// =======
 	private static final int web_THRESHOLD = 1000;
 	private static final int SENSOR_THRESHOLD = 500;
-//>>>>>>> .r79
+	// >>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 300;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final String baudRate = "1200";// speed of data transfer
@@ -158,7 +156,8 @@ public class shakeServ extends Service implements SensorEventListener {
 	// web
 	public static long webDataArTm[] = new long[100]; // array time of request
 	// data from web
-	public static int webDataCount = 0; // curren counter value for webData array
+	public static int webDataCount = 0; // curren counter value for webData
+										// array
 
 	public float[] aValues;
 	public float[] mValues;
@@ -341,7 +340,6 @@ public class shakeServ extends Service implements SensorEventListener {
 				Log.d("onShake", "ar_doing orient:" + "x " + dir0 + ";y "
 						+ dir1 + ";z " + dir2);
 
-				
 				if (!getTaskStarted()) {
 					double tmpX = 0;
 					double tmpY = 0;
@@ -349,16 +347,35 @@ public class shakeServ extends Service implements SensorEventListener {
 					int tmpDir = 0;
 					int tmpTE = 0;
 					Boolean tmpTC = false;
-					try{
-					tmpDir = Integer.parseInt(webDataAr[0]);
-					tmpTE=Integer.parseInt(webDataAr[1]);
-					//debug
-					//tmpDir++;
-					//if (tmpDir>360){tmpDir=0;}
-					//webDataAr[0]=tmpDir+"";
-					}catch(Exception e){}
-					Log.d("", "shS_oSCH_:addTask() x:"+ tmpX+";y:"+tmpY+";z:"+tmpZ+";dir:"+tmpDir+";te:"+tmpTE+";tc:"+tmpTC);
-					operationModule.addTask(tmpX, tmpY, tmpZ, tmpDir, tmpTE, tmpTC);
+					try {
+
+						StringTokenizer parser = new StringTokenizer(webDataAr[0], "|");
+						String tmpStr = "";
+						int i = 0;
+						while (parser.hasMoreTokens()) {
+							i++;
+							tmpStr = parser.nextToken();
+							if (i == 1) {
+								tmpDir = Integer.parseInt(tmpStr);
+							}
+							if (i == 2) {
+								tmpTE = Integer.parseInt(tmpStr);;
+							}
+						}
+
+						//tmpDir = Integer.parseInt(webDataAr[0]);
+						//tmpTE = Integer.parseInt(webDataAr[1]);
+						// debug
+						// tmpDir++;
+						// if (tmpDir>360){tmpDir=0;}
+						// webDataAr[0]=tmpDir+"";
+					} catch (Exception e) {
+					}
+					Log.d("", "shS_oSCH_:addTask() x:" + tmpX + ";y:" + tmpY
+							+ ";z:" + tmpZ + ";dir:" + tmpDir + ";te:" + tmpTE
+							+ ";tc:" + tmpTC);
+					operationModule.addTask(tmpX, tmpY, tmpZ, tmpDir, tmpTE,
+							tmpTC);
 					Log.d("", "shS_oSCH_:addTask() ended;");
 					setTaskStarted(true);
 					Log.d("", "shS_oSCH_:nextTask();taskStarted:"
@@ -406,7 +423,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				new Thread() {
 					@Override
 					public void run() {
-						 webSender();
+						webSender();
 						// _doInBackgroundPost();
 						// uiThreadCallback.post(runInUIThread);
 					}
@@ -508,9 +525,9 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		try {
 			Date cDate = new Date();
-			//int tmpInt = Integer.parseInt(webDataAr[0])+1;
-			//if (tmpInt>360){tmpInt=3;}
-			//webDataAr[0] = tmpInt+"";
+			// int tmpInt = Integer.parseInt(webDataAr[0])+1;
+			// if (tmpInt>360){tmpInt=3;}
+			// webDataAr[0] = tmpInt+"";
 
 			// locX=777;
 			// locY=777;
@@ -523,7 +540,7 @@ public class shakeServ extends Service implements SensorEventListener {
 					+ "&ext=" + "!" + battLevel;
 
 			String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
-			Log.d("ar_wSndr:", urlStr );
+			Log.d("ar_wSndr:", urlStr);
 
 			URL myURL = new URL(urlStr);
 			URLConnection ucon = myURL.openConnection();
@@ -547,12 +564,13 @@ public class shakeServ extends Service implements SensorEventListener {
 					webDataAr[i + 1] = webDataAr[i];
 					webDataArTm[i + 1] = webDataArTm[i];
 				}
-				webDataAr[0] = webData.trim();
+
+				// webDataAr[0] = webData.trim();
+				webDataAr[0] = "120|5000";
 				Log.d("ar_wSndr:", "webData [" + webData + "]");
-				//webDataAr[0] = "180";
+				// webDataAr[0] = "180";
 				webDataArTm[0] = System.currentTimeMillis();
 			}
-
 
 			// inetView.setText("inet answ: " + new
 			// String(baf.toByteArray()));
@@ -668,7 +686,7 @@ public class shakeServ extends Service implements SensorEventListener {
 
 	public static void setTaskStarted(boolean taskStarted2) {
 		// TODO Auto-generated method stub
-		taskStarted=taskStarted2;
+		taskStarted = taskStarted2;
 	}
 
 }
