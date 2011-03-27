@@ -8,11 +8,11 @@ import android.util.Log;
 public class operationModule {
 	static Calendar clndr = Calendar.getInstance();
 	private static int taskListCount = 0;
-	private static double taskListCoords[][] = new double[100][3];
-	private static double taskDir[] = new double[100];// 0-360
-	private static long taskListTimeExpire[] = new long[100]; // time task in
+	private static double taskListCoords[][] = new double[100000][3];
+	private static double taskDir[] = new double[100000];// 0-360
+	private static long taskListTimeExpire[] = new long[100000]; // time task in
 	// mSec
-	private static Boolean taskListTaskComplete[] = new Boolean[100];
+	private static Boolean taskListTaskComplete[] = new Boolean[100000];
 	private static int currentTask = 0;
 	private static double currentCoords[] = new double[3];
 	private static double currentDir[] = new double[3];
@@ -47,6 +47,7 @@ public class operationModule {
 	 */
 	public static void addTask(double x, double y, double h, int dir, long tE,
 			Boolean tC) {
+		//if (taskListCount>98){taskListCount=0;}
 		taskListCount++;
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
