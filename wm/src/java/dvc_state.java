@@ -3,23 +3,22 @@
  * and open the template in the editor.
  */
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-
-//import javax.servlet.*;
-//import javax.servlet.http.*;
-
-import java.util.*;
-import java.sql.*;
 
 /**
  *
  * @author Bor
  */
-public class cmnd extends HttpServlet {
+public class dvc_state extends HttpServlet {
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,34 +31,15 @@ public class cmnd extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String cmndR = "";
-        String cmndR_fwd = "0";
-        String cmnd = request.getParameter("cmnd");
-        cmndR_fwd = request.getParameter("cmnd_fwd");
-        String fwd = request.getParameter("fwd");
-        String command_state = "";
-        try{ int temp=0; temp=Integer.parseInt(cmndR_fwd); cmndR_fwd=temp+""; }catch(Exception e){cmndR_fwd="0";}
-
-        String sqlReq = "INSERT INTO cmnds(cmnd,cntrl_dirt,cntrl_te) VALUES ('" + cmnd + "',"+cmnd+","+cmndR_fwd+");";
-        String cmndR_R = cmnd;
-        String cmndR_L = cmnd;
         try {
-            try {
-                Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
-                String password = "pgsql";
-                Connection con = DriverManager.getConnection(url, username, password);
-                Statement st = con.createStatement();
-                st.executeUpdate(sqlReq);
-                st.close();
-                con.close();
+        String command_state = "";
+        String device_state = "";
 
-            } catch (Exception e) {
-                out.print("Exception insert:" + e);
-            }
+        String cD="";
+        String tD="";
+        String tE="";
 
-            sqlReq = "SELECT * FROM cmnds order by id desc limit 1;";
+            String sqlReq = "SELECT now(),* FROM cmnds order by id desc limit 1;";
             try {
                 Class.forName("org.postgresql.Driver");
                 String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
@@ -69,68 +49,76 @@ public class cmnd extends HttpServlet {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
                 while (rs.next()) {
-                    cmndR = rs.getString(9);
-                    for (int i=1;i<11;i++){
-                        String temp="";
-                        try{temp=rs.getString(i).trim();}catch(Exception e){};
-                    command_state+="|"+temp;
+                    //cmndR = rs.getString(9);
+                    for (int i = 1; i < 12; i++) {
+                        String temp = "";
+                        try {
+                            temp = rs.getString(i).trim();
+                            if (i==3){tD=temp;}
+                            if (i==11){tE=temp;}
+                        } catch (Exception e) {
+                        }
+                        ;
+                        command_state += "|" + temp;
                     }
                 }
                 rs.close();
                 st.close();
                 con.close();
                 //String fwd="";
-
-                int int_cmndR = 0;
-                int_cmndR = Integer.parseInt(cmndR);
-
-
-                int r = int_cmndR + 20;
-                int l = int_cmndR - 20;
-                cmndR_R = r + "";
-                cmndR_L = l + "";
-
-
             } catch (Exception e) {
                 out.print("Exception select:" + e);
             }
-
-
-
-            //TODO output your page here
+            sqlReq = "SELECT id, srvtime, dvctime, orient1, orient2, orient3, X(\"position\"), Y(\"position\"),ext FROM timeline order by id desc limit 1;";
+            try {
+                Class.forName("org.postgresql.Driver");
+                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
+                String username = "pgsql";
+                String password = "pgsql";
+                Connection con = DriverManager.getConnection(url, username, password);
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(sqlReq);
+                while (rs.next()) {
+                    //cmndR = rs.getString(9);
+                    for (int i = 1; i < 9; i++) {
+                        String temp = "";
+                        try {
+                            temp = rs.getString(i).trim();
+                             if (i==4){cD=temp;}
+                       } catch (Exception e) {
+                        }
+                        ;
+                        device_state += "|" + temp;
+                    }
+                }
+                rs.close();
+                st.close();
+                con.close();
+                //String fwd="";
+            } catch (Exception e) {
+                out.print("Exception select:" + e);
+            }
+            //WEB OUT
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet cmnd</title>");
+            out.println("<meta http-equiv=\"refresh\" content=\"3\">");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet cmnd at " + request.getContextPath() + "</h1>");
-            out.println("<hr/>command state:<br/>" + command_state + "<hr/>");
-            out.println("<form action='/wm/cmnd'>");
-            out.println("<input type=text name=cmnd value='" + cmndR + "'></input>");
-            out.println("<br/><input type=text name=cmnd_fwd value='" + 0 + "'></input>");
-            String fwd_s=" ";
-            try{
-            if (fwd.equals("on")){
-                fwd_s="checked='checked'";
-            }else{
-                fwd_s="checked=''";
-            }}catch(Exception e){}
-            out.println("<input type=checkbox name=fwd "+fwd_s+" />");
-            out.println("<input type=submit />");
-            out.println("<hr/>");
-            out.println("<a href='http://92.63.96.27:8180/wm/cmnd?cmnd=" + cmndR_L + "'> toLEFT  </a>");
-            out.println("_____________________");
-            out.println("<a href='http://92.63.96.27:8180/wm/cmnd?cmnd=" + cmndR_R + "'> toRIGHT </a>");
-            out.println("<hr/>");
-            out.println("</form>");
-
-
+            out.println("device and command state: <br/>");
+            out.println(command_state + "|" + device_state);
+            out.println("<br/> tD|cD|tE <br/>");
+            out.println( tD+" | "+cD+" | " + tE + " <br/>");
             out.println("</body>");
             out.println("</html>");
 
         } finally {
             out.close();
         }
+
+
+
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -173,7 +173,7 @@ public class wm_s extends HttpServlet {
                 out.print("Exception!:"+e);
             }
 
-                       sqlReq = "SELECT cmnd FROM cmnds order by id desc limit 1;";
+                       sqlReq = "SELECT cmnd,cntrl_te FROM cmnds order by id desc limit 1;";
                                String cmndR="";
 
                 try{
@@ -185,7 +185,7 @@ public class wm_s extends HttpServlet {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
                 while (rs.next()) {
-                    cmndR=rs.getString(1);
+                    cmndR=rs.getString(1)+"|"+rs.getString(2);
                 }
                 rs.close();
                 st.close();

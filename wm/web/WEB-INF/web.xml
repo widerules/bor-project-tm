@@ -28,6 +28,10 @@
         <servlet-name>cmnd</servlet-name>
         <servlet-class>cmnd</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>dvc_state</servlet-name>
+        <servlet-class>dvc_state</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>wm_s</servlet-name>
         <url-pattern>/wm_s</url-pattern>
@@ -55,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>cmnd</servlet-name>
         <url-pattern>/cmnd</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dvc_state</servlet-name>
+        <url-pattern>/dvc_state</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
