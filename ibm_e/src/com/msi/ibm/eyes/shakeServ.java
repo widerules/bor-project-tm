@@ -166,7 +166,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	public void onCreate() {
 		AudioSerialOutMono.activate();
 		for (int i = 0; i < 100; i++) {
-			webDataAr[i] = "0";
+			webDataAr[i] = "0|0";
 			webDataArTm[i] = System.currentTimeMillis();
 		}
 
@@ -345,9 +345,13 @@ public class shakeServ extends Service implements SensorEventListener {
 					double tmpY = 0;
 					double tmpZ = 0;
 					int tmpDir = 0;
-					int tmpTE = 0;
+					int tmpTE = 5000;
 					Boolean tmpTC = false;
-					try {
+//<<<<<<< .mine
+					try{
+					//tmpDir = Integer.parseInt(webDataAr[0]);
+					//tmpTE=Integer.parseInt(webDataAr[1]);
+					
 
 						StringTokenizer parser = new StringTokenizer(
 								webDataAr[0], "|");
@@ -417,7 +421,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				// if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB");
 				// }
 				//debug
-				if (webDataAr[0].equalsIgnoreCase("120|5000")){webDataAr[0] = "120|0";}
+				//if (webDataAr[0].equalsIgnoreCase("120|5000")){webDataAr[0] = "120|0";}
 			}
 
 			if ((now - mLastTime) > web_THRESHOLD) {
@@ -529,7 +533,7 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		try {
 			// debug
-			webDataAr[0] = "120|5000";
+			//webDataAr[0] = "120|5000";
 
 			Date cDate = new Date();
 			// int tmpInt = Integer.parseInt(webDataAr[0])+1;
@@ -555,7 +559,7 @@ public class shakeServ extends Service implements SensorEventListener {
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			String webData = "120|5000";
+			String webData = "";
 			try {
 				int current = 0;
 				while ((current = bis.read()) != -1) {
@@ -571,9 +575,21 @@ public class shakeServ extends Service implements SensorEventListener {
 					webDataAr[i + 1] = webDataAr[i];
 					webDataArTm[i + 1] = webDataArTm[i];
 				}
+//<<<<<<< .mine
+				
+//			     StringTokenizer st = new StringTokenizer(webData,"|");
+//			     int i=0;
+///			     while (st.hasMoreTokens()) {
+//						webDataAr[i] = st.nextToken().trim();
+//						i++;
+//			     }
+				
+				
+//=======
 
-				// webDataAr[0] = webData.trim();
-				webDataAr[0] = "120|5000";
+				 webDataAr[0] = webData.trim();
+				//webDataAr[0] = "120|5000";
+//>>>>>>> .r93
 				Log.d("ar_wSndr:", "webData [" + webData + "]");
 				// webDataAr[0] = "180";
 				webDataArTm[0] = System.currentTimeMillis();
