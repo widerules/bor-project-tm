@@ -35,6 +35,8 @@ public class operationModule {
 	private static double curDir = 0;
 	private static double preDir = 0;
 
+	private static boolean isTestComplete = false;
+
 	/*
 	 * 1)tE.prio > tC.prio ?!tE:go(T);nextTask();
 	 * 
@@ -55,6 +57,15 @@ public class operationModule {
 		Log.d("", "oM_nextTask_addTask:x:" + taskListCoords[taskListCount][0]
 				+ ";taskDir:" + taskDir[taskListCount] + ";tE:"
 				+ taskListTimeExpire[taskListCount]);
+
+		// test
+		// for (int i=-360;i<360;i++){
+		// for (int j=-360;j<360;j++){
+		// int res =(int) getTarget(i, j);
+		// Log.d("test getTarget(src,dst)","["+ i+","+j+"]:"+res+";");
+		// }
+		// }
+
 	}
 
 	public static void nextTask() {
@@ -244,6 +255,7 @@ public class operationModule {
 				int da_temp=(int)getTarget(curDir, aT);
 				if (Math.abs(da_temp) < 20) {// pacific area - move area
 					F = 2;
+//>>>>>>> .r91
 				}
 				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:" + aT
 						+ ";dirTc:" + ati + ";wc:" + wn_temp + ";wmax:"
