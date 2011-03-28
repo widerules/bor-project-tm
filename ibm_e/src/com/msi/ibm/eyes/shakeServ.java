@@ -84,6 +84,17 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static String An_TSens_cntrl;
 	public static String An_TArdu_cntrl;
 
+	// accel for local tracking
+	public static float aclTrk_ar[][] = new float[100000][3];// 0x 1y 2z
+	public static long aclTrk_arCount = 0;
+	public static float acl_x = 0;
+	public static float acl_y = 0;
+	public static float acl_z = 0;
+	public static float acl_vx = 0;
+	public static float acl_vy = 0;
+	public static float acl_vz = 0;
+	public static long acl_pt = 0;
+
 	private LocationManager locationManager;
 
 	final Handler uiThreadCallback = new Handler();
@@ -182,8 +193,8 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		// Get the default sensor for accel
 		mSensor = mSensorEventManager
-		// .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-				.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		// .getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
 		// Register for events.
 		mSensorEventManager.registerListener(this, mSensor,
@@ -288,7 +299,9 @@ public class shakeServ extends Service implements SensorEventListener {
 		// if(event.sensor.getType() != Sensor.TYPE_ACCELEROMETER) return;
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			long now = System.currentTimeMillis();
-
+			netxAccl(event.values[SensorManager.DATA_X],
+					event.values[SensorManager.DATA_X],
+					event.values[SensorManager.DATA_X], now);
 			// if ((now - mLastForce) > SHAKE_TIMEOUT) {
 			// mShakeCount = 0;
 			// }
@@ -298,6 +311,9 @@ public class shakeServ extends Service implements SensorEventListener {
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
+				Log.d("accl_offset", "accl_offset x:" + acl_x + ";y:" + acl_y
+						+ ";z:" + acl_z + ";cnt:" + aclTrk_arCount + ";pt:"
+						+ acl_pt);
 
 				/*
 				 * long diff = now - mLastTime; float speed =
@@ -347,11 +363,10 @@ public class shakeServ extends Service implements SensorEventListener {
 					int tmpDir = 0;
 					int tmpTE = 5000;
 					Boolean tmpTC = false;
-//<<<<<<< .mine
-					try{
-					//tmpDir = Integer.parseInt(webDataAr[0]);
-					//tmpTE=Integer.parseInt(webDataAr[1]);
-					
+					// <<<<<<< .mine
+					try {
+						// tmpDir = Integer.parseInt(webDataAr[0]);
+						// tmpTE=Integer.parseInt(webDataAr[1]);
 
 						StringTokenizer parser = new StringTokenizer(
 								webDataAr[0], "|");
@@ -377,6 +392,7 @@ public class shakeServ extends Service implements SensorEventListener {
 						// webDataAr[0]=tmpDir+"";
 					} catch (Exception e) {
 					}
+
 					Log.d("", "shS_oSCH_:addTask() x:" + tmpX + ";y:" + tmpY
 							+ ";z:" + tmpZ + ";dir:" + tmpDir + ";te:" + tmpTE
 							+ ";tc:" + tmpTC);
@@ -420,8 +436,9 @@ public class shakeServ extends Service implements SensorEventListener {
 				// }
 				// if ((mValues[0] < 360)&&(mValues[0] > 270)) { toRight("toB");
 				// }
-				//debug
-				//if (webDataAr[0].equalsIgnoreCase("120|5000")){webDataAr[0] = "120|0";}
+				// debug
+				// if (webDataAr[0].equalsIgnoreCase("120|5000")){webDataAr[0] =
+				// "120|0";}
 			}
 
 			if ((now - mLastTime) > web_THRESHOLD) {
@@ -533,7 +550,7 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		try {
 			// debug
-			//webDataAr[0] = "120|5000";
+			// webDataAr[0] = "120|5000";
 
 			Date cDate = new Date();
 			// int tmpInt = Integer.parseInt(webDataAr[0])+1;
@@ -575,21 +592,20 @@ public class shakeServ extends Service implements SensorEventListener {
 					webDataAr[i + 1] = webDataAr[i];
 					webDataArTm[i + 1] = webDataArTm[i];
 				}
-//<<<<<<< .mine
-				
-//			     StringTokenizer st = new StringTokenizer(webData,"|");
-//			     int i=0;
-///			     while (st.hasMoreTokens()) {
-//						webDataAr[i] = st.nextToken().trim();
-//						i++;
-//			     }
-				
-				
-//=======
+				// <<<<<<< .mine
 
-				 webDataAr[0] = webData.trim();
-				//webDataAr[0] = "120|5000";
-//>>>>>>> .r93
+				// StringTokenizer st = new StringTokenizer(webData,"|");
+				// int i=0;
+				// / while (st.hasMoreTokens()) {
+				// webDataAr[i] = st.nextToken().trim();
+				// i++;
+				// }
+
+				// =======
+
+				webDataAr[0] = webData.trim();
+				// webDataAr[0] = "120|5000";
+				// >>>>>>> .r93
 				Log.d("ar_wSndr:", "webData [" + webData + "]");
 				// webDataAr[0] = "180";
 				webDataArTm[0] = System.currentTimeMillis();
@@ -710,6 +726,33 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static void setTaskStarted(boolean taskStarted2) {
 		// TODO Auto-generated method stub
 		taskStarted = taskStarted2;
+	}
+
+	public static void netxAccl(float values, float values2, float values3,
+			long ct) {
+		aclTrk_arCount++;
+		if (aclTrk_arCount == 98000) {
+			aclTrk_arCount = 0;
+		}
+		float ax = (float) (values+0.28);
+		float ay = (float) (values2-0.57);
+		float az = (float) (values3+10.31);
+		aclTrk_ar[(int) aclTrk_arCount][0] = ax;
+		aclTrk_ar[(int) aclTrk_arCount][1] = ay;
+		aclTrk_ar[(int) aclTrk_arCount][2] = az;
+		if (acl_pt != 0) {
+			float dt = (ct - acl_pt) * 1000;
+			acl_x = acl_x + acl_vx * dt + ax * dt * dt / 2;
+			acl_y = acl_y + acl_vy * dt + ay * dt * dt / 2;
+			acl_z = acl_z + acl_vz * dt + az * dt * dt / 2;
+			acl_vx = acl_vx + ax * dt;
+			acl_vy = acl_vy + ay * dt;
+			acl_vz = acl_vz + az * dt;
+			acl_pt = ct;
+		} else {
+			acl_pt = ct;
+		}
+
 	}
 
 }
