@@ -85,15 +85,25 @@ public class shakeServ extends Service implements SensorEventListener {
 	public static String An_TArdu_cntrl;
 
 	// accel for local tracking
-	public static float aclTrk_ar[][] = new float[100000][3];// 0x 1y 2z
+	public static double aclTrk_ar[][] = new double[100000][3];// 0x 1y 2z
 	public static long aclTrk_arCount = 0;
-	public static float acl_x = 0;
-	public static float acl_y = 0;
-	public static float acl_z = 0;
-	public static float acl_vx = 0;
-	public static float acl_vy = 0;
-	public static float acl_vz = 0;
+	public static double acl_x = 0;
+	public static double acl_y = 0;
+	public static double acl_z = 0;
+	public static double acl_vx = 0;
+	public static double acl_vy = 0;
+	public static double acl_vz = 0;
+	public static double acl_ax = 0;
+	public static double acl_ay = 0;
+	public static double acl_az = 0;
+	public static double acl_ex = 0;
+	public static double acl_ey = 0;
+	public static double acl_ez = 0;
 	public static long acl_pt = 0;
+	public static double acl_pax = 0;
+	public static double acl_pay = 0;
+	public static double acl_paz = 0;
+	public static double acl_dt = 0;
 
 	private LocationManager locationManager;
 
@@ -300,8 +310,8 @@ public class shakeServ extends Service implements SensorEventListener {
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			long now = System.currentTimeMillis();
 			netxAccl(event.values[SensorManager.DATA_X],
-					event.values[SensorManager.DATA_X],
-					event.values[SensorManager.DATA_X], now);
+					event.values[SensorManager.DATA_Y],
+					event.values[SensorManager.DATA_Z], now);
 			// if ((now - mLastForce) > SHAKE_TIMEOUT) {
 			// mShakeCount = 0;
 			// }
@@ -311,7 +321,10 @@ public class shakeServ extends Service implements SensorEventListener {
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
-				Log.d("accl_offset", "accl_offset x:" + acl_x + ";y:" + acl_y
+				Log.d("accl_offset", "accl_offset 1 x:" + acl_x + ";vx:" + acl_vx+ ";ax:" + acl_ax + ";ex:" + acl_ex + ";dt:" + acl_dt + ";");
+				Log.d("accl_offset", "accl_offset 2 y:" + acl_y + ";vy:" + acl_vy+ ";ay:" + acl_ay + ";ey:" + acl_ey + ";dt:" + acl_dt + ";");
+				Log.d("accl_offset", "accl_offset 3 z:" + acl_z + ";vz:" + acl_vz+ ";az:" + acl_az + ";ez:" + acl_ez + ";dt:" + acl_dt + ";");
+				Log.d("accl_offset", "accl_offset 4 x:" + acl_x + ";y:" + acl_y
 						+ ";z:" + acl_z + ";cnt:" + aclTrk_arCount + ";pt:"
 						+ acl_pt);
 
@@ -728,30 +741,43 @@ public class shakeServ extends Service implements SensorEventListener {
 		taskStarted = taskStarted2;
 	}
 
-	public static void netxAccl(float values, float values2, float values3,
+	public static void netxAccl(float values1, float values2, float values3,
 			long ct) {
 		aclTrk_arCount++;
 		if (aclTrk_arCount == 98000) {
 			aclTrk_arCount = 0;
 		}
-		float ax = (float) (values+0.28);
-		float ay = (float) (values2-0.57);
-		float az = (float) (values3+10.31);
-		aclTrk_ar[(int) aclTrk_arCount][0] = ax;
-		aclTrk_ar[(int) aclTrk_arCount][1] = ay;
-		aclTrk_ar[(int) aclTrk_arCount][2] = az;
+
 		if (acl_pt != 0) {
-			float dt = (ct - acl_pt) * 1000;
-			acl_x = acl_x + acl_vx * dt + ax * dt * dt / 2;
-			acl_y = acl_y + acl_vy * dt + ay * dt * dt / 2;
-			acl_z = acl_z + acl_vz * dt + az * dt * dt / 2;
-			acl_vx = acl_vx + ax * dt;
-			acl_vy = acl_vy + ay * dt;
-			acl_vz = acl_vz + az * dt;
-			acl_pt = ct;
-		} else {
-			acl_pt = ct;
+			double dt = (ct - acl_pt);
+			acl_dt=dt/1000;
+			
+			aclTrk_ar[(int) aclTrk_arCount][0] = values1-acl_pax;
+			aclTrk_ar[(int) aclTrk_arCount][1] = values2-acl_pay;
+			aclTrk_ar[(int) aclTrk_arCount][2] = values3-acl_paz;
+			acl_pax=values1;
+			acl_pay=values2;
+			acl_paz=values3;
+			acl_ex = (values1 - aclTrk_ar[(int) aclTrk_arCount - 1][0]) / acl_dt;
+			acl_ey = (values2 - aclTrk_ar[(int) aclTrk_arCount - 1][1]) / acl_dt;
+			acl_ez = (values3 - aclTrk_ar[(int) aclTrk_arCount - 1][2]) / acl_dt;
+			acl_ax = acl_ax + acl_ex * acl_dt;
+			acl_ay = acl_ay + acl_ey * acl_dt;
+			acl_az = acl_az + acl_ez * acl_dt;
+
+			float tempF=(float) acl_vx;
+
+			acl_vx = tempF + acl_ax * acl_dt;
+			acl_vy = acl_vy + acl_ay * acl_dt;
+			acl_vz = acl_vz + acl_az * acl_dt;
+			acl_x = acl_x + acl_vx * acl_dt + acl_ax * acl_dt * acl_dt / 2 + acl_ex * acl_dt
+					* acl_dt * acl_dt / 6;
+			acl_y = acl_y + acl_vy * acl_dt + acl_ay * acl_dt * acl_dt / 2 + acl_ey * acl_dt
+					* acl_dt * acl_dt / 6;
+			acl_z = acl_z + acl_vz * acl_dt + acl_az * acl_dt * acl_dt / 2 + acl_ez * acl_dt
+					* acl_dt * acl_dt / 6;
 		}
+		acl_pt = ct;
 
 	}
 
