@@ -22,7 +22,9 @@
 <!--    <string name="template_wotd_title">"Wiktionary:Word of the day/%s"</string>-->
 <!--    <string name="template_wotd_title">"Викисловарь:Слово_дня/%s"</string>-->
     
-    <string name="template_define_url">"http://en.wiktionary.org/wiki/%s"</string>
+<!--    <string name="template_define_url">"http://en.wiktionary.org/wiki/%s"</string>-->
+<string name="template_define_url">"http://ru.windfinder.com/report/stavropol_shpakovskoye_airport"</string>
+
 <!--    <string name="template_define_url">"http://ru.wiktionary.org/wiki/%s"</string>-->
     
     <string name="widget_name">Wiktionary simple</string>
