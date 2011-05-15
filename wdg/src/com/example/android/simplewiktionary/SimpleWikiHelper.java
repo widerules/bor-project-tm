@@ -265,7 +265,7 @@ public class SimpleWikiHelper {
             	}
                // System.out.println();
             }
-            String t="{\"query\":{\"pages\":{\"270852\":{\"revisions\":[{\"*\":\"{{wotd|Wind of Stavropol|(Knots)|"+Res1+" (max:"+Res2+")|May|17}}\"}]}}}}";
+            String t="{\"query\":{\"pages\":{\"270852\":{\"revisions\":[{\"*\":\"{{wotd|Wind of Stavropol|(Knots)|(Knots)"+Res1+" (max:"+Res2+")|May|17}}\"}]}}}}";
             
             
             
