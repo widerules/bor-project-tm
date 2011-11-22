@@ -22,6 +22,7 @@ public class AudioSerialOutMono {
 
 	public static String outStr = "";
 
+	
 	private static Thread audiothread = null;
 	private static AudioTrack audiotrk = null;
 	private static byte generatedSnd[] = null;
