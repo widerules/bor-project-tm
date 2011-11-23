@@ -108,17 +108,19 @@ public class shakeServ extends Service implements SensorEventListener {
 	private LocationManager locationManager;
 
 	final Handler uiThreadCallback = new Handler();
-	public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
+	//public static final String LoginServiceUri = "http://92.63.96.27:8180/wm";
+	public static final String LoginServiceUri = com.msi.ibm.eyes.IBMEyes.getBNNurl();
+	
 
-	private static final int FORCE_THRESHOLD = 200;
+	private static final int FORCE_THRESHOLD = 2000;
 	// <<<<<<< .mine
 	private static final int TIME_THRESHOLD = 15000;
 	// =======
-	private static final int web_THRESHOLD = 1000;
-	private static final int SENSOR_THRESHOLD = 500;
+	private static final int web_THRESHOLD = 5000;
+	private static final int SENSOR_THRESHOLD = 1500;
 	// >>>>>>> .r79
-	private static final int TIME_TRESHOLD_AUDIO = 300;
-	private static final int SHAKE_TIMEOUT = 500;
+	private static final int TIME_TRESHOLD_AUDIO = 1300;
+	private static final int SHAKE_TIMEOUT = 1500;
 	private static final String baudRate = "1200";// speed of data transfer
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
@@ -203,8 +205,8 @@ public class shakeServ extends Service implements SensorEventListener {
 
 		// Get the default sensor for accel
 		mSensor = mSensorEventManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		// .getDefaultSensor(Sensor.TYPE_ORIENTATION);
+				//.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		 .getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
 		// Register for events.
 		mSensorEventManager.registerListener(this, mSensor,
@@ -321,12 +323,12 @@ public class shakeServ extends Service implements SensorEventListener {
 						+ event.values[SensorManager.DATA_X] + ";y "
 						+ event.values[SensorManager.DATA_Y] + ";z "
 						+ event.values[SensorManager.DATA_Z]);
-				Log.d("accl_offset", "accl_offset 1 x:" + acl_x + ";vx:" + acl_vx+ ";ax:" + acl_ax + ";ex:" + acl_ex + ";dt:" + acl_dt + ";");
-				Log.d("accl_offset", "accl_offset 2 y:" + acl_y + ";vy:" + acl_vy+ ";ay:" + acl_ay + ";ey:" + acl_ey + ";dt:" + acl_dt + ";");
-				Log.d("accl_offset", "accl_offset 3 z:" + acl_z + ";vz:" + acl_vz+ ";az:" + acl_az + ";ez:" + acl_ez + ";dt:" + acl_dt + ";");
-				Log.d("accl_offset", "accl_offset 4 x:" + acl_x + ";y:" + acl_y
-						+ ";z:" + acl_z + ";cnt:" + aclTrk_arCount + ";pt:"
-						+ acl_pt);
+				//Log.d("accl_offset", "accl_offset 1 x:" + acl_x + ";vx:" + acl_vx+ ";ax:" + acl_ax + ";ex:" + acl_ex + ";dt:" + acl_dt + ";");
+				//Log.d("accl_offset", "accl_offset 2 y:" + acl_y + ";vy:" + acl_vy+ ";ay:" + acl_ay + ";ey:" + acl_ey + ";dt:" + acl_dt + ";");
+				//Log.d("accl_offset", "accl_offset 3 z:" + acl_z + ";vz:" + acl_vz+ ";az:" + acl_az + ";ez:" + acl_ez + ";dt:" + acl_dt + ";");
+				//Log.d("accl_offset", "accl_offset 4 x:" + acl_x + ";y:" + acl_y
+				//		+ ";z:" + acl_z + ";cnt:" + aclTrk_arCount + ";pt:"
+				//		+ acl_pt);
 
 				/*
 				 * long diff = now - mLastTime; float speed =
@@ -576,11 +578,13 @@ public class shakeServ extends Service implements SensorEventListener {
 			// ="v="+cDate.toString()+"&lX="+aValues[0]+"&lY="+aValues[1]+
 			// "&v0="+mValues[0]+"&v1="+mValues[1]+"&v2="+mValues[2];
 			String sender = "lX=" + locX + "&lY=" + locY + "&v0=" + mValues[0]
-					+ "&v1=" + mValues[1] + "&v2=" + mValues[2] + "&a0="
-					+ aValues[0] + "&a1=" + aValues[1] + "&a2=" + aValues[2]
+					+ "&v1=" + mValues[1] + "&v2=" + mValues[2]
+					//+"&a0="	+ aValues[0] + "&a1=" + aValues[1] + "&a2=" + aValues[2]
 					+ "&ext=" + "!" + battLevel;
 
-			String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
+			//String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
+			String urlStr = com.msi.ibm.eyes.IBMEyes.getBNNurl()+"/wm_s?" + sender;
+			
 			Log.d("ar_wSndr:", urlStr);
 
 			URL myURL = new URL(urlStr);

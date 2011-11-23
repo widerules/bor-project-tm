@@ -211,7 +211,8 @@ public void onSensorChanged(int sensor, float[] values) {
 						+ mValues[2] + "&a0=" + aValues[0] + "&a1="
 						+ aValues[1] + "&a2=" + aValues[2];
 
-				String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
+				//String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
+				String urlStr =  com.msi.ibm.eyes.IBMEyes.getBNNurl()+"/wm_s?" + sender;
 
 				URL myURL = new URL(urlStr);
 				URLConnection ucon = myURL.openConnection();
