@@ -48,6 +48,7 @@ import android.widget.Toast;
 public class IBMEyes extends Activity 
 //implements SensorListener 
 {
+	public static String  BNNurl="http://192.168.0.101:8084";
 	private LocationManager locationManager;
 
 	final String tag = "IBMEyes";
@@ -123,7 +124,9 @@ public class IBMEyes extends Activity
 		
 	}
 
-	
+	public static String getBNNurl(){
+		return BNNurl;
+	}
 	public void getIni() {
 		
 		
