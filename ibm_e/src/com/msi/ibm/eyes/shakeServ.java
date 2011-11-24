@@ -457,7 +457,9 @@ public class shakeServ extends Service implements SensorEventListener {
 			}
 
 			if ((now - mLastTime) > web_THRESHOLD) {
-
+				com.msi.ibm.eyes.IBMEyes.getIni();
+				Log.d("getBNNurl", com.msi.ibm.eyes.IBMEyes.getBNNurl());
+				 
 				mLastTime = now;
 
 				new Thread() {
