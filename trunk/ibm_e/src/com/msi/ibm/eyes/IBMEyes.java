@@ -149,7 +149,7 @@ public class IBMEyes extends Activity
 		//-----------------
 		try{
 			 
-			   File f = new File(Environment.getExternalStorageDirectory()+"/1.txt");
+			   File f = new File(Environment.getExternalStorageDirectory()+"/bor_fps/fpsTacticINI");
 			 
 			   FileInputStream fileIS = new FileInputStream(f);
 			 
@@ -158,9 +158,10 @@ public class IBMEyes extends Activity
 			   String readString = new String();
 			 
 			   //just reading each line and pass it on the debugger
+			   int i=1;
 			 
 			   while((readString = buf.readLine())!= null){
-			 
+				   if (i==0){ BNNurl=readString; }
 			      Log.d("line: ", readString);
 			 
 			   }
