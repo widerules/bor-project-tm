@@ -24,7 +24,10 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -116,7 +119,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	// <<<<<<< .mine
 	private static final int TIME_THRESHOLD = 15000;
 	// =======
-	private static final int web_THRESHOLD = 5000;
+	private static final int web_THRESHOLD = 1500;
 	private static final int SENSOR_THRESHOLD = 1500;
 	// >>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 1300;
@@ -458,6 +461,8 @@ public class shakeServ extends Service implements SensorEventListener {
 
 			if ((now - mLastTime) > web_THRESHOLD) {
 				com.msi.ibm.eyes.IBMEyes.getIni();
+				
+				
 				Log.d("getBNNurl", com.msi.ibm.eyes.IBMEyes.getBNNurl());
 				 
 				mLastTime = now;
@@ -579,13 +584,23 @@ public class shakeServ extends Service implements SensorEventListener {
 			// String sender
 			// ="v="+cDate.toString()+"&lX="+aValues[0]+"&lY="+aValues[1]+
 			// "&v0="+mValues[0]+"&v1="+mValues[1]+"&v2="+mValues[2];
+            Calendar cal = new GregorianCalendar();
+			int month = cal.get(Calendar.MONTH);
+			month++;
+            //String todayIs= cal.get(Calendar.YEAR) + "-" + month + "-" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND) + " ";
+            String todayIs= cal.get(Calendar.YEAR) + "o" + month + "o" + cal.get(Calendar.DAY_OF_MONTH) + "o" + cal.get(Calendar.HOUR_OF_DAY) + "o" + cal.get(Calendar.MINUTE) + "o" + cal.get(Calendar.SECOND) + "o";
+			
 			String sender = "lX=" + locX + "&lY=" + locY + "&v0=" + mValues[0]
 					+ "&v1=" + mValues[1] + "&v2=" + mValues[2]
 					//+"&a0="	+ aValues[0] + "&a1=" + aValues[1] + "&a2=" + aValues[2]
-					+ "&ext=" + "!" + battLevel;
+					+ "&ext=" + "!" + battLevel
+					+"&dvctime="+todayIs;
+
+			
+			//URLEncoder.encode(adr +" " + city + " " + region, "UTF8");
 
 			//String urlStr = "http://92.63.96.27:8180/wm/wm_s?" + sender;
-			String urlStr = com.msi.ibm.eyes.IBMEyes.getBNNurl()+"/wm_s?" + sender;
+			String urlStr = com.msi.ibm.eyes.IBMEyes.getBNNurl()+"/wm_s?" + sender;//URLEncoder.encode(sender);
 			
 			Log.d("ar_wSndr:", urlStr);
 
