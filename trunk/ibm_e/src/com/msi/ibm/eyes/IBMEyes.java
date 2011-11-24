@@ -1,6 +1,6 @@
 /*
  * 
- * IBMEyes.java
+ * com.msi.ibm.eyes.IBMEyes.java
  * sample code for IBM Developerworks Article
  * Author: W. Frank Ableson
  * fableson@msiservices.com
@@ -48,7 +48,7 @@ import android.widget.Toast;
 public class IBMEyes extends Activity 
 //implements SensorListener 
 {
-	public static String  BNNurl="http://192.168.0.101:8084";
+	public static  String  BNNurl="http://192.168.0.101:8084";
 	private LocationManager locationManager;
 
 	final String tag = "IBMEyes";
@@ -127,8 +127,10 @@ public class IBMEyes extends Activity
 	public static String getBNNurl(){
 		return BNNurl;
 	}
-	public static  void setBNNurl(String url){
+	public static void setBNNurl(String url){
+	    Log.d("setBNNurl url: ", url);
 		BNNurl =url;
+	    Log.d("setBNNurl BNNurl: ", BNNurl);
 	}
 	public static void getIni() {
 		
@@ -161,13 +163,17 @@ public class IBMEyes extends Activity
 			   String readString = new String();
 			 
 			   //just reading each line and pass it on the debugger
-			   int i=1;
+			   int i=0;
 			 
 			   while((readString = buf.readLine())!= null){
 				   if (i==0){ 
-					   setBNNurl(readString);
+					   //setBNNurl(readString);
+					   com.msi.ibm.eyes.IBMEyes.setBNNurl(readString);
+					   Log.d("getIni readString0: ", readString);
+					   
 					   }
-			      Log.d("line: ", readString);
+				   i++;
+			      Log.d("getIni readString: ", readString);
 			 
 			   }
 			 
@@ -180,7 +186,8 @@ public class IBMEyes extends Activity
 			   e.printStackTrace();
 			 
 			}
-	      Log.d("BNNurl: ", getBNNurl());
+	      Log.d("getIni getBNNurl(): ", getBNNurl());
+	      Log.d("getIni BNNurl: ", BNNurl);
 			 
 			 
 	}
