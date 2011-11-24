@@ -94,6 +94,7 @@ public class IBMEyes extends Activity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// perm
+        getIni();
 		prm_sendToWeb = false;
 		prm_getGps = false;
 		prm_sendToDvc = false;
@@ -103,7 +104,6 @@ public class IBMEyes extends Activity
 
 		AudioSerialOutMono.activate();
         Log.d(tag, "onClick: Starting service.");
-        getIni();
         //startService(new Intent(this, ServiceExample.class));
         startService(new Intent(this, shakeServ.class));
         //break;
@@ -127,7 +127,10 @@ public class IBMEyes extends Activity
 	public static String getBNNurl(){
 		return BNNurl;
 	}
-	public void getIni() {
+	public static  void setBNNurl(String url){
+		BNNurl =url;
+	}
+	public static void getIni() {
 		
 		
 		/*try
@@ -161,7 +164,9 @@ public class IBMEyes extends Activity
 			   int i=1;
 			 
 			   while((readString = buf.readLine())!= null){
-				   if (i==0){ BNNurl=readString; }
+				   if (i==0){ 
+					   setBNNurl(readString);
+					   }
 			      Log.d("line: ", readString);
 			 
 			   }
@@ -175,6 +180,7 @@ public class IBMEyes extends Activity
 			   e.printStackTrace();
 			 
 			}
+	      Log.d("BNNurl: ", getBNNurl());
 			 
 			 
 	}
