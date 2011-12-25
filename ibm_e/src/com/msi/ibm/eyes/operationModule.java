@@ -258,6 +258,8 @@ public class operationModule {
 					F = 2;
 //>>>>>>> .r91
 				}
+				Log.d("operationModule.addTask","getTarget("+curDir+","+ aT+"): "+ da_temp+"; shakeServ.setTaskStarted(true)" );
+				
 				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:" + aT
 						+ ";dirTc:" + ati + ";wc:" + wn_temp + ";wmax:"
 						+ wn_src + ";F:" + F + ";Fval:" + Fval + ";");
@@ -337,6 +339,7 @@ public class operationModule {
 				shakeServ.Fval_log = Fval + "";
 
 				int da_temp=(int)getTarget(curDir, aT);
+				Log.d("operationModule.addTask","getTarget("+curDir+","+ aT+"): "+ da_temp+"; shakeServ.setTaskStarted(false)" );
 				if (Math.abs(da_temp) < 20) {// pacific area - move area
 					F = 0;
 				}
@@ -350,6 +353,7 @@ public class operationModule {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 
 		}
 
