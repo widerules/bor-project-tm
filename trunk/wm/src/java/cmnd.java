@@ -46,8 +46,8 @@ public class cmnd extends HttpServlet {
         try {
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
@@ -62,17 +62,19 @@ public class cmnd extends HttpServlet {
             sqlReq = "SELECT * FROM cmnds order by id desc limit 1;";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
                 while (rs.next()) {
-                    cmndR = rs.getString(9);
-                    for (int i=1;i<11;i++){
+                    cmndR = rs.getString(3);
+                    for (int i=1;i<6;i++){
                         String temp="";
-                        try{temp=rs.getString(i).trim();}catch(Exception e){};
+                        try{temp=rs.getString(i).trim();}catch(Exception e){
+                         out.print("[temp=rs.getString(i).trim();]:"+e);
+                        };
                     command_state+="|"+temp;
                     }
                 }
@@ -118,9 +120,9 @@ public class cmnd extends HttpServlet {
             out.println("<input type=checkbox name=fwd "+fwd_s+" />");
             out.println("<input type=submit />");
             out.println("<hr/>");
-            out.println("<a href='http://92.63.96.27:8180/wm/cmnd?cmnd=" + cmndR_L + "'> toLEFT  </a>");
+            out.println("<a href='http://localhost:8084/wm/cmnd?cmnd=" + cmndR_L + "'> toLEFT  </a>");
             out.println("_____________________");
-            out.println("<a href='http://92.63.96.27:8180/wm/cmnd?cmnd=" + cmndR_R + "'> toRIGHT </a>");
+            out.println("<a href='http://localhost:8084/wm/cmnd?cmnd=" + cmndR_R + "'> toRIGHT </a>");
             out.println("<hr/>");
             out.println("</form>");
 
@@ -169,3 +171,7 @@ public class cmnd extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 }
+
+//                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+//                String username = "postgres";
+//                String password = "pgsql";
