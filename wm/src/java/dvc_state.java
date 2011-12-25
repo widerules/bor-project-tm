@@ -42,20 +42,20 @@ public class dvc_state extends HttpServlet {
             String sqlReq = "SELECT now(),* FROM cmnds order by id desc limit 1;";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
                 while (rs.next()) {
                     //cmndR = rs.getString(9);
-                    for (int i = 1; i < 12; i++) {
+                    for (int i = 1; i < 6; i++) {
                         String temp = "";
                         try {
                             temp = rs.getString(i).trim();
                             if (i==3){tD=temp;}
-                            if (i==11){tE=temp;}
+                            if (i==4){tE=temp;}
                         } catch (Exception e) {
                         }
                         ;
@@ -72,8 +72,8 @@ public class dvc_state extends HttpServlet {
             sqlReq = "SELECT id, srvtime, dvctime, orient1, orient2, orient3, X(\"position\"), Y(\"position\"),ext FROM timeline order by id desc limit 1;";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
