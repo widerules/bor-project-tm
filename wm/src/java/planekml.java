@@ -54,8 +54,11 @@ public class planekml extends HttpServlet {
                     + " from timeline line order by srvtime desc limit 100; ";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://127.0.0.1:5432/gisdb";
-                String username = "pgsql";
+//                String url = "jdbc:postgresql://127.0.0.1:5432/gisdb";
+//                String username = "pgsql";
+//                String password = "pgsql";
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
@@ -199,17 +202,27 @@ public class planekml extends HttpServlet {
                     + " <ScreenOverlay id=\"khScreenOverlay756\">"
                     + "  <name>Simple crosshairs</name>"
                     + "  <Icon>"
-                    + "    <href>http://92.63.96.27:8180/wm/files/kren.png</href>"
+                    + "    <href>files/kren.png</href>"
                     + "  </Icon>"
                     + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <screenXY x=\"0\" y=\"0.9\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <rotation>"+rol+"</rotation>"
                     + "  <size x=\"600\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
                     + "</ScreenOverlay>"
+                    + " <ScreenOverlay id=\"khScreenOverlay755\">"
+                    + "  <name>Simple crosshairs</name>"
+                    + "  <Icon>"
+                    + "    <href>files/dir.png</href>"
+                    + "  </Icon>"
+                    + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <screenXY x=\"0\" y=\"0.9\" xunits=\"fraction\" yunits=\"fraction\"/>"
+                    + "  <rotation>"+dir+"</rotation>"
+                    + "  <size x=\"600\" y=\"0\" xunits=\"pixels\" yunits=\"pixels\"/>"
+                    + "</ScreenOverlay>"
                     + " <ScreenOverlay id=\"khScreenOverlay757\">"
                     + "  <name>Simple crosshairs</name>"
                     + "  <Icon>"
-                    + "    <href>http://92.63.96.27:8180/wm/files/base.png</href>"
+                    + "    <href>files/base.png</href>"
                     + "  </Icon>"
                     + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <screenXY x=\"0\" y=\"0.9\" xunits=\"fraction\" yunits=\"fraction\"/>"
@@ -219,7 +232,7 @@ public class planekml extends HttpServlet {
                     + " <ScreenOverlay id=\"khScreenOverlay759\">"
                     + "  <name>Simple crosshairs</name>"
                     + "  <Icon>"
-                    + "    <href>http://92.63.96.27:8180/wm/files/ground.png</href>"
+                    + "    <href>files/ground.png</href>"
                     + "  </Icon>"
                     + "  <overlayXY x=\"0.28\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/>"
                     + "  <screenXY x=\"0\" y=\""+sc_til+"\" xunits=\"fraction\" yunits=\"fraction\"/>"

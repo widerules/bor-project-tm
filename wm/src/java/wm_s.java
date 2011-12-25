@@ -38,7 +38,7 @@ public class wm_s extends HttpServlet {
         try {
 
             Calendar cal = new GregorianCalendar();
-            //out.println(cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH) + " " + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR) + " " + cal.get(Calendar.MINUTE) + " " + cal.get(Calendar.SECOND) + " ");
+            String todayIs = cal.get(Calendar.YEAR) + " " + cal.get(Calendar.MONTH) + " " + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR) + " " + cal.get(Calendar.MINUTE) + " " + cal.get(Calendar.SECOND) + " ";
 
 
 
@@ -51,54 +51,89 @@ public class wm_s extends HttpServlet {
             String a0 = request.getParameter("a0");
             String a1 = request.getParameter("a1");
             String a2 = request.getParameter("a2");
-            String ext  = request.getParameter("ext");
-            //out.println(a1);
+            String ext = request.getParameter("ext");
+            String dvctime_in = request.getParameter("dvctime");
+            String dvctime="";
+            //String todayIs= cal.get(Calendar.YEAR) + 1"-" + month + 2"-" + cal.get(Calendar.DAY_OF_MONTH) + 3" " + cal.get(Calendar.HOUR_OF_DAY) + 4":" + cal.get(Calendar.MINUTE) + 5":" + cal.get(Calendar.SECOND) + " ";
+            try {
+                                   String tokenStr = "";
+                    StringTokenizer parser = new StringTokenizer(dvctime_in, "o");
+                    int i = 0;
+                    while (parser.hasMoreTokens()) {
+                        i++;
+                        tokenStr = parser.nextToken();
+                        String delim ="";
+                        if (i == 1) {
+                            delim="-";
+                        }
+                        if (i == 2) {
+                            delim="-";
+                        }
+                        if (i == 3) {
+                            delim=" ";
+                        }
+                        if (i == 4) {
+                            delim=":";
+                        }
+                        if (i == 5) {
+                            delim=":";
+                        }
+                        dvctime+=tokenStr+delim;
+
+                    //GeomFromText('POINT(55.697216 37.57321)',32769)
+                    }
+
+            } catch (Exception e) {
+                
+            }
+            out.println(dvctime_in+"|");
+            out.println(dvctime+"|");
             /*
              *
-
+            
             try {
-
+            
             //prepare result(to need format)
-
+            
             Class.forName("org.postgresql.Driver");
             String url="jdbc:postgresql://78.24.222.84:5432/ptgis";
             String username = "pgsql";
             String password = "pgsql";
-
+            
             Connection con = DriverManager.getConnection(url,username,password);
             Statement st = con.createStatement();
-
+            
             //exec sqlReq
             ResultSet rs = st.executeQuery(sqlReq);
             //rs.first();
-
+            
             int j=0;
             String[] tmpStr = new String[10]; for (i=0;i<10;i++){tmpStr[i]="";}
             i=0;
-
+            
             //maxCountOfRecords
             int maxRec = 16;
-
-
+            
+            
             while(rs.next()){
             if(i==0){
             respStr+="{\n";
             } else{
             respStr+=",{\n";
             }
-
-
+            
+            
             if(i<=maxRec){
             for (j=1;j<=rs.getMetaData().getColumnCount();j++){
             tmpStr[j]=rs.getString(j);
             //out.println(j+":"+tmpStr[j]+"<br>");
             }
             respStr+="\"id\":\""+tmpStr[1]+"\",\n";
-
+            
             double x0 =- 21337.9761900000;
             double y0 = 7288.6904760000;
             double kwm = 0.337;
-
+            
             //convert coords
             String oldCoord =tmpStr[3];
             String newCoord="";
@@ -111,7 +146,7 @@ public class wm_s extends HttpServlet {
             double nCrdY = 0;
             nCrdX = (oCrdX-x0)*kwm-300;
             nCrdY = (oCrdY-y0)*kwm-300;
-
+            
             //mod coord
             //                        respStr+="\"wx\":\""+ Double.toString(nCrdX)  +"\",\n";
             //                        respStr+="\"wy\":\""+ Double.toString(nCrdY) +"\",\n";
@@ -123,7 +158,7 @@ public class wm_s extends HttpServlet {
             respStr+="}\n";
             //out.println(respStr+"<br>");
             } else {
-
+            
             respStr+="\"id\":\""+tmpStr[1]+"\",\n";
             respStr+="\"wx\":\""+ -3000  +"\",\n";
             respStr+="\"wy\":\""+ -1000 +"\",\n";
@@ -137,27 +172,38 @@ public class wm_s extends HttpServlet {
             st.close();
             con.close();
             //OUTPUT!
-
+            
             }catch(Exception e){out.println(e);}finally {
-
+            
             }
-
-
+            
+            
              * http://192.168.0.102:8080/wm_s
             INSERT INTO timeline
             (srvtime, dvctime, orient1, orient2, orient3, "position",ext)
             VALUES
             (now(),   now(),   3.7,     3.5,     3.0,     GeomFromText('POINT(45.1 45.1)',32769),'111');
-
+            
              */
+            String latlng = lng + " " + lat;
+            try {
+                double lat_dbl = Double.parseDouble(lat);
+                double lng_dbl = Double.parseDouble(lng);
+                double tmp_dbl = lng_dbl + lat_dbl;
+            } catch (Exception e) {
+                latlng = "1 1";
+            }
             String sqlReq = " INSERT INTO timeline "
                     + "             (srvtime, dvctime, orient1, orient2, orient3, \"position\",ext)"
                     + " VALUES "
-                    + " (now(),   now(),   " + v0+ ",     " + v1+ ",     " + v2+ ",     GeomFromText('POINT(" + lng + " " + lat + ")',32769),'" + ext + "'); ";
+                    + " (now(),   '" + dvctime + "',   " + v0 + ",     " + v1 + ",     " + v2 + ",     GeomFromText('POINT(" + latlng + ")',4326),'" + ext + ":(" + lng + " " + lat + ")'); ";
             try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
+                //String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
+
+                //connect to postgesql database postgis
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
@@ -170,29 +216,29 @@ public class wm_s extends HttpServlet {
                 con.close();
 
             } catch (Exception e) {
-                out.print("Exception!:"+e);
+                out.print("Exception!:" + e);
             }
 
-                       sqlReq = "SELECT cmnd,cntrl_te FROM cmnds order by id desc limit 1;";
-                               String cmndR="";
+            sqlReq = "SELECT cmnd,cntrl_te FROM cmnds order by id desc limit 1;";
+            String cmndR = "";
 
-                try{
+            try {
                 Class.forName("org.postgresql.Driver");
-                String url = "jdbc:postgresql://92.63.96.27:5432/gisdb";
-                String username = "pgsql";
+                String url = "jdbc:postgresql://localhost:5432/gisdb_fps";
+                String username = "postgres";
                 String password = "pgsql";
                 Connection con = DriverManager.getConnection(url, username, password);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlReq);
                 while (rs.next()) {
-                    cmndR=rs.getString(1)+"|"+rs.getString(2);
+                    cmndR = rs.getString(1) + "|" + rs.getString(2);
                 }
                 rs.close();
                 st.close();
                 con.close();
 
             } catch (Exception e) {
-                out.print("Exception!:"+e);
+                out.print("Exception!:" + e);
             }
 
             out.println(cmndR);

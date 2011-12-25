@@ -32,6 +32,10 @@
         <servlet-name>dvc_state</servlet-name>
         <servlet-class>dvc_state</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>stg_view_smp</servlet-name>
+        <servlet-class>stg_view_smp</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>wm_s</servlet-name>
         <url-pattern>/wm_s</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>dvc_state</servlet-name>
         <url-pattern>/dvc_state</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>stg_view_smp</servlet-name>
+        <url-pattern>/stg_view_smp</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

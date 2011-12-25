@@ -40,7 +40,7 @@ public class cmnd extends HttpServlet {
         String command_state = "";
         try{ int temp=0; temp=Integer.parseInt(cmndR_fwd); cmndR_fwd=temp+""; }catch(Exception e){cmndR_fwd="0";}
 
-        String sqlReq = "INSERT INTO cmnds(cmnd,cntrl_dirt,cntrl_te) VALUES ('" + cmnd + "',"+cmnd+","+cmndR_fwd+");";
+        String sqlReq = "INSERT INTO cmnds(cmnd,cntrl_dirt,srvtime,cntrl_te) VALUES ('" + cmnd + "',"+cmnd+",now(),"+cmndR_fwd+");";
         String cmndR_R = cmnd;
         String cmndR_L = cmnd;
         try {
