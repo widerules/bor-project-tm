@@ -389,18 +389,28 @@ public class shakeServ extends Service implements SensorEventListener {
 						StringTokenizer parser = new StringTokenizer(
 								webDataAr[0], "|");
 						String tmpStr = "";
+						String logTmp="";
 						int i = 0;
 						while (parser.hasMoreTokens()) {
 							i++;
 							tmpStr = parser.nextToken();
-							if (i == 1) {
-								tmpDir = Integer.parseInt(tmpStr);
+							logTmp+="("+i+":"+tmpStr.trim()+")";
+							if (i == 3) {
+								try{
+								tmpDir = Integer.parseInt(tmpStr.trim());
+								}catch(Exception e){}
 							}
-							if (i == 2) {
-								tmpTE = Integer.parseInt(tmpStr);
+							if (i == 4) {
+								try{
+								tmpTE = Integer.parseInt(tmpStr.trim());
+							}catch(Exception e){}
 								;
 							}
 						}
+						
+						Log.d("operationModule.addTask","webDataAr[0]: "+webDataAr[0] );
+						Log.d("operationModule.addTask","parse webDataAr[0]: "+logTmp );
+						
 
 						// tmpDir = Integer.parseInt(webDataAr[0]);
 						// tmpTE = Integer.parseInt(webDataAr[1]);
@@ -411,12 +421,12 @@ public class shakeServ extends Service implements SensorEventListener {
 					} catch (Exception e) {
 					}
 
-					Log.d("", "shS_oSCH_:addTask() x:" + tmpX + ";y:" + tmpY
+					Log.d("operationModule.addTask", "shS_oSCH_:addTask() x:" + tmpX + ";y:" + tmpY
 							+ ";z:" + tmpZ + ";dir:" + tmpDir + ";te:" + tmpTE
 							+ ";tc:" + tmpTC);
 					operationModule.addTask(tmpX, tmpY, tmpZ, tmpDir, tmpTE,
 							tmpTC);
-					Log.d("", "shS_oSCH_:addTask() ended;");
+					Log.d("operationModule.addTask", "shS_oSCH_:addTask() ended;");
 					setTaskStarted(true);
 					Log.d("", "shS_oSCH_:nextTask();taskStarted:"
 							+ getTaskStarted());
@@ -640,7 +650,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				webDataAr[0] = webData.trim();
 				// webDataAr[0] = "120|5000";
 				// >>>>>>> .r93
-				Log.d("ar_wSndr:", "webData [" + webData + "]");
+				Log.d("ar_wSndr:", "webData1 [" + webData + "]");
 				// webDataAr[0] = "180";
 				webDataArTm[0] = System.currentTimeMillis();
 			}
