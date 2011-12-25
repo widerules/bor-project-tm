@@ -47,7 +47,7 @@ public class operationModule {
 	 */
 	public static void addTask(double x, double y, double h, int dir, long tE,
 			Boolean tC) {
-		//if (taskListCount>98){taskListCount=0;}
+		// if (taskListCount>98){taskListCount=0;}
 		taskListCount++;
 		taskListCoords[taskListCount][0] = x;
 		taskListCoords[taskListCount][1] = y;
@@ -151,7 +151,8 @@ public class operationModule {
 
 			// cgs current step of cg
 			int prevcgs = cgs;
-			//cgs = (int) ((ct - startCGtime) * na / taskListTimeExpire[taskListCount]);
+			// cgs = (int) ((ct - startCGtime) * na /
+			// taskListTimeExpire[taskListCount]);
 			Log.d("", "oM_go_:cgs:" + cgs
 					+ ";taskListTimeExpire[taskListCount]:"
 					+ taskListTimeExpire[taskListCount] + ";");
@@ -245,6 +246,8 @@ public class operationModule {
 					Fval = 3;
 				}
 				Log.d("", "oM_go_F:" + Fc + ";Fval:" + Fval + ";");
+				Log.d("operationModule.addTask", "Fval cmnd(" + F + "," + Fval	+ ");");
+				cmnd(F, Fval);// send to ardu
 				shakeServ.ctime_log = ct + "";
 				shakeServ.dirc_log = curDir + "";
 				shakeServ.dirT_log = aT + "";
@@ -253,18 +256,22 @@ public class operationModule {
 				shakeServ.wmax_log = wn_src + "";
 				shakeServ.F_log = F + "";
 				shakeServ.Fval_log = Fval + "";
-				int da_temp=(int)getTarget(curDir, aT);
+				int da_temp = (int) getTarget(curDir, aT);
 				if (Math.abs(da_temp) < 20) {// pacific area - move area
 					F = 2;
-//>>>>>>> .r91
+					// >>>>>>> .r91
 				}
-				Log.d("operationModule.addTask","getTarget("+curDir+","+ aT+"): "+ da_temp+"; shakeServ.setTaskStarted(true)" );
-				
+				Log.d("operationModule.addTask", "getTarget(" + curDir + ","
+						+ aT + "): " + da_temp
+						+ "; shakeServ.setTaskStarted(true)");
+
 				Log.d("web_log", "ct:" + ct + ";dirc:" + curDir + ";dirT:" + aT
 						+ ";dirTc:" + ati + ";wc:" + wn_temp + ";wmax:"
 						+ wn_src + ";F:" + F + ";Fval:" + Fval + ";");
 				Log.d("web_log", "cd:" + curDir + ";pd:" + preDir + ";ct: "
 						+ curTime + ";pt: " + preTime + ";dt:" + delta_t + ";");
+				Log.d("operationModule.addTask", "Fval cmnd(" + F + "," + Fval
+						+ ");");
 				cmnd(F, Fval);// send to ardu
 
 			} else {
@@ -329,6 +336,8 @@ public class operationModule {
 					Fval = 3;
 				}
 				Log.d("", "oM_go_F:" + Fc + ";Fval:" + Fval + ";");
+				Log.d("operationModule.addTask", "Fval cmnd(" + F + "," + Fval	+ ");");
+				cmnd(F, Fval);// send to ardu
 				shakeServ.ctime_log = ct + "";
 				shakeServ.dirc_log = curDir + "";
 				shakeServ.dirT_log = aT + "";
@@ -338,8 +347,10 @@ public class operationModule {
 				shakeServ.F_log = F + "";
 				shakeServ.Fval_log = Fval + "";
 
-				int da_temp=(int)getTarget(curDir, aT);
-				Log.d("operationModule.addTask","getTarget("+curDir+","+ aT+"): "+ da_temp+"; shakeServ.setTaskStarted(false)" );
+				int da_temp = (int) getTarget(curDir, aT);
+				Log.d("operationModule.addTask", "getTarget(" + curDir + ","
+						+ aT + "): " + da_temp
+						+ "; shakeServ.setTaskStarted(false)");
 				if (Math.abs(da_temp) < 20) {// pacific area - move area
 					F = 0;
 				}
@@ -349,11 +360,9 @@ public class operationModule {
 				Log.d("web_log", "cd:" + curDir + ";pd:" + preDir + ";ct: "
 						+ curTime + ";pt: " + preTime + ";dt:" + delta_t + ";");
 
-				cmnd(F, Fval);// send to ardu
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			
 
 		}
 
@@ -366,8 +375,9 @@ public class operationModule {
 
 		double ra = Math.toRadians(dstDir - srcDir);
 		double sa = Math.sin(ra);
-		long b = Math.round(-1 * (sa / Math.abs(sa))
-				* Math.toDegrees(Math.acos(Math.cos(ra))));
+		long b = -1
+				* Math.round(-1 * (sa / Math.abs(sa))
+						* Math.toDegrees(Math.acos(Math.cos(ra))));
 		return b;
 	}
 
@@ -399,6 +409,9 @@ public class operationModule {
 
 	// >>>>>>> .r61
 	private static void cmnd(int cmnd, int val) {
+		Log.d("operationModule.cmnd", " cmnd cmnd(" + cmnd + "," + val	+ ");");
+
+		
 		AudioSerialOutMono.outStr = cmnd + "|" + val;
 
 		try {
