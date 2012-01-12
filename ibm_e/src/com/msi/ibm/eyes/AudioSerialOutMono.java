@@ -26,7 +26,7 @@ public class AudioSerialOutMono {
 	private static Thread audiothread = null;
 	private static AudioTrack audiotrk = null;
 	private static byte generatedSnd[] = null;
-	private static int newwave_l = 2000;;
+	private static int newwave_l = 1000;;
 	private static double[] newwave = new double[newwave_l];
 	private final static byte generatedNewWave[] = new byte[2 * newwave_l];
 	// set that can be edited externally
@@ -252,10 +252,10 @@ public class AudioSerialOutMono {
 					int p6 = 0;// play
 					int p7 = 0;// play
 					
-					int p = 50; // pause
+					int p = 10; // pause
 					int s1 = 500;// sigs
 					int s2 = 100;
-					int s3 = 10;
+					int s3 = 15;
 					// int state = 0;
 
 					p4 = newwave_l;// play
@@ -284,25 +284,25 @@ public class AudioSerialOutMono {
 						s1 = 50;
 					}
 					if (oS[0].equalsIgnoreCase("0")) {
-						s1 = 100;
+						s1 = 55;
 					}
 					if (oS[0].equalsIgnoreCase("1")) {
-						s1 = 150;
+						s1 = 60;
 					}
 					if (oS[0].equalsIgnoreCase("2")) {
-						s1 = 200;
+						s1 = 65;
 					}
 					//if (oS[0].equalsIgnoreCase("2")) {
 					//	s1 = 1000;	
 					//}
 					if (oS[1].equalsIgnoreCase("1")) {
-						s2 = 50;
+						s2 = 70;
 					}
 					if (oS[1].equalsIgnoreCase("2")) {
-						s2 = 100;
+						s2 = 75;
 					}
 					if (oS[1].equalsIgnoreCase("3")) {
-						s2 = 150;
+						s2 = 80;
 					}
 
 					p0 = 0;
@@ -363,7 +363,7 @@ public class AudioSerialOutMono {
 						// ((i>2997)&&(i<3005)){Log.d("","ar_"+i+":"+sample[i]);};
 					}
 
-					Log.d("", "ar_sig:" + outStr + ";");
+					Log.d("", "ar_sig1:"+s1+"-"+s2+"-"+s3+";" + outStr + ";");
 					// >>>>>>> .r29
 
 					int idx = 0;
@@ -377,8 +377,8 @@ public class AudioSerialOutMono {
 					}
 
 					// audiotrk.write(generatedSnd, 0, length);
-					//audiotrk.write(generatedNewWave, 0, newwave_l);
-					audiotrk.write(generatedNewWave, 0, 1000);
+					audiotrk.write(generatedNewWave, 0, newwave_l/2);
+					//audiotrk.write(generatedNewWave, 0, 1000);
 					// debug
 					/*
 					 * String log_sdtr="lng:"+generatedSnd.length+";"; for (int
