@@ -22,11 +22,15 @@ public class AudioSerialOutMono {
 
 	public static String outStr = "";
 
+	public static int tmpInt = 15;
+	public static int tmpInts1 = 15;
+	public static int tmpInts2 = 15;
+	public static int tmpInts3 = 15;
 	
 	private static Thread audiothread = null;
 	private static AudioTrack audiotrk = null;
 	private static byte generatedSnd[] = null;
-	private static int newwave_l = 1000;;
+	private static int newwave_l = 1000;
 	private static double[] newwave = new double[newwave_l];
 	private final static byte generatedNewWave[] = new byte[2 * newwave_l];
 	// set that can be edited externally
@@ -251,15 +255,20 @@ public class AudioSerialOutMono {
 					int p5 = 0;// idle
 					int p6 = 0;// play
 					int p7 = 0;// play
+					int p8 = 0;// play
 					
-					int p = 10; // pause
-					int s1 = 500;// sigs
-					int s2 = 100;
+					int p = 15; // pause
+					int s1 = 15;// sigs
+					int s2 = 15;
 					int s3 = 15;
+					int sync=5;
+					
 					// int state = 0;
 
-					p4 = newwave_l;// play
+					//p4 = newwave_l;// play
 
+
+					
 					
 					// compas
 					// if (outStr.equalsIgnoreCase("toF")){p2=500;}// 23 - 73 -
@@ -305,14 +314,38 @@ public class AudioSerialOutMono {
 						s2 = 80;
 					}
 
-					p0 = 0;
-					p1 = p;
-					p2 = p + s1;
-					p3 = 2 * p + s1;
-					p4 = 2 * p + s1 + s2;
-					p5 = 3 * p + s1 + s2;
-					p6 = 3 * p + s1 + s2 + s3;
-					p7 = 4 * p + s1 + s2 + s3;
+					//debug
+					/*good
+					if(tmpInts1>100){tmpInts2+=5;tmpInts1=15;}
+					if(tmpInts2>100){tmpInts3+=5;tmpInts2=15;}
+					if(tmpInts3>100){tmpInts1=15;tmpInts2=15;tmpInts3=15;}
+					s1=tmpInts3;
+					s2=tmpInts2;
+					s3=tmpInts1;
+					tmpInts1+=5;
+					*/
+					if(tmpInts1>20){tmpInts2+=5;tmpInts1=15;}
+					if(tmpInts2>20){tmpInts3+=5;tmpInts2=15;}
+					if(tmpInts3>20){tmpInts1=15;tmpInts2=15;tmpInts3=15;}
+					s1=tmpInts1;
+					s2=tmpInts2;
+					s3=tmpInts3;
+					tmpInts1+=5;
+					
+					
+					//tmpInt+=5;
+					//if (tmpInt>50){tmpInt=15;}
+					//s3=15;
+
+					p0 = 0;							//<
+					p1 = p;							//<
+					p2 = p + s1;					//  >
+					p3 = 2 * p + s1;				//  >
+					p4 = 2 * p + s1 + s2;			//<
+					p5 = 3 * p + s1 + s2;			//<
+					p6 = 3 * p + s1 + s2 + s3;		//  >
+					p7 = 4 * p + s1 + s2 + s3;		//  >
+					p8 = 4 * p + s1 + s2 + s3+sync;		//  >
 
 					outStr +=":"+p0 + "." + 
 						p1 + "." + p2 + "." + p3 + "." + p4
@@ -354,21 +387,36 @@ public class AudioSerialOutMono {
 								n = 1;
 							}
 						}
-						if ((i >= p6)) {
+						if ((i >= p6) && (i < p7)) {
 							n = 1;
 						}
+						if ((i >= p7) && (i < p8)) {
+							if (n == 1) {
+								n = -1;
+							} else {
+								n = 1;
+							}
+						}
+						if (i >= p8) {
+							n = 1;
+						}
+						
 						newwave[i] = n;
 						// sample[i]=1;
 						// if
 						// ((i>2997)&&(i<3005)){Log.d("","ar_"+i+":"+sample[i]);};
 					}
 
-					Log.d("", "ar_sig1:"+s1+"-"+s2+"-"+s3+";" + outStr + ";");
+					Log.d("", "ar_sig3:"+s1+"-"+s2+"-"+s3+";" + outStr + ";");
+					Log.d("ar_sig_test", "1:"+s1);
+					Log.d("ar_sig_test", "2:"+s2);
+					Log.d("ar_sig_test", "3:"+s3);
+					Log.d("ar_sig_test", "s:"+sync+"<br/>");
 					// >>>>>>> .r29
 
 					int idx = 0;
 					for (final double dVal : newwave) {
-						// scale to maximum amplitude
+						// scale to maximum amplitude	
 						final short val = (short) ((dVal * 32767));
 						// in 16 bit wav PCM, first byte is the low order byte
 						generatedNewWave[idx++] = (byte) (val & 0x00ff);
@@ -377,7 +425,7 @@ public class AudioSerialOutMono {
 					}
 
 					// audiotrk.write(generatedSnd, 0, length);
-					audiotrk.write(generatedNewWave, 0, newwave_l/2);
+					audiotrk.write(generatedNewWave, 0, 250);
 					//audiotrk.write(generatedNewWave, 0, 1000);
 					// debug
 					/*
