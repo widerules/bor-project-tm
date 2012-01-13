@@ -120,7 +120,7 @@ public class shakeServ extends Service implements SensorEventListener {
 	private static final int TIME_THRESHOLD = 15000;
 	// =======
 	private static final int web_THRESHOLD = 1500;
-	private static final int SENSOR_THRESHOLD = 300;
+	private static final int SENSOR_THRESHOLD = 100;
 	// >>>>>>> .r79
 	private static final int TIME_TRESHOLD_AUDIO = 1300;
 	private static final int SHAKE_TIMEOUT = 1500;
@@ -162,7 +162,7 @@ public class shakeServ extends Service implements SensorEventListener {
 				mSensorEventManager.unregisterListener(shakeServ.this);
 				mSensorEventManager.registerListener(shakeServ.this, mSensor,
 				// SensorManager.SENSOR_DELAY_NORMAL);
-						SensorManager.SENSOR_DELAY_GAME);
+						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 		}
 	};
@@ -214,7 +214,7 @@ public class shakeServ extends Service implements SensorEventListener {
 		// Register for events.
 		mSensorEventManager.registerListener(this, mSensor,
 //				SensorManager.SENSOR_DELAY_NORMAL);
-		SensorManager.SENSOR_DELAY_GAME);
+		SensorManager.SENSOR_DELAY_FASTEST);
 		// TODO I'll only register at screen off. I don't have a use for shake
 		// while not in sleep (yet)
 
