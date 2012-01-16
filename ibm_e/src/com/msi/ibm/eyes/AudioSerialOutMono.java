@@ -289,31 +289,54 @@ public class AudioSerialOutMono {
 					//if (oS[0].equalsIgnoreCase("-2")) {
 					//	s1 = 200;
 					//}// 23 - 73 - 120 170 1000~50ms
-					if (oS[0].equalsIgnoreCase("-1")) {
-						s1 = 50;
-					}
-					if (oS[0].equalsIgnoreCase("0")) {
-						s1 = 55;
-					}
-					if (oS[0].equalsIgnoreCase("1")) {
-						s1 = 60;
-					}
-					if (oS[0].equalsIgnoreCase("2")) {
-						s1 = 65;
-					}
-					//if (oS[0].equalsIgnoreCase("2")) {
-					//	s1 = 1000;	
-					//}
-					if (oS[1].equalsIgnoreCase("1")) {
-						s2 = 70;
-					}
-					if (oS[1].equalsIgnoreCase("2")) {
-						s2 = 75;
-					}
-					if (oS[1].equalsIgnoreCase("3")) {
-						s2 = 80;
-					}
+//					if (oS[0].equalsIgnoreCase("-1")) {
+//						s1 = 50;
+//					}
+//					if (oS[0].equalsIgnoreCase("0")) {
+//						s1 = 55;
+//					}
+//					if (oS[0].equalsIgnoreCase("1")) {
+//						s1 = 60;
+//					}
+//					if (oS[0].equalsIgnoreCase("2")) {
+//						s1 = 65;
+//					}
+//					//if (oS[0].equalsIgnoreCase("2")) {
+//					//	s1 = 1000;	
+//					//}
+//					if (oS[1].equalsIgnoreCase("1")) {
+//						s2 = 70;
+//					}
+//					if (oS[1].equalsIgnoreCase("2")) {
+//						s2 = 75;
+//					}
+//					if (oS[1].equalsIgnoreCase("3")) {
+//						s2 = 80;
+//					}
 
+						if (oS[0].equalsIgnoreCase("-1")) {
+							s1 = 15;//0
+							s2 = 15;
+							s3 = 15;
+						}
+						if (oS[0].equalsIgnoreCase("0")) {
+							s1 = 20;//1
+							s2 = 15;
+							s3 = 15;
+						}
+						if (oS[0].equalsIgnoreCase("1")) {
+							s1 = 15;//2
+							s2 = 20;
+							s3 = 15;
+						}
+						if (oS[0].equalsIgnoreCase("1")) {
+							s1 = 20;//3
+							s2 = 20;
+							s3 = 15;
+						}
+
+				     
+				     
 					//debug
 					/*good
 					if(tmpInts1>100){tmpInts2+=5;tmpInts1=15;}
@@ -324,6 +347,8 @@ public class AudioSerialOutMono {
 					s3=tmpInts1;
 					tmpInts1+=5;
 					*/
+					
+					/* bin counter
 					if(tmpInts1>20){tmpInts2+=5;tmpInts1=15;}
 					if(tmpInts2>20){tmpInts3+=5;tmpInts2=15;}
 					if(tmpInts3>20){tmpInts1=15;tmpInts2=15;tmpInts3=15;}
@@ -331,6 +356,7 @@ public class AudioSerialOutMono {
 					s2=tmpInts2;
 					s3=tmpInts3;
 					tmpInts1+=5;
+					*/
 					
 					
 					//tmpInt+=5;
@@ -425,7 +451,7 @@ public class AudioSerialOutMono {
 					}
 
 					// audiotrk.write(generatedSnd, 0, length);
-					audiotrk.write(generatedNewWave, 0, 250);
+					audiotrk.write(generatedNewWave, 0, 500);
 					//audiotrk.write(generatedNewWave, 0, 1000);
 					// debug
 					/*
