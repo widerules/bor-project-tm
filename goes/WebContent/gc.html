@@ -1,0 +1,132 @@
+
+<!DOCTYPE html> 
+<html> 
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <link rel="stylesheet" href="../theme/default/style.css" type="text/css"> 
+    <link rel="stylesheet" href="style.css" type="text/css"> 
+ 
+    <style type="text/css"> 
+        html, body {
+            height: 100%;
+        }
+        #map {
+            width: 100%;
+            height: 80%;
+            border: 1px solid black;
+        }
+        .olPopup p { margin:0px; font-size: .9em;}
+        .olPopup h2 { font-size:1.2em; }
+    </style> 
+    <script src="../openlayers/OpenLayers.js"></script> 
+    <script type="text/javascript"> 
+    var lat = 45.02645;
+    var lon = 41.93671; 
+
+    var zoom = 15;
+    var map, layer;
+    
+
+    var map;
+    var untiled;
+    var tiled;
+    var pureCoverage = false;
+    // pink tile avoidance
+    OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
+    // make OL compute scale according to WMS spec
+    OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
+
+    function init(){
+        // if this is just a coverage or a group of them, disable a few items,
+        // and default to jpeg format
+        format = 'image/png';
+        if(pureCoverage) {
+            document.getElementById('filterType').disabled = true;
+            document.getElementById('filter').disabled = true;
+            document.getElementById('antialiasSelector').disabled = true;
+            document.getElementById('updateFilterButton').disabled = true;
+            document.getElementById('resetFilterButton').disabled = true;
+            document.getElementById('jpeg').selected = true;
+            format = "image/jpeg";
+        }
+    
+        var bounds = new OpenLayers.Bounds(
+            0, 0,
+            90, 90
+        );
+        var options = {
+            controls: [],
+            maxExtent: bounds,
+            maxResolution: 0.3515625,
+            projection: "EPSG:4326",
+            units: 'degrees'
+        };
+        map = new OpenLayers.Map('map', options);
+    
+        // setup tiled layer
+        tiled = new OpenLayers.Layer.WMS(
+            "cite:devlist - Tiled", "http://localhost:8081/geoserver/cite/wms",
+            {
+                LAYERS: 'cite:devlist',
+                STYLES: '',
+                format: format,
+                tiled: true,
+                tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom
+            },
+            {
+                buffer: 0,
+                displayOutsideMaxExtent: true,
+                isBaseLayer: true,
+                yx : {'EPSG:4326' : true}
+            } 
+        );
+    
+        // setup single tiled layer
+        untiled = new OpenLayers.Layer.WMS(
+            "cite:devlist - Untiled", "http://localhost:8081/geoserver/cite/wms",
+            {
+                LAYERS: 'cite:devlist',
+                STYLES: '',
+                format: format
+            },
+            {
+               singleTile: true, 
+               ratio: 1, 
+               isBaseLayer: true,
+               yx : {'EPSG:4326' : true}
+            } 
+        );
+
+        map.addLayers([untiled, tiled]);
+
+        // build up all controls
+        map.addControl(new OpenLayers.Control.PanZoomBar({
+            position: new OpenLayers.Pixel(2, 15)
+        }));
+        map.addControl(new OpenLayers.Control.Navigation());
+        map.addControl(new OpenLayers.Control.Scale($('scale')));
+        map.addControl(new OpenLayers.Control.MousePosition({element: $('location')}));
+        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+    } 
+
+</script> 
+    </script> 
+  </head> 
+  <body onload="init()"> 
+      <h1 id="title">KML Layer Example</h1> 
+ 
+      <div id="tags"> 
+          kml, popup, feature
+      </div> 
+ 
+      <p id="shortdesc"> 
+          Demonstrates loading and displaying a KML file on top of a basemap.
+    </p> 
+ 
+    <div id="map" class="smallmap"></div> 
+ 
+    <div id="docs"></div> 
+  </body> 
+</html> 
