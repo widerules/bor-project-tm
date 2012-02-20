@@ -25,7 +25,7 @@
     var lat = 45.02645;
     var lon = 41.93671; 
 
-    var zoom = 15;
+    var zoom = 17;
     var map, layer;
     
 
@@ -39,6 +39,10 @@
     OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 
     function init(){
+    	
+    	
+    	
+    	/*
         // if this is just a coverage or a group of them, disable a few items,
         // and default to jpeg format
         format = 'image/png';
@@ -98,14 +102,56 @@
                yx : {'EPSG:4326' : true}
             } 
         );
+        
+        var kmllayer = new OpenLayers.Layer.Vector("KML", 
+                {
+                   projection: new OpenLayers.Projection("EPSG:4326"),
+                   strategies: [new OpenLayers.Strategy.Fixed()],
+                   protocol: new OpenLayers.Protocol.HTTP(
+                   {
+                      url: "http://localhost:8081/geoserver/cite/wms/kml?layers=cite:devlist",
+                      format: new OpenLayers.Format.KML(
+                      {
+                         maxDepth: 1,
+                         extractStyles: true, 
+                         extractAttributes: true,
+                         singleTile: true, 
+                         ratio: 1, 
+                         isBaseLayer: true
+                      })
+                   })
+                });
+		map.addLayer(kmllayer,options);
 
-        map.addLayers([untiled, tiled]);
+		*/
+		
+		
+		var map = new OpenLayers.Map({
+		    div: "map",
+		    layers: [
+		        new OpenLayers.Layer.WMS("WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0",{layers: "basic"}),
+		        new OpenLayers.Layer.Vector("KML", {
+		            strategies: [new OpenLayers.Strategy.Fixed()],
+		            protocol: new OpenLayers.Protocol.HTTP({
+		                url: "http://localhost:8081/geoserver/www/cite-devlist_.kml",
+		                //url: "http://localhost:8081/geoserver/gwc/service/kml/devlist.png.kml",
+		                //url: "http://localhost:8081/geoserver/gwc/service/kml/cite:devlist/x2y1z1.png.kml",
+		                format: new OpenLayers.Format.KML({
+		                    extractStyles: true, 
+		                    extractAttributes: true,
+		                  //  maxDepth: 2
+		                })
+		            })
+		        })
+		    ],
+		    //center: new OpenLayers.LonLat(-112.169, 36.099),
+		    zoom: 11
+		});	
+		//map.addLayers([tiled]);
 
         // build up all controls
-        map.addControl(new OpenLayers.Control.PanZoomBar({
-            position: new OpenLayers.Pixel(2, 15)
-        }));
-        map.addControl(new OpenLayers.Control.Navigation());
+        //map.addControl(new OpenLayers.Control.PanZoomBar({position: new OpenLayers.Pixel(2, 15)}));
+        //map.addControl(new OpenLayers.Control.Navigation());
         map.addControl(new OpenLayers.Control.Scale($('scale')));
         map.addControl(new OpenLayers.Control.MousePosition({element: $('location')}));
         map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
