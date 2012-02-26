@@ -1,27 +1,36 @@
 
-<!DOCTYPE html> 
-<html> 
-  <head> 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
-    <meta name="apple-mobile-web-app-capable" content="yes"> 
-    <link rel="stylesheet" href="../theme/default/style.css" type="text/css"> 
-    <link rel="stylesheet" href="style.css" type="text/css"> 
- 
-    <style type="text/css"> 
-        html, body {
-            height: 100%;
-        }
-        #map {
-            width: 100%;
-            height: 80%;
-            border: 1px solid black;
-        }
-        .olPopup p { margin:0px; font-size: .9em;}
-        .olPopup h2 { font-size:1.2em; }
-    </style> 
-    <script src="../openlayers/OpenLayers.js"></script> 
-    <script type="text/javascript"> 
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="../theme/default/style.css" type="text/css">
+<link rel="stylesheet" href="style.css" type="text/css">
+
+<style type="text/css">
+html,body {
+	height: 100%;
+}
+
+#map {
+	width: 100%;
+	height: 80%;
+	border: 1px solid black;
+}
+
+.olPopup p {
+	margin: 0px;
+	font-size: .9em;
+}
+
+.olPopup h2 {
+	font-size: 1.2em;
+}
+</style>
+<script src="../openlayers/OpenLayers.js"></script>
+<script type="text/javascript"> 
     var lat = 45.02645;
     var lon = 41.93671; 
 
@@ -130,11 +139,14 @@
 		    div: "map",
 		    layers: [
 		        new OpenLayers.Layer.WMS("WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0",{layers: "basic"}),
+	             /*
 		        new OpenLayers.Layer.Vector("KML", {
 		            strategies: [new OpenLayers.Strategy.Fixed()],
 		            protocol: new OpenLayers.Protocol.HTTP({
-		                url: "http://localhost:8081/geoserver/www/cite-devlist_.kml",
-		                //url: "http://localhost:8081/geoserver/gwc/service/kml/devlist.png.kml",
+		                //url: "http://localhost:8081/geoserver/www/cite-devlist_.kml",
+		                //url: "http://localhost:8081/geoserver/wms/kml?layers=cite:devlist&format=format=application/vnd.google-earth.kmz+XML",
+		                //url: "http://localhost:8081/geoserver/wms?height=1024&width=1024&layers=cite:devlist&request=GetMap&service=wms&styles=atm&format_options=SUPEROVERLAY:false;KMPLACEMARK:true;KMSCORE:40;KMATTR:true;&srs=EPSG:4326&format=application/vnd.google-earth.kmz&transparent=false&version=1.1.1&bbox=20,20,70,70",
+		                url: "http://localhost:8081/geoserver/wms?height=1024&width=1024&layers=topp:states&request=GetMap&service=wms&styles=population&format_options=SUPEROVERLAY:false;KMPLACEMARK:true;KMSCORE:40;KMATTR:true;&srs=EPSG:4326&format=application/vnd.google-earth.kmz&transparent=false&version=1.1.1",
 		                //url: "http://localhost:8081/geoserver/gwc/service/kml/cite:devlist/x2y1z1.png.kml",
 		                format: new OpenLayers.Format.KML({
 		                    extractStyles: true, 
@@ -142,10 +154,33 @@
 		                  //  maxDepth: 2
 		                })
 		            })
-		        })
-		    ],
+		        })*/
+		        
+		        new OpenLayers.Layer.Vector("Маршрутки", {
+	                //projection: mercator,
+	                strategies: [new OpenLayers.Strategy.Refresh({interval:10000}), new OpenLayers.Strategy.Fixed()],
+	                protocol: new OpenLayers.Protocol.HTTP({
+	                	url: "http://localhost:8081/geoserver/www/cite-devlist_.kml",
+	                    format: new OpenLayers.Format.KML({
+		                    extractStyles: true, 
+		                    extractAttributes: true,
+	         })
+	                })
+	            })
+		        /*
+	            new OpenLayers.Layer.Vector("WFS", {
+	            	strategies: [new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Refresh({interval: 4000, force: true})],
+	            	//protocol: new OpenLayers.Protocol.WFS({url:  "http://localhost:8081/geoserver/wfs",
+	            		protocol: new OpenLayers.Protocol.WFS({url:  "http://localhost:8081/geoserver/cite/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=cite:devlist&maxFeatures=5000&outputFormat=text/xml;%20subtype=gml/3.2",
+	            		featureType: "ss2011_v03",
+	                    featureNS: "http://csiro.au/underway",
+	                    geometryName: "devlist"})
+	            	})
+				*/
+		        ]
+	            	
 		    //center: new OpenLayers.LonLat(-112.169, 36.099),
-		    zoom: 11
+		    //zoom: 15
 		});	
 		//map.addLayers([tiled]);
 
@@ -154,25 +189,22 @@
         //map.addControl(new OpenLayers.Control.Navigation());
         map.addControl(new OpenLayers.Control.Scale($('scale')));
         map.addControl(new OpenLayers.Control.MousePosition({element: $('location')}));
-        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+        map.setCenter(new OpenLayers.LonLat(lon, lat), 15);
     } 
 
-</script> 
-    </script> 
-  </head> 
-  <body onload="init()"> 
-      <h1 id="title">KML Layer Example</h1> 
- 
-      <div id="tags"> 
-          kml, popup, feature
-      </div> 
- 
-      <p id="shortdesc"> 
-          Demonstrates loading and displaying a KML file on top of a basemap.
-    </p> 
- 
-    <div id="map" class="smallmap"></div> 
- 
-    <div id="docs"></div> 
-  </body> 
-</html> 
+</script>
+</script>
+</head>
+<body onload="init()">
+	<h1 id="title">KML Layer Example</h1>
+
+	<div id="tags">kml, popup, feature</div>
+
+	<p id="shortdesc">Demonstrates loading and displaying a KML file on
+		top of a basemap.</p>
+
+	<div id="map" class="smallmap"></div>
+
+	<div id="docs"></div>
+</body>
+</html>
