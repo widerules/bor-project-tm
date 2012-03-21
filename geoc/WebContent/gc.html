@@ -1,194 +1,102 @@
 
-<!DOCTYPE html> 
-<html> 
-  <head> 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
-    <meta name="apple-mobile-web-app-capable" content="yes"> 
- 
-    <style type="text/css"> 
-        html, body {
-            height: 100%;
-        }
-        #map {
-            width: 100%;
-            height: 80%;
-            border: 1px solid black;
-        }
-        .olPopup p { margin:0px; font-size: .9em;}
-        .olPopup h2 { font-size:1.2em; }
-    </style> 
-    <script src="./openlayers/OpenLayers.js"></script> 
-    <script type="text/javascript"> 
-    //var host="http://192.168.56.1:8080";
-    //var host="http://10.0.2.2:8080";
-    var host="http://192.168.1.90:8080";
-    var lat = 45.02645;
-    var lon = 41.93671; 
-
-    var zoom = 15;
-    var map, layer;
-    
-
-    var map;
-    var untiled;
-    var tiled;
-    var pureCoverage = false;
-    // pink tile avoidance
-    //OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
-    // make OL compute scale according to WMS spec
-    OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
-
-    function init(){
-    	
-    	
-    	
-        // if this is just a coverage or a group of them, disable a few items,
-        // and default to jpeg format
-        format = 'image/png';
-//         if(pureCoverage) {
-//             document.getElementById('filterType').disabled = true;
-//             document.getElementById('filter').disabled = true;
-//             document.getElementById('antialiasSelector').disabled = true;
-//             document.getElementById('updateFilterButton').disabled = true;
-//             document.getElementById('resetFilterButton').disabled = true;
-//             document.getElementById('jpeg').selected = true;
-//             format = "image/jpeg";
-//         }
-    
-        var bounds = new OpenLayers.Bounds(
-                0, 0,
-                90, 90
-            );
-        var options = {
-            controls: [],
-            maxExtent: bounds,
-            maxResolution: 0.3515625,
-            projection: "EPSG:4326",
-            units: 'degrees'
-        };
-        map = new OpenLayers.Map('map', options);
-    
-        // setup tiled layer
-        tiled = new OpenLayers.Layer.WMS(
-            "cite:devlist - Tiled", host+"/geoserver/gwc/service/wms",
-            {
-                LAYERS: 'cite:devlist',
-                STYLES: '',
-                format: format,
-                tiled: true,
-                tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom
-            },
-            {
-                buffer: 0,
-                displayOutsideMaxExtent: true,
-                isBaseLayer: false,
-                yx : {'EPSG:4326' : true}
-            } 
-        );
-        tiledOSM = new OpenLayers.Layer.WMS(
-                "cite:OSM - Tiled", host+"/geoserver/gwc/service/wms",
-                {
-                    LAYERS: 'OSM',
-                    STYLES: '',
-                    format: format//,
-                    //tiled: true,
-                    //tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom
-                },
-                {
-                    buffer: 0,
-                    displayOutsideMaxExtent: true,
-                    isBaseLayer: true,
-                    yx : {'EPSG:4326' : true}
-                } 
-            );
-		/*    
-        // setup single tiled layer
-        untiled = new OpenLayers.Layer.WMS(
-            "cite:devlist - Untiled", host+"/geoserver/cite/wms",
-            {
-                LAYERS: 'cite:devlist',
-                STYLES: '',
-                format: format
-            },
-            {
-               singleTile: true, 
-               ratio: 1, 
-               isBaseLayer: false,
-               yx : {'EPSG:4326' : true}
-            } 
-        );
-        */
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <title>OpenLayers Vector Behavior Example</title>
+        <link rel="stylesheet" href="./style/style.css" type="text/css">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="./openlayers.js"></script>
+        <script type="text/javascript">
+            var map;
         
-        
-        
-        var kmllayer = new OpenLayers.Layer.Vector("KML", 
-                {
-                   projection: new OpenLayers.Projection("EPSG:4326"),
-                   strategies: [new OpenLayers.Strategy.Fixed()],
-                   protocol: new OpenLayers.Protocol.HTTP(
-                   {
-                      //url: host+"/geoserver/cite/wms/kml?layers=cite:devlist",
-                    	//url: host+"/geoserver/gwc/demo/cite:devlist?gridSet=EPSG:4326&format=image/jpeg",
-                      format: new OpenLayers.Format.KML(
-                      {
-                         maxDepth: 1,
-                         extractStyles: true, 
-                         extractAttributes: true,
-                         //singleTile: true, 
-                         ratio: 1, 
-                         isBaseLayer: true
-                      })
-                   })
+            function init(){
+                map = new OpenLayers.Map('map');
+                var wms = new OpenLayers.Layer.WMS(
+                    "OpenLayers WMS", "http://192.168.1.90:8080/wms",
+                    {layers: 'basic'}
+                );
+
+                var layer = new OpenLayers.Layer.Vector("POIs", {
+                    strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1})],
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        url: "textfile.txt",
+                        format: new OpenLayers.Format.Text()
+                    })
                 });
-		//map.addLayer(kmllayer,options);
-	    
 
-		
-	        /*
-		
-		var map = new OpenLayers.Map({
-		    div: "map",
-		    layers: [
-		        new OpenLayers.Layer.WMS("WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0",{layers: "basic"}),
-		        untiled 
-// 		        new OpenLayers.Layer.Vector("KML", {
-// 		            strategies: [new OpenLayers.Strategy.Fixed()],
-// 		            protocol: new OpenLayers.Protocol.HTTP({
-// 		                url: host+"/geoserver/www/cite-devlist_.kml",
-// 		                //url: host+"/geoserver/gwc/service/kml/devlist.png.kml",
-// 		                //url: host+"/geoserver/gwc/service/kml/cite:devlist/x2y1z1.png.kml",
-// 		                format: new OpenLayers.Format.KML({
-// 		                    extractStyles: true, 
-// 		                    extractAttributes: true,
-// 		                  //  maxDepth: 2
-// 		                })
-// 		            })
-// 		        })
-		    ],
-		    //center: new OpenLayers.LonLat(-112.169, 36.099),
-		    zoom: 11
-		});	
-        */
+                map.addLayers([wms, layer]);
+                map.zoomToMaxExtent();
 
-		//map.addLayer(tiled);
-		map.addLayer(kmllayer);
+                // Interaction; not needed for initial display.
+                selectControl = new OpenLayers.Control.SelectFeature(layer);
+                map.addControl(selectControl);
+                selectControl.activate();
+                layer.events.on({
+                    'featureselected': onFeatureSelect,
+                    'featureunselected': onFeatureUnselect
+                });
+            }
+             
 
-        // build up all controls
-        map.addControl(new OpenLayers.Control.PanZoomBar({position: new OpenLayers.Pixel(2, 15)}));
-        map.addControl(new OpenLayers.Control.Navigation());
-        map.addControl(new OpenLayers.Control.Scale($('scale')));
-        map.addControl(new OpenLayers.Control.MousePosition({element: $('location')}));
-        map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
-    } 
-
-</script> 
-     
-  </head> 
-  <body onload="init()">
-  v0.0.3 
-    <div id="map" class="smallmap"></div> 
- 
-    
-  </body> 
-</html> 
+            // Needed only for interaction, not for the display.
+            function onPopupClose(evt) {
+                // 'this' is the popup.
+                var feature = this.feature;
+                if (feature.layer) { // The feature is not destroyed
+                    selectControl.unselect(feature);
+                } else { // After "moveend" or "refresh" events on POIs layer all 
+                         //     features have been destroyed by the Strategy.BBOX
+                    this.destroy();
+                }
+            }
+            function onFeatureSelect(evt) {
+                feature = evt.feature;
+                popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                                         feature.geometry.getBounds().getCenterLonLat(),
+                                         new OpenLayers.Size(100,100),
+                                         "<h2>"+feature.attributes.title + "</h2>" +
+                                         feature.attributes.description,
+                                         null, true, onPopupClose);
+                feature.popup = popup;
+                popup.feature = feature;
+                map.addPopup(popup, true);
+            }
+            function onFeatureUnselect(evt) {
+                feature = evt.feature;
+                if (feature.popup) {
+                    popup.feature = null;
+                    map.removePopup(feature.popup);
+                    feature.popup.destroy();
+                    feature.popup = null;
+                }
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <h1 id="title">Dynamic POIs via a Text Layer</h1>
+        <div id="tags">
+            poi, dynamic data, text, format, strategy, popup, select, selection
+        </div>
+        <p id="shortdesc">
+           Loading dynamic data from a text file. 
+        </p>
+        <div id="map" class="smallmap"></div>
+        <div id="docs">
+            <p>The vector layer shown uses the BBOX strategy, the HTTP protocol,
+            and the Text format.
+            This setup appends "?bbox=west,south,east,north" to every
+            request. This allows you to configure the location as something
+            like 'textfile.php', and take the '?bbox=' parameter to select
+            data from a database or the like.</p>
+            <p>There is nothing about this example that limits it to text files;
+            you can do the same thing with KML, GeoJSON, etc.</p>
+            <p>This is an alternative to something like the <a href="http://wiki.openstreetmap.org/index.php/OpenLayers_Dynamic_POI">OpenStreetMap "Dynamic POI"</a> example. The Layer is a standard vector layer, and interaction can be
+            configured via the SelectFeature control, as you can see in the 
+            latter half of the code, which allows you to open a popup when
+            a feature is selected.</p>
+        </div>
+    </body>
+</html>
