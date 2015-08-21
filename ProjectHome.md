@@ -1,0 +1,1 @@
+remote use of sensors based on android
